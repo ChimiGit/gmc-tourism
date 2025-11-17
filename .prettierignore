@@ -1,0 +1,9 @@
+dist
+node_modules
+.astro
+.vercel
+.netlify
+*.log
+pnpm-lock.yaml
+coverage
+

@@ -1,22 +1,56 @@
+---
+import '../styles/global.css';
+import Seo from '../components/layout/Seo.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { SITE, type StructuredData } from '../config/site';
+
+interface Props {
+	title?: string;
+	description?: string;
+	ogImage?: string;
+	canonical?: string;
+	structuredData?: StructuredData;
+	bodyClass?: string;
+	noIndex?: boolean;
+	mainClass?: string;
+}
+
+const {
+	title,
+	description,
+	ogImage,
+	canonical,
+	structuredData,
+	bodyClass = '',
+	noIndex = false,
+	mainClass = 'pt-28 sm:pt-32',
+} = Astro.props as Props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang={SITE.language} class="bg-black">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<Seo
+			{title}
+			{description}
+			{ogImage}
+			{canonical}
+			{structuredData}
+			noIndex={noIndex}
+		/>
 	</head>
-	<body>
-		<slot />
+	<body class:list={['min-h-screen bg-black text-slate-100 antialiased', bodyClass]}>
+		<Header />
+		<main class={mainClass}>
+			<slot />
+		</main>
+		<Footer />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

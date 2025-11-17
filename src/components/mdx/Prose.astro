@@ -1,0 +1,12 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className = '' } = Astro.props as Props;
+---
+
+<article class:list={['mx-auto flex max-w-3xl flex-col gap-6 text-slate-200', className]}>
+	<slot />
+</article>
+

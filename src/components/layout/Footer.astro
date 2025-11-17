@@ -1,0 +1,151 @@
+---
+import SocialLinks from '../ui/SocialLinks.astro';
+import Divider from '../ui/Divider.astro';
+
+const socialLinks = [
+  {
+    platform: 'facebook',
+    url: 'https://www.facebook.com/people/Gelephu-Mindfulness-City/61565212923092',
+  },
+  {
+    platform: 'instagram',
+    url: 'https://www.instagram.com/gmcbhutan/#',
+  },
+  { platform: 'twitter', url: 'https://x.com/gmcbhutan' },
+  {
+    platform: 'tiktok',
+    url: 'https://www.tiktok.com/@gmc_bhutan',
+  },
+  {
+    platform: 'youtube',
+    url: 'https://www.youtube.com/@gelephumindfulnesscity',
+  },
+];
+
+const footerLinks = [
+  [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'News', href: '/news' },
+  ],
+  [
+    { label: 'Gallery', href: '/gallery' },
+    { label: 'FAQ', href: '/faq' },
+    { label: 'Careers', href: '/careers' },
+  ],
+  [
+    { label: 'Contact', href: '/contact' },
+    { label: 'People', href: '/people' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+  ],
+];
+---
+
+<footer class="relative overflow-hidden px-4 pt-16 pb-8 md:px-8 lg:px-16">
+  <!-- Background text -->
+  <div
+    id="footer-background-text"
+    class="pointer-events-none absolute top-0 left-0 right-0 bottom-24 z-0 flex items-center justify-center select-none whitespace-nowrap text-[200px] font-bold text-white opacity-5 md:text-[300px]"
+  >
+    GMC
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <!-- Top section with sitemap and social links -->
+    <div class="mb-16 flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+      <div class="mb-16 md:mb-0">
+        <div class="mb-6 text-lg text-slate-400">/ SITEMAP</div>
+        <div class="grid grid-cols-3 gap-28 md:grid-cols-4">
+          {
+            footerLinks.map((column) => (
+              <div>
+                {column.map((link) => (
+                  <a
+                    href={link.href}
+                    class="footer-link block py-1 text-lg transition-colors hover:text-slate-600"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div>
+        <h3 class="mb-4 text-lg font-medium text-slate-400">Follow us</h3>
+        <SocialLinks links={socialLinks} />
+      </div>
+    </div>
+
+    <!-- Bottom section with divider, back to top and copyright -->
+    <div class="flex w-full flex-col">
+      <Divider className="relative left-1/2 w-screen -translate-x-1/2" />
+
+      <div
+        class="flex flex-col items-center justify-center gap-4 max-sm:mt-4 max-sm:items-start max-sm:text-center md:flex-row md:items-center md:gap-8"
+      >
+        <button
+          type="button"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+          class="flex items-center font-medium text-white transition-colors hover:text-slate-600"
+          aria-label="Back to top"
+        >
+          <span class="fa-solid fa-arrow-up mr-2 h-4 w-4" aria-hidden="true"></span>
+          BACK TO TOP
+        </button>
+        <div class="text-slate-500 max-sm:text-center">
+          COPYRIGHT {new Date().getFullYear()} GMC. ALL RIGHTS RESERVED
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Animate background text on scroll
+  const backgroundText = document.getElementById('footer-background-text');
+
+  if (backgroundText) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            backgroundText.style.opacity = '0';
+            backgroundText.style.transform = 'translateY(50px)';
+            backgroundText.style.transition = 'opacity 1.2s ease-out, transform 1.2s ease-out';
+
+            setTimeout(() => {
+              backgroundText.style.opacity = '0.05';
+              backgroundText.style.transform = 'translateY(0)';
+            }, 50);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '-100px' }
+    );
+
+    observer.observe(backgroundText);
+  }
+</script>
+
+<style>
+  .footer-link {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  html[data-theme='light'] .footer-link {
+    color: rgb(51 65 85); /* slate-700 */
+  }
+
+  html[data-theme='light'] .footer-link:hover {
+    color: rgb(15 23 42); /* slate-900 */
+  }
+
+  html[data-theme='light'] #footer-background-text {
+    color: black;
+    opacity: 0.05;
+  }
+</style>

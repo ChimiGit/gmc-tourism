@@ -1,0 +1,181 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700;900&display=swap");
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200/60;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-black font-sans text-base text-slate-100 antialiased;
+  }
+
+  a {
+    @apply transition-colors duration-200 ease-out;
+  }
+
+  p {
+    @apply leading-relaxed text-slate-300;
+  }
+
+  .markdown {
+    @apply flex flex-col gap-6 text-base leading-relaxed text-slate-200;
+  }
+
+  .markdown h1,
+  .markdown h2,
+  .markdown h3 {
+    @apply font-display text-white;
+  }
+
+  .markdown h1 {
+    @apply text-4xl font-bold;
+  }
+
+  .markdown h2 {
+    @apply pt-6 text-3xl font-semibold;
+  }
+
+  .markdown h3 {
+    @apply pt-4 text-2xl font-semibold;
+  }
+
+  .markdown a {
+    @apply text-sky-300 underline decoration-sky-300/40 underline-offset-4 hover:text-sky-200 hover:decoration-transparent;
+  }
+
+  .markdown ul {
+    @apply list-disc space-y-2 pl-6 marker:text-slate-400;
+  }
+
+  .markdown ol {
+    @apply list-decimal space-y-2 pl-6 marker:text-slate-400;
+  }
+
+  .markdown blockquote {
+    @apply border-l-4 border-slate-700/70 bg-white/5 p-6 text-lg italic text-slate-200;
+  }
+
+  .footer-link {
+    @apply text-white/70 transition hover:text-white;
+  }
+}
+
+/* Global light theme overrides */
+[data-theme="light"] body {
+  background-color: #ffffff !important;
+  color: #0f172a !important; /* slate-900 */
+}
+[data-theme="light"] p,
+[data-theme="light"] .markdown {
+  color: #334155 !important; /* slate-700 */
+}
+[data-theme="light"] .markdown :is(h1,h2,h3) {
+  color: #0f172a !important;
+}
+[data-theme="light"] .text-white {
+  color: #0f172a !important;
+}
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200,
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-gray-300,
+[data-theme="light"] .text-gray-400 {
+  color: #334155 !important;
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 20px 40px -24px rgb(15 23 42 / 0.45);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent;
+  }
+
+  .card {
+    @apply rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur;
+    box-shadow: 0 20px 40px -24px rgb(15 23 42 / 0.45);
+  }
+}
+
+/* Theme-aware footer colors for light mode */
+[data-theme="light"] footer :is(p, a, span, button, div) {
+  color: #0f172a !important; /* slate-900 */
+}
+[data-theme="light"] footer .footer-link {
+  color: #334155 !important; /* slate-700 */
+}
+[data-theme="light"] footer .footer-link:hover {
+  color: #0f172a !important; /* slate-900 */
+}
+[data-theme="light"] footer .text-slate-400 {
+  color: #475569 !important; /* slate-600-like for light mode */
+}
+
+/* Theme-aware sidebar/menu overlay colors */
+[data-theme="light"] #menu-overlay {
+  background-color: white !important;
+  color: black !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] #menu-decoration span {
+  color: black !important;
+}
+
+[data-theme="light"] #menu-close {
+  color: black !important;
+}
+
+[data-theme="light"] #menu-items a,
+[data-theme="light"] #menu-items button {
+  color: rgb(75 85 99) !important; /* gray-600 */
+}
+
+[data-theme="light"] #menu-items a:hover,
+[data-theme="light"] #menu-items button:hover {
+  color: black !important;
+}
+
+[data-theme="dark"] #menu-overlay {
+  background-color: black !important;
+  color: white !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] #menu-decoration span {
+  color: white !important;
+}
+
+[data-theme="dark"] #menu-close {
+  color: white !important;
+}
+
+[data-theme="dark"] #menu-items a,
+[data-theme="dark"] #menu-items button {
+  color: rgb(156 163 175) !important; /* gray-400 */
+}
+
+[data-theme="dark"] #menu-items a:hover,
+[data-theme="dark"] #menu-items button:hover {
+  color: white !important;
+}
+
+/* Header navbar colors - keep white in all themes over hero */
+#navbar :is(a, button, span, i) {
+  color: #ffffff !important;
+}
+#navbar #theme-toggle i {
+  color: #ffffff !important;
+}

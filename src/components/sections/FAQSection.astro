@@ -1,0 +1,377 @@
+---
+import Divider from '../ui/Divider.astro';
+interface FAQ {
+	id: string;
+	question: string;
+	answer: string;
+	category: 'international' | 'bhutan' | 'investment';
+}
+
+const faqs: FAQ[] = [
+	{
+		id: 'investment-visa',
+		category: 'investment',
+		question: 'What is Gelephu Mindfulness City (GMC) and what is its founding vision?',
+		answer:
+			'Submit a letter of intent to the Bhutan Development Authority, then our investment concierge will prepare your due diligence, site visits, and business registration within four weeks.',
+	},
+	{
+		id: 'bhutan-entry',
+		category: 'bhutan',
+		question: 'Where is GMC located, how was it established, and what is its governance structure?',
+		answer:
+			'Independent travel is allowed inside the Special Administrative Region. Outside the SAR you must be accompanied by a licensed Bhutanese guide as per national regulations.',
+	},
+	{
+		id: 'international-connectivity',
+		category: 'international',
+		question: 'Who leads GMC and what are its management principles?',
+		answer:
+			'Phase one opens direct routes from Delhi, Bangkok, Singapore, and Dubai. Additional regional connections are being negotiated with Dhaka and Kathmandu.',
+	},
+	{
+		id: 'climate',
+		category: 'bhutan',
+		question: 'What climate should I expect throughout the year?',
+		answer:
+			'Gelephu enjoys a subtropical climate—mild winters (18‑22°C) and warm summers with refreshing monsoon rains. Most outdoor events run October through April.',
+	},
+	{
+		id: 'property',
+		category: 'investment',
+		question: `What is the 'Diamond Strategy' and how are GMC and Bhutan expected to evolve?`,
+		answer:
+			'Yes. Long-term leases of up to 50 years are available within approved innovation districts, renewable once after a performance review.',
+	},
+	{
+		id: 'visitors',
+		category: 'international',
+		question: 'What makes GMC different from Bhutan and other jurisdictions?',
+		answer:
+			'Unlike the rest of Bhutan, the SAR uses a dynamic sustainability fee that adjusts to seasonal demand, ensuring mindful growth without strict volume caps.',
+	},
+];
+---
+
+<section id="faq-section" class="faq-section relative overflow-hidden px-4 py-16 md:px-8 lg:px-16">
+	<div class="faq-background" aria-hidden="true"></div>
+
+	<div class="relative z-10 mx-auto w-full max-w-4xl space-y-10">
+		<div class="faq-header">
+			<div class="space-y-4 text-center md:text-left">
+				<h2 class="faq-heading text-3xl font-semibold md:text-4xl text-center">Frequently Asked Questions</h2>
+			</div>
+		</div>
+
+		<Divider className="relative left-1/2 w-screen -translate-x-1/2 my-4" />
+
+		<div class="faq-list divide-y divide-white/10 border-b border-white/10" data-faq-list>
+			{faqs.map((faq, index) => (
+				<article class="faq-item" data-faq-item data-category={faq.category}>
+					<button
+						type="button"
+						class="faq-toggle flex w-full items-center justify-between gap-4 py-6 text-left"
+						data-faq-toggle
+						data-target={`faq-panel-${faq.id}`}
+						aria-expanded="false"
+						aria-controls={`faq-panel-${faq.id}`}
+					>
+						<div class="flex flex-1 items-center gap-4">
+							<span class="faq-number text-sm font-medium uppercase tracking-[0.3em]">
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<div>
+								<h3 id={`faq-question-${faq.id}`} class="faq-heading text-lg font-semibold md:text-2xl">
+									{faq.question}
+								</h3>
+							</div>
+						</div>
+						<span class="faq-icon relative flex h-8 w-8 items-center justify-center rounded-full border">
+							<span class="faq-line vertical"></span>
+							<span class="faq-line horizontal"></span>
+						</span>
+					</button>
+					<div
+						id={`faq-panel-${faq.id}`}
+						class="faq-panel text-base"
+						data-faq-panel
+						role="region"
+						aria-labelledby={`faq-question-${faq.id}`}
+						hidden
+					>
+						<p class="faq-body pb-6 pl-12 pr-2">{faq.answer}</p>
+					</div>
+				</article>
+			))}
+		</div>
+
+		<div class="flex justify-center md:justify-start">
+			<a
+				href="/faq"
+				class="faq-link group inline-flex items-center gap-2 text-base font-medium transition"
+			>
+				View all FAQs
+				<svg
+					class="h-5 w-5 transition group-hover:translate-x-1"
+					viewBox="0 0 24 24"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					aria-hidden="true"
+				>
+					<path
+						d="M5 12h14m-6-6 6 6-6 6"
+						stroke="currentColor"
+						stroke-width="1.6"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+			</a>
+		</div>
+	</div>
+</section>
+
+<script is:inline>
+	const script = document.currentScript;
+	const componentRoot = script?.previousElementSibling;
+	const section = componentRoot?.closest('.faq-section');
+
+	if (section) {
+		const toggles = Array.from(section.querySelectorAll('[data-faq-toggle]'));
+		const filterSelect = section.querySelector('[data-faq-filter]');
+		const articles = Array.from(section.querySelectorAll('[data-faq-item]'));
+		let animating = false;
+		let activeButton = null;
+
+		const collapse = (button, panel) => {
+			button.setAttribute('aria-expanded', 'false');
+			button.parentElement?.classList.remove('is-active');
+			panel.style.height = `${panel.scrollHeight}px`;
+			panel.style.opacity = '1';
+			requestAnimationFrame(() => {
+				panel.style.height = '0px';
+				panel.style.opacity = '0';
+			});
+			setTimeout(() => {
+				panel.hidden = true;
+				panel.classList.remove('is-open');
+				animating = false;
+			}, 320);
+		};
+
+		const expand = (button, panel) => {
+			button.setAttribute('aria-expanded', 'true');
+			button.parentElement?.classList.add('is-active');
+			panel.hidden = false;
+			panel.style.height = '0px';
+			panel.style.opacity = '0';
+			const targetHeight = panel.scrollHeight;
+			requestAnimationFrame(() => {
+				panel.style.height = `${targetHeight}px`;
+				panel.style.opacity = '1';
+			});
+			setTimeout(() => {
+				panel.style.height = 'auto';
+				panel.classList.add('is-open');
+				animating = false;
+			}, 320);
+		};
+
+		const handleToggle = (button) => {
+			if (animating) return;
+			animating = true;
+			const targetId = button.dataset.target;
+			const panel = targetId ? section.querySelector(`#${targetId}`) : null;
+			if (!panel) {
+				animating = false;
+				return;
+			}
+
+			const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+			if (isOpen) {
+				collapse(button, panel);
+				activeButton = null;
+			} else {
+				if (activeButton && activeButton !== button) {
+					const activePanelId = activeButton.dataset.target;
+					const activePanel = activePanelId ? section.querySelector(`#${activePanelId}`) : null;
+					if (activePanel) {
+						collapse(activeButton, activePanel);
+					}
+				}
+				activeButton = button;
+				expand(button, panel);
+			}
+		};
+
+		toggles.forEach((button) => {
+			button.addEventListener('click', () => {
+				handleToggle(button);
+			});
+			button.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					handleToggle(button);
+				}
+			});
+		});
+
+		const applyFilter = (value) => {
+			const normalized = value?.toLowerCase() ?? 'all';
+			articles.forEach((article) => {
+				const category = article.dataset.category ?? 'all';
+				const visible = normalized === 'all' || category === normalized;
+				article.classList.toggle('is-hidden', !visible);
+
+				if (!visible) {
+					const toggle = article.querySelector('[data-faq-toggle]');
+					if (toggle && toggle === activeButton) {
+						const targetId = toggle.dataset.target;
+						const panel = targetId ? section.querySelector(`#${targetId}`) : null;
+						if (panel) {
+							collapse(toggle, panel);
+						}
+						activeButton = null;
+					}
+				}
+			});
+		};
+
+		filterSelect?.addEventListener('change', (event) => {
+			const target = event.target;
+			if (!(target instanceof HTMLSelectElement)) return;
+			applyFilter(target.value);
+		});
+
+		if (filterSelect) {
+			applyFilter(filterSelect.value);
+		}
+	}
+</script>
+
+<style>
+	.faq-section {
+		--faq-bg: #050505;
+		--faq-heading: #f8fafc;
+		--faq-body: #cbd5f5;
+		--faq-number: #94a3b8;
+		--faq-tag: #94a3b8;
+		--faq-border: rgba(255, 255, 255, 0.12);
+		--faq-icon: #ffffff;
+		--faq-button-bg: rgba(255, 255, 255, 0.05);
+		background: var(--faq-bg);
+		color: var(--faq-body);
+	}
+
+	:global([data-theme='light'] .faq-section) {
+		--faq-bg: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), transparent 60%) #f7f8fc;
+		--faq-heading: #0f172a;
+		--faq-body: #475569;
+		--faq-number: #94a3b8;
+		--faq-tag: #94a3b8;
+		--faq-border: rgba(15, 23, 42, 0.15);
+		--faq-icon: #0f172a;
+		--faq-button-bg: rgba(15, 23, 42, 0.05);
+	}
+
+	:global([data-theme='light'] .faq-background::after) {
+		opacity: 0.55;
+	}
+
+	.faq-header {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.faq-header {
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.faq-heading {
+		color: var(--faq-heading);
+	}
+
+	.faq-body {
+		color: var(--faq-body);
+	}
+
+	.faq-tag {
+		color: var(--faq-tag);
+		text-transform: uppercase;
+	}
+
+	.faq-number {
+		color: var(--faq-number);
+	}
+
+	.faq-select {
+		color: var(--faq-heading);
+		background-color: var(--faq-button-bg);
+		border: 1px solid var(--faq-border);
+	}
+
+	.faq-filter {
+		color: var(--faq-body);
+		align-self: flex-start;
+	}
+
+	.faq-select option {
+		color: #0f172a;
+	}
+
+	.faq-list {
+		border-color: var(--faq-border);
+	}
+
+	.faq-icon {
+		border-color: var(--faq-border);
+	}
+
+	.faq-icon .faq-line {
+		position: absolute;
+		display: block;
+		width: 14px;
+		height: 2px;
+		background: var(--faq-icon);
+		transition: transform 0.3s ease, opacity 0.3s ease;
+	}
+
+	.faq-icon .faq-line.vertical {
+		transform: rotate(90deg);
+	}
+
+	.faq-item.is-active .faq-icon .faq-line.vertical {
+		transform: rotate(0deg);
+		opacity: 0;
+	}
+
+	.faq-panel {
+		overflow: hidden;
+		height: 0;
+		opacity: 0;
+		transition: height 0.3s ease, opacity 0.3s ease;
+	}
+
+	.faq-panel.is-open {
+		opacity: 1;
+	}
+
+	.faq-link {
+		color: var(--faq-heading);
+	}
+
+	.faq-link:hover {
+		color: var(--faq-body);
+	}
+
+	.faq-item.is-hidden {
+		display: none;
+	}
+</style>
+

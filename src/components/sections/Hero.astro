@@ -1,0 +1,131 @@
+---
+// Fullscreen hero with video background and overlays
+---
+
+<section class="relative h-screen w-full overflow-hidden bg-black hero-force-white">
+	<!-- Video Background -->
+	<div class="absolute inset-0 h-full w-full overflow-hidden">
+		<video
+			id="hero-video"
+			autoplay
+			muted
+			loop
+			playsinline
+			class="absolute h-full w-full scale-110 object-cover object-center"
+		>
+			<source src="/assets/hero.mp4" type="video/mp4" />
+			Your browser does not support the video tag.
+		</video>
+		<div class="absolute inset-0 z-10 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
+	</div>
+
+	<!-- Overlay for fade effect -->
+	<div id="overlay" class="pointer-events-none absolute inset-0 z-30 bg-black opacity-100"></div>
+
+	<!-- Hero Content -->
+	<div class="relative z-20 flex h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12">
+		<div id="hero-heading" class="max-w-[90vw] text-center md:max-w-[80vw] lg:max-w-[70vw]">
+			<h1 class="sr-only">Gelephu Mindfulness City</h1>
+			<div class="hero-line overflow-hidden">
+				<span
+					class="block select-none text-[clamp(2.5rem,8vw,7rem)] font-bold leading-[1.1] tracking-wide text-white"
+				>
+					GMC TOURISM
+				</span>
+			</div>
+			<!-- <div class="hero-line overflow-hidden">
+				<span class="block text-[clamp(2.5rem,8vw,7rem)] font-bold leading-[1.1] tracking-tight text-white">
+					<span class="relative inline-block select-none">MINDFULNESS</span>
+				</span>
+			</div>
+			<div class="hero-line overflow-hidden">
+				<span
+					class="block select-none text-[clamp(2.5rem,8vw,7rem)] font-bold leading-[1.1] tracking-wide text-white"
+				>
+					CITY
+				</span>
+			</div> -->
+			<div class="mt-2 md:mt-3">
+				<span class="block select-none text-xl font-medium text-white">
+					A Special Administrative Region (SAR) in The Kingdom of Bhutan
+				</span>
+			</div>
+		</div>
+
+		<!-- Scroll Indicator -->
+		<div id="scroll-indicator" class="absolute bottom-12 left-1/2 -translate-x-1/2 transform opacity-0">
+			<div class="flex flex-col items-center">
+				<div class="h-12 w-px bg-white"></div>
+				<div class="mt-4 select-none text-xs font-light uppercase tracking-[0.2em] text-white">Scroll</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bottom gradient -->
+	<div class="absolute bottom-0 left-0 right-0 z-20 h-16 bg-gradient-to-t from-black to-transparent"></div>
+</section>
+
+<script>
+	// Overlay fade animation
+	const overlay = document.getElementById('overlay');
+	if (overlay) {
+		// Initial pulse effect
+		setTimeout(() => {
+			overlay.style.transition = 'opacity 2s';
+			overlay.style.opacity = '0.9';
+			setTimeout(() => {
+				overlay.style.opacity = '1';
+				setTimeout(() => {
+					// Final fade out
+					overlay.style.transition = 'opacity 1.5s';
+					overlay.style.opacity = '0';
+				}, 2000);
+			}, 2000);
+		}, 1000);
+	}
+
+	// Scroll indicator fade in
+	const scrollIndicator = document.getElementById('scroll-indicator');
+	if (scrollIndicator) {
+		setTimeout(() => {
+			scrollIndicator.style.transition = 'opacity 1s, transform 1s';
+			scrollIndicator.style.opacity = '0.8';
+
+			// Animate scroll indicator
+			setInterval(() => {
+				scrollIndicator.style.transform = 'translate(-50%, 0)';
+				setTimeout(() => {
+					scrollIndicator.style.transform = 'translate(-50%, 24px)';
+				}, 1250);
+			}, 2500);
+		}, 5000);
+	}
+
+	// Video parallax effect
+	const video = document.getElementById('hero-video');
+	if (video) {
+		window.addEventListener(
+			'scroll',
+			() => {
+				const scrollY = window.scrollY;
+				const parallaxSpeed = 0.15;
+				video.style.transform = `scale(1.1) translateY(${scrollY * parallaxSpeed}px)`;
+			},
+			{ passive: true }
+		);
+	}
+	</script>
+
+<style>
+	#scroll-indicator {
+		transition: opacity 1s ease-out, transform 1s ease-out;
+	}
+	#hero-video {
+		transition: transform 0.5s ease-out;
+	}
+	/* Ensure hero text stays white in light theme as well */
+	html[data-theme="light"] .hero-force-white :is(h1, h2, h3, h4, h5, h6, p, span, div) {
+		color: #ffffff !important;
+	}
+</style>
+

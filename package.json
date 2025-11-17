@@ -1,14 +1,43 @@
 {
-  "name": "lunar-light",
+  "name": "GMC Tourism",
   "type": "module",
   "version": "0.0.1",
+  "description": "Lightning-fast tourism website starter built with Astro and Tailwind CSS.",
+  "license": "MIT",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=20.10.0",
+    "pnpm": ">=8.0.0"
   },
   "dependencies": {
-    "astro": "^5.15.4"
+    "@astrojs/mdx": "^4.3.10",
+    "@astrojs/sitemap": "^3.6.0",
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.15.4",
+    "gsap": "^3.13.0",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.5",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,0 +1,120 @@
+---
+// A single component to initialize and toggle site theme.
+// Usage: place <ThemeManager /> once (e.g., in Header).
+// It sets `data-theme` and toggles `html.dark` for Tailwind class mode.
+---
+
+<button
+  id="theme-toggle"
+  class="inline-flex items-center justify-center p-0 bg-transparent border-0 text-inherit focus:outline-none focus-visible:outline-none focus:ring-0"
+  aria-label="Toggle theme"
+  title="Toggle theme"
+>
+  <i id="theme-toggle-icon" class="fa-regular fa-moon text-base" aria-hidden="true"></i>
+  <span class="sr-only">Toggle theme</span>
+</button>
+
+<script>
+  (function () {
+    const html = document.documentElement;
+    const THEME_KEY = 'theme';
+    const toggleBtn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
+    const toggleIcon = document.getElementById('theme-toggle-icon') as HTMLElement | null;
+
+    function applyTheme(theme: 'light' | 'dark') {
+      // Persist and expose
+      localStorage.setItem(THEME_KEY, theme);
+      html.setAttribute('data-theme', theme);
+      // Ensure Tailwind dark: works (darkMode: 'class')
+      html.classList.toggle('dark', theme === 'dark');
+
+      // Update icon
+      if (toggleIcon) {
+        if (theme === 'light') {
+          toggleIcon.classList.remove('fa-moon', 'fa-regular');
+          toggleIcon.classList.add('fa-sun', 'fa-solid');
+        } else {
+          toggleIcon.classList.remove('fa-sun', 'fa-solid');
+          toggleIcon.classList.add('fa-moon', 'fa-regular');
+        }
+      }
+
+      // Header brand and overlay colors (if present)
+      const logo = document.getElementById('site-logo') as HTMLImageElement | null;
+      const menuOverlayElement = document.getElementById('menu-overlay');
+      const decorationContainer = document.getElementById('menu-decoration');
+      const decorationSpans = decorationContainer?.querySelectorAll('span');
+      const menuCloseBtn = document.getElementById('menu-close');
+      const menuLinks = document.querySelectorAll('#menu-items a, #menu-items button');
+
+      if (theme === 'light') {
+        if (logo) logo.src = '/logo.svg';
+        if (menuOverlayElement) {
+          menuOverlayElement.classList.remove('bg-black', 'text-white');
+          menuOverlayElement.classList.add('bg-white', 'text-black');
+          (menuOverlayElement as HTMLElement).style.boxShadow = '-10px 0 30px rgba(0,0,0,0.1)';
+        }
+        decorationSpans?.forEach((span) => {
+          (span as HTMLElement).classList.remove('text-white');
+          (span as HTMLElement).classList.add('text-black');
+        });
+        if (menuCloseBtn) {
+          menuCloseBtn.classList.remove('text-white');
+          menuCloseBtn.classList.add('text-black');
+        }
+        menuLinks.forEach((link) => {
+          (link as HTMLElement).classList.remove('text-gray-400', 'hover:text-white');
+          (link as HTMLElement).classList.add('text-gray-600', 'hover:text-black');
+        });
+      } else {
+        if (logo) logo.src = '/logo-light.svg';
+        if (menuOverlayElement) {
+          menuOverlayElement.classList.remove('bg-white', 'text-black');
+          menuOverlayElement.classList.add('bg-black', 'text-white');
+          (menuOverlayElement as HTMLElement).style.boxShadow = '-10px 0 30px rgba(0,0,0,0.5)';
+        }
+        decorationSpans?.forEach((span) => {
+          (span as HTMLElement).classList.remove('text-black');
+          (span as HTMLElement).classList.add('text-white');
+        });
+        if (menuCloseBtn) {
+          menuCloseBtn.classList.remove('text-black');
+          menuCloseBtn.classList.add('text-white');
+        }
+        menuLinks.forEach((link) => {
+          (link as HTMLElement).classList.remove('text-gray-600', 'hover:text-black');
+          (link as HTMLElement).classList.add('text-gray-400', 'hover:text-white');
+        });
+      }
+
+      // Notify listeners that theme changed
+      window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+    }
+
+    function initTheme() {
+      const saved = (localStorage.getItem(THEME_KEY) || 'dark') as 'dark' | 'light';
+      applyTheme(saved);
+    }
+
+    // Init ASAP
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTheme);
+    } else {
+      initTheme();
+    }
+
+    // Toggle
+    toggleBtn?.addEventListener('click', () => {
+      const current = (html.getAttribute('data-theme') || 'dark') as 'dark' | 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+
+    // React if other tabs change it
+    window.addEventListener('storage', (e) => {
+      if (e.key === THEME_KEY && (e.newValue === 'light' || e.newValue === 'dark')) {
+        applyTheme(e.newValue as 'light' | 'dark');
+      }
+    });
+  })();
+</script>
