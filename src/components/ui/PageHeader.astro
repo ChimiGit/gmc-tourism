@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  image?: string;
+}
+
+const { title, subtitle, image = '/backgrounds/home-background.jpg' } = Astro.props;
+---
+
+<section class="page-header relative h-[40vh] min-h-[400px] w-full overflow-hidden">
+  <!-- Background Image -->
+  <div class="absolute inset-0 h-full w-full">
+    <img src={image} alt={title} class="h-full w-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
+  </div>
+
+  <!-- Content -->
+  <div
+    class="relative z-10 flex h-full w-full flex-col items-center justify-center px-6 text-center sm:px-8 lg:px-12"
+  >
+    <h1 class="page-header-title mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+      {title}
+    </h1>
+    {
+      subtitle && (
+        <p class="page-header-subtitle max-w-2xl text-lg text-white/90 md:text-xl">{subtitle}</p>
+      )
+    }
+  </div>
+
+  <!-- Bottom gradient -->
+  <div
+    class="absolute bottom-0 left-0 right-0 z-20 h-16 bg-gradient-to-t from-black to-transparent"
+  >
+  </div>
+</section>
+
+<style>
+  .page-header {
+    --header-overlay: rgba(0, 0, 0, 0.5);
+  }
+
+  :global([data-theme='light']) .page-header {
+    --header-overlay: rgba(0, 0, 0, 0.3);
+  }
+
+  .page-header-title,
+  .page-header-subtitle {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+</style>

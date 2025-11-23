@@ -1,0 +1,453 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const galleries = await getCollection('gallery');
+  return galleries.map((gallery) => ({
+    params: { slug: gallery.slug },
+    props: { gallery },
+  }));
+}
+
+const { gallery } = Astro.props;
+const { Content } = await gallery.render();
+const { title, description, images } = gallery.data;
+---
+
+<Layout title={`${title} | Gallery`} description={description} mainClass="pt-0">
+  <!-- Hero/Header -->
+  <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
+    <img
+      src={gallery.data.coverImage}
+      alt={title}
+      class="absolute h-full w-full object-cover blur-sm"
+    />
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold text-white md:text-4xl lg:text-5xl mb-4">{title}</h1>
+      <p class="text-lg text-gray-200">{description}</p>
+      <div class="mt-6 flex items-center justify-center gap-4 text-sm text-gray-300">
+        <span><i class="fa-regular fa-images mr-2"></i>{images.length} photos</span>
+        {
+          gallery.data.date && (
+            <span>
+              <i class="fa-regular fa-calendar mr-2" />
+              {gallery.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+            </span>
+          )
+        }
+      </div>
+      <a
+        href="/gallery"
+        class="inline-block mt-8 text-sm text-white hover:text-blue-400 transition-colors"
+      >
+        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Gallery
+      </a>
+    </div>
+  </div>
+
+  <!-- MDX Content -->
+  <section class="bg-black text-white py-8 px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+    <div class="max-w-4xl mx-auto prose prose-invert">
+      <Content />
+    </div>
+  </section>
+
+  <!-- Images Grid -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-black text-white min-h-screen">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {
+          images.map((image, index) => (
+            <button
+              class="gallery-item group relative aspect-square overflow-hidden rounded-lg bg-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-index={index}
+              aria-label={`View ${image.title || 'image'}`}
+            >
+              <img
+                src={image.src}
+                alt={image.alt || image.title || ''}
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+              <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {image.title && (
+                  <p class="text-xs font-medium truncate text-white px-2">{image.title}</p>
+                )}
+              </div>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox Modal -->
+  <dialog
+    id="lightbox"
+    class="lightbox-modal fixed inset-0 z-50 h-full w-full max-w-none max-h-none bg-black/95 p-0 m-0 backdrop:bg-black/90 border-none open:flex flex-col hidden text-white"
+  >
+    <!-- Toolbar -->
+    <div
+      class="flex items-center justify-between p-4 bg-black/50 backdrop-blur-sm z-20 absolute top-0 left-0 right-0"
+    >
+      <div class="flex items-center gap-4">
+        <span id="lightbox-counter" class="text-sm font-medium text-gray-300"></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="lightbox-zoom"
+          class="p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+          title="Toggle Zoom"
+        >
+          <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </button>
+        <button
+          id="lightbox-share"
+          class="p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+          title="Share"
+        >
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+        <a
+          id="lightbox-download"
+          href="#"
+          download
+          class="p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+          title="Download"
+        >
+          <i class="fa-solid fa-download"></i>
+        </a>
+        <button
+          id="lightbox-close"
+          class="p-2 rounded-full hover:bg-white/10 transition-colors text-white ml-2"
+          title="Close"
+        >
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col md:flex-row h-full overflow-hidden pt-16">
+      <!-- Image Area -->
+      <div
+        class="relative flex-1 flex items-center justify-center h-full bg-black overflow-hidden group"
+      >
+        <!-- Navigation Buttons -->
+        <button
+          id="prev-btn"
+          class="absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-black/50 hover:bg-black/80 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <i class="fa-solid fa-chevron-left text-xl"></i>
+        </button>
+        <button
+          id="next-btn"
+          class="absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-black/50 hover:bg-black/80 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <i class="fa-solid fa-chevron-right text-xl"></i>
+        </button>
+
+        <!-- The Image -->
+        <div
+          class="w-full h-full flex items-center justify-center overflow-hidden"
+          id="image-container"
+        >
+          <img
+            id="lightbox-image"
+            src=""
+            alt=""
+            class="max-h-full max-w-full object-contain transition-transform duration-200 cursor-zoom-in"
+          />
+        </div>
+      </div>
+
+      <!-- Sidebar (Metadata) -->
+      <div
+        class="w-full md:w-80 bg-gray-900/95 backdrop-blur border-t md:border-t-0 md:border-l border-gray-800 p-6 overflow-y-auto flex-shrink-0 hidden md:block"
+        id="lightbox-sidebar"
+      >
+        <h2 id="lightbox-title" class="text-xl font-bold mb-4 text-white"></h2>
+
+        <div class="space-y-6 text-sm">
+          <div class="space-y-1">
+            <h3 class="text-gray-500 uppercase text-xs tracking-wide font-semibold">Description</h3>
+            <p id="lightbox-desc" class="text-gray-300 leading-relaxed"></p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4">
+            <div class="space-y-1">
+              <h3 class="text-gray-500 uppercase text-xs tracking-wide font-semibold">Location</h3>
+              <p id="lightbox-location" class="text-white flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-gray-400"></i>
+                <span></span>
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h3 class="text-gray-500 uppercase text-xs tracking-wide font-semibold">Source</h3>
+              <p id="lightbox-source" class="text-white flex items-center gap-2">
+                <i class="fa-solid fa-camera text-gray-400"></i>
+                <span></span>
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h3 class="text-gray-500 uppercase text-xs tracking-wide font-semibold">Rights</h3>
+              <p id="lightbox-rights" class="text-white flex items-center gap-2">
+                <i class="fa-solid fa-copyright text-gray-400"></i>
+                <span></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Sidebar Toggle (Info button equivalent) -->
+        <div class="mt-8 pt-6 border-t border-gray-800 text-xs text-gray-500">
+          Images provided by GMC Tourism
+        </div>
+      </div>
+
+      <!-- Mobile Info Overlay (Initially hidden) -->
+      <div
+        id="mobile-info-overlay"
+        class="absolute bottom-0 left-0 right-0 bg-black/90 p-6 transform translate-y-full transition-transform duration-300 md:hidden z-20 max-h-[50vh] overflow-y-auto rounded-t-2xl"
+      >
+        <!-- Copied content from sidebar via JS or just simplified view -->
+        <div class="flex justify-between items-start mb-4">
+          <h2 id="mobile-lightbox-title" class="text-lg font-bold text-white"></h2>
+          <button id="close-mobile-info" class="text-gray-400 p-1"
+            ><i class="fa-solid fa-chevron-down"></i></button
+          >
+        </div>
+        <p id="mobile-lightbox-desc" class="text-gray-300 text-sm mb-4"></p>
+        <div class="grid grid-cols-2 gap-4 text-xs text-gray-400">
+          <div>
+            <span class="block uppercase font-semibold text-gray-600">Location</span>
+            <span id="mobile-lightbox-location"></span>
+          </div>
+          <div>
+            <span class="block uppercase font-semibold text-gray-600">Source</span>
+            <span id="mobile-lightbox-source"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Info Toggle Button -->
+      <button
+        id="toggle-mobile-info"
+        class="absolute bottom-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur text-white md:hidden z-10"
+      >
+        <i class="fa-solid fa-circle-info text-xl"></i>
+      </button>
+    </div>
+  </dialog>
+</Layout>
+
+<style>
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.95);
+  }
+
+  dialog[open] {
+    display: flex !important; /* Override hidden */
+  }
+
+  .gallery-item {
+    /* touch-action: manipulation; */
+  }
+
+  :global([data-theme='light']) section {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  :global([data-theme='light']) .gallery-item {
+    background-color: #e2e8f0;
+  }
+</style>
+
+<script is:inline define:vars={{ images }}>
+  // Gallery Logic
+  const lightbox = document.getElementById('lightbox');
+  const items = document.querySelectorAll('.gallery-item');
+  const imgEl = document.getElementById('lightbox-image');
+  const titleEl = document.getElementById('lightbox-title');
+  const descEl = document.getElementById('lightbox-desc');
+  const locEl = document.querySelector('#lightbox-location span');
+  const sourceEl = document.querySelector('#lightbox-source span');
+  const rightsEl = document.querySelector('#lightbox-rights span');
+  const downloadBtn = document.getElementById('lightbox-download');
+  const counterEl = document.getElementById('lightbox-counter');
+
+  // Mobile elements
+  const mobileTitle = document.getElementById('mobile-lightbox-title');
+  const mobileDesc = document.getElementById('mobile-lightbox-desc');
+  const mobileLoc = document.getElementById('mobile-lightbox-location');
+  const mobileSource = document.getElementById('mobile-lightbox-source');
+
+  let currentIndex = 0;
+  let zoomLevel = 1;
+
+  // Open Lightbox
+  items.forEach((item) => {
+    item.addEventListener('click', () => {
+      const index = parseInt(item.dataset.index);
+      openLightbox(index);
+    });
+  });
+
+  function openLightbox(index) {
+    currentIndex = index;
+    updateLightboxContent();
+    lightbox.showModal();
+    document.body.style.overflow = 'hidden'; // Prevent scrolling background
+  }
+
+  function closeLightbox() {
+    lightbox.close();
+    document.body.style.overflow = '';
+    resetZoom();
+  }
+
+  function updateLightboxContent() {
+    const data = images[currentIndex];
+
+    // Update Image
+    imgEl.src = data.src;
+    imgEl.alt = data.alt || data.title || '';
+
+    // Update Text (Desktop)
+    titleEl.textContent = data.title || 'Untitled';
+    descEl.textContent = data.description || 'No description available.';
+    locEl.textContent = data.location || 'Unknown';
+    sourceEl.textContent = data.source || 'Unknown';
+    rightsEl.textContent = data.rights || 'Unknown';
+
+    // Update Text (Mobile)
+    mobileTitle.textContent = data.title || 'Untitled';
+    mobileDesc.textContent = data.description || 'No description available.';
+    mobileLoc.textContent = data.location || 'Unknown';
+    mobileSource.textContent = data.source || 'Unknown';
+
+    // Update Buttons
+    downloadBtn.href = data.src;
+    counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
+
+    // Reset Zoom
+    resetZoom();
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    updateLightboxContent();
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateLightboxContent();
+  }
+
+  const imgContainer = document.getElementById('image-container');
+
+  // Zoom Logic
+  function toggleZoom() {
+    if (zoomLevel === 1) {
+      zoomLevel = 2; // logical state
+      imgEl.classList.remove('max-h-full', 'max-w-full');
+      imgEl.style.height = 'auto';
+      imgEl.style.width = 'auto';
+      imgEl.style.maxHeight = 'none';
+      imgEl.style.maxWidth = 'none';
+
+      // If natural size is smaller than container, force it larger to simulate zoom
+      if (
+        imgEl.naturalWidth < imgContainer.clientWidth &&
+        imgEl.naturalHeight < imgContainer.clientHeight
+      ) {
+        imgEl.style.height = '200%';
+        imgEl.style.width = 'auto';
+      }
+
+      imgContainer.classList.remove('overflow-hidden');
+      imgContainer.classList.add('overflow-auto', 'flex-start'); // flex-start to allow scrolling from top-left
+
+      imgEl.style.cursor = 'zoom-out';
+    } else {
+      resetZoom();
+    }
+  }
+
+  function resetZoom() {
+    zoomLevel = 1;
+    imgEl.classList.add('max-h-full', 'max-w-full');
+    imgEl.style.height = '';
+    imgEl.style.width = '';
+    imgEl.style.maxHeight = '';
+    imgEl.style.maxWidth = '';
+
+    imgContainer.classList.add('overflow-hidden');
+    imgContainer.classList.remove('overflow-auto', 'flex-start');
+
+    imgEl.style.cursor = 'zoom-in';
+  }
+
+  // Event Listeners
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.getElementById('next-btn').addEventListener('click', nextImage);
+  document.getElementById('prev-btn').addEventListener('click', prevImage);
+  document.getElementById('lightbox-zoom').addEventListener('click', toggleZoom);
+  imgEl.addEventListener('click', toggleZoom); // Click image to zoom also
+
+  // Mobile Info Toggle
+  const mobileOverlay = document.getElementById('mobile-info-overlay');
+  const toggleInfoBtn = document.getElementById('toggle-mobile-info');
+  const closeInfoBtn = document.getElementById('close-mobile-info');
+
+  toggleInfoBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    mobileOverlay.classList.remove('translate-y-full');
+  });
+
+  closeInfoBtn.addEventListener('click', () => {
+    mobileOverlay.classList.add('translate-y-full');
+  });
+
+  // Close on clicking outside image (on background)
+  document.getElementById('image-container').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      closeLightbox();
+    }
+  });
+
+  // Keyboard Navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.open) return;
+
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  });
+
+  // Share functionality
+  document.getElementById('lightbox-share').addEventListener('click', async () => {
+    const data = images[currentIndex];
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: data.title || 'GMC Tourism Gallery',
+          text: data.description || 'Check out this image from GMC Tourism',
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      // Fallback
+      alert('Sharing is not supported on this browser. URL copied to clipboard.');
+      navigator.clipboard.writeText(window.location.href);
+    }
+  });
+</script>

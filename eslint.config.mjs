@@ -8,7 +8,7 @@ import prettier from 'eslint-config-prettier';
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
-    ignores: ['.astro/**', 'dist/**', 'node_modules/**', 'public/**', 'coverage/**']
+    ignores: ['.astro/**', 'dist/**', 'node_modules/**', 'public/**', 'coverage/**'],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts}'],
@@ -17,19 +17,19 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: false
-      }
+        project: false,
+      },
     },
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': tseslint,
     },
     rules: {
       ...js.configs.recommended.rules,
       ...tseslint.configs.recommendedTypeChecked?.rules,
       ...tseslint.configs.stylisticTypeChecked?.rules,
       // Avoid noisy false positives for escapes in inline script contexts
-      'no-useless-escape': 'off'
-    }
+      'no-useless-escape': 'off',
+    },
   },
   // Astro files
   ...astro.configs['flat/recommended'],
@@ -37,15 +37,14 @@ export default [
     files: ['**/*.astro'],
     rules: {
       // Allow escaped quotes in inline scripts/HTML where needed
-      'no-useless-escape': 'off'
-    }
+      'no-useless-escape': 'off',
+    },
   },
   // Prettier turns off stylistic rules that conflict with Prettier formatting
   {
     name: 'prettier',
     rules: {
-      ...prettier.rules
-    }
-  }
+      ...prettier.rules,
+    },
+  },
 ];
-

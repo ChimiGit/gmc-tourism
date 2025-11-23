@@ -1,0 +1,166 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  event: CollectionEntry<'events'> | CollectionEntry<'experiences'>;
+  variant?: 'default' | 'simple';
+}
+
+const { event, variant = 'default' } = Astro.props;
+const basePath = event.collection === 'experiences' ? '/experiences' : '/events';
+
+// Get category data from content collection
+const categories = await getCollection('event-category');
+const categoryMap = new Map(categories.map((cat) => [cat.data.id, cat]));
+const eventCategory = categoryMap.get(event.data.category);
+
+// Get category name or fallback to capitalized category ID
+function getCategoryName(): string {
+  return (
+    eventCategory?.data.name ||
+    event.data.category.charAt(0).toUpperCase() + event.data.category.slice(1)
+  );
+}
+
+// Format date range
+function formatDateRange(startDate: Date, endDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+  const start = startDate.toLocaleDateString('en-US', options);
+  const end = endDate.toLocaleDateString('en-US', options);
+  return `${start} - ${end}`;
+}
+
+function formatPublicationDate(startDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+  return startDate.toLocaleDateString('en-US', options);
+}
+---
+
+{
+  variant === 'simple' ? (
+    <article class="event-card rounded-xl overflow-hidden">
+      <a href={`${basePath}/${event.slug}`} class="block">
+        <div class="event-card-image relative h-64 overflow-hidden rounded-xl">
+          <img
+            src={event.data.image}
+            alt={event.data.title}
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+          <div class="absolute bottom-4 left-4">
+            <span class="event-card-badge bg-gray-600 text-white text-xs font-regular px-3 py-1 rounded uppercase">
+              {getCategoryName()}
+            </span>
+          </div>
+        </div>
+        <div class="pt-4">
+          <h3 class="mb-2 line-clamp-2 font-regular">{event.data.title}</h3>
+          <p class="text-xs font-regular uppercase">
+            <span class="opacity-70">{formatPublicationDate(event.data.startDate)}</span>
+          </p>
+        </div>
+      </a>
+    </article>
+  ) : (
+    <article class="event-card rounded-lg overflow-hidden shadow-lg">
+      <a href={`${basePath}/${event.slug}`} class="block">
+        <div class="relative h-48 overflow-hidden">
+          <img
+            src={event.data.image}
+            alt={event.data.title}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div class="absolute bottom-4 left-4">
+            <span class="event-card-badge bg-gray-600 text-white text-xs font-semibold px-3 py-1 rounded uppercase">
+              {getCategoryName()}
+            </span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="event-card-title text-xl font-regular mb-4 line-clamp-2">
+            {event.data.title}
+          </h3>
+          <div class="event-card-meta space-y-2 text-sm">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-location-dot event-icon" />
+              <span>{event.data.location}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-calendar-days event-icon" />
+              <span>{formatDateRange(event.data.startDate, event.data.endDate)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-tag event-icon" />
+              <span class="event-price font-regular">{event.data.price}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </article>
+  )
+}
+
+<style>
+  .event-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .event-card-title {
+    color: var(--event-card-title, #ffffff);
+  }
+
+  .event-card-meta {
+    color: var(--event-card-meta, #cbd5e1);
+  }
+
+  .event-icon {
+    color: var(--event-icon, #ffffff);
+  }
+
+  .event-price {
+    color: var(--event-price, #ffffff);
+  }
+
+  :global([data-theme='light']) .event-card {
+    background: transparent;
+    border: none;
+  }
+
+  :global([data-theme='light']) .event-card-title {
+    color: var(--event-card-title, #0f172a);
+  }
+
+  :global([data-theme='light']) .event-card-meta {
+    color: var(--event-card-meta, #475569);
+  }
+
+  :global([data-theme='light']) .event-icon {
+    color: var(--event-icon, #0f172a);
+  }
+
+  :global([data-theme='light']) .event-price {
+    color: var(--event-price, #0f172a);
+  }
+
+  .event-card-category {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .event-card-category {
+    color: #000000;
+  }
+
+  .event-card-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+
+  :global([data-theme='light']) .event-card-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+</style>

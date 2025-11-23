@@ -6,21 +6,16 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://gmctourism.com',
-	compressHTML: true,
-	integrations: [
-		mdx(),
-		sitemap({
-			customPages: ['/blog'],
-		}),
-	],
-	markdown: {
-		smartypants: true,
-		shikiConfig: {
-			theme: 'github-dark-default',
-		},
-	},
-	vite: {
-		plugins: [tailwindcss()],
-	},
+  site: 'https://gmctourism.com',
+  compressHTML: true,
+  integrations: [mdx(), sitemap()],
+  markdown: {
+    smartypants: true,
+    shikiConfig: {
+      theme: 'github-dark-default',
+    },
+  },
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

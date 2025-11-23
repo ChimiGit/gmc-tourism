@@ -6,51 +6,44 @@ import Footer from '../components/layout/Footer.astro';
 import { SITE, type StructuredData } from '../config/site';
 
 interface Props {
-	title?: string;
-	description?: string;
-	ogImage?: string;
-	canonical?: string;
-	structuredData?: StructuredData;
-	bodyClass?: string;
-	noIndex?: boolean;
-	mainClass?: string;
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+  structuredData?: StructuredData;
+  bodyClass?: string;
+  noIndex?: boolean;
+  mainClass?: string;
 }
 
 const {
-	title,
-	description,
-	ogImage,
-	canonical,
-	structuredData,
-	bodyClass = '',
-	noIndex = false,
-	mainClass = 'pt-28 sm:pt-32',
+  title,
+  description,
+  ogImage,
+  canonical,
+  structuredData,
+  bodyClass = '',
+  noIndex = false,
+  mainClass = 'pt-28 sm:pt-32',
 } = Astro.props as Props;
 ---
 
 <!doctype html>
 <html lang={SITE.language} class="bg-black">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<Seo
-			{title}
-			{description}
-			{ogImage}
-			{canonical}
-			{structuredData}
-			noIndex={noIndex}
-		/>
-	</head>
-	<body class:list={['min-h-screen bg-black text-slate-100 antialiased', bodyClass]}>
-		<Header />
-		<main class={mainClass}>
-			<slot />
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <Seo {title} {description} {ogImage} {canonical} {structuredData} noIndex={noIndex} />
+  </head>
+  <body class:list={['min-h-screen bg-black text-slate-100 antialiased', bodyClass]}>
+    <Header />
+    <main class={mainClass}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>

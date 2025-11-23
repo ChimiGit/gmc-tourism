@@ -6,7 +6,7 @@ Lightning-fast tourism starter built with Astro 5, Tailwind CSS 4, and MDX. Ever
 
 - Astro islands with zero-JS by default and HTML compression enabled
 - Tailwind 4 theme tokens, global typography, and gradient-rich hero sections
-- MDX content collections with sample blog post and reusable callout components
+- MDX content collections with reusable callout components
 - SEO-ready layout with structured data, canonical URLs, and social preview image
 - Font Awesome icons, Google Fonts, sitemap, and robots configuration baked in
 
@@ -26,14 +26,9 @@ Lightning-fast tourism starter built with Astro 5, Tailwind CSS 4, and MDX. Ever
 │   │       └── Prose.astro
 │   ├── config/site.ts
 │   ├── content/
-│   │   ├── blog/
-│   │   │   └── astro-starter.mdx
 │   │   └── config.ts
 │   ├── layouts/Layout.astro
 │   ├── pages/
-│   │   ├── blog/
-│   │   │   ├── [slug].astro
-│   │   │   └── index.astro
 │   │   └── index.astro
 │   └── styles/global.css
 ├── astro.config.mjs
@@ -50,19 +45,17 @@ pnpm dev       # http://localhost:4321
 
 ### Useful Scripts
 
-| Command        | Description                              |
-| :------------- | :--------------------------------------- |
-| `pnpm dev`     | Start the local development server       |
-| `pnpm build`   | Build production assets to `dist/`       |
-| `pnpm preview` | Preview the production build locally     |
-| `pnpm check`   | Run `astro check` for diagnostics        |
+| Command        | Description                          |
+| :------------- | :----------------------------------- |
+| `pnpm dev`     | Start the local development server   |
+| `pnpm build`   | Build production assets to `dist/`   |
+| `pnpm preview` | Preview the production build locally |
+| `pnpm check`   | Run `astro check` for diagnostics    |
 
 ## ✍️ Authoring Content
 
-- Duplicate `src/content/blog/astro-starter.mdx` for new travel stories.
 - Frontmatter is validated via `src/content/config.ts` for consistent metadata.
 - Use MDX components like `<Callout />` and `<Prose />` to enrich storytelling.
-- Blog pages are generated automatically through `src/pages/blog/[slug].astro`.
 
 ## 🌐 SEO & Performance
 
@@ -79,4 +72,4 @@ pnpm dev       # http://localhost:4321
 - Font Awesome Free icons
 - pnpm for package management
 
-Deploy the `dist/` directory to your preferred static host (Vercel, Netlify, Cloudflare Pages, etc.) once you are ready to launch. Let’s build unforgettable journeys!*** End Patch
+Deploy the `dist/` directory to your preferred static host (Vercel, Netlify, Cloudflare Pages, etc.) once you are ready to launch. Let’s build unforgettable journeys!\*\*\* End Patch

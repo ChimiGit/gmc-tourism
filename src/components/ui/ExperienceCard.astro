@@ -1,0 +1,150 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  experience: CollectionEntry<'experiences'>;
+  variant?: 'default' | 'simple';
+}
+
+const { experience, variant = 'default' } = Astro.props;
+
+// Get category data from content collection
+const categories = await getCollection('event-category');
+const categoryMap = new Map(categories.map((cat) => [cat.data.id, cat]));
+const experienceCategory = categoryMap.get(experience.data.category);
+
+// Get category name or fallback to capitalized category ID
+function getCategoryName(): string {
+  return (
+    experienceCategory?.data.name ||
+    experience.data.category.charAt(0).toUpperCase() + experience.data.category.slice(1)
+  );
+}
+
+// Format date range
+function formatDateRange(startDate: Date, endDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+  const start = startDate.toLocaleDateString('en-US', options);
+  const end = endDate.toLocaleDateString('en-US', options);
+  return `${start} - ${end}`;
+}
+
+function formatPublicationDate(startDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+  return startDate.toLocaleDateString('en-US', options);
+}
+---
+
+{
+  variant === 'simple' ? (
+    <article class="experience-card rounded-xl overflow-hidden">
+      <a href={`/experiences/${experience.slug}`} class="block">
+        <div class="experience-card-image relative h-64 overflow-hidden rounded-xl">
+          <img
+            src={experience.data.image}
+            alt={experience.data.title}
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class=" pt-4">
+          <h3 class="mb-2 line-clamp-2 font-bold leading-tight">{experience.data.title}</h3>
+          <p class="text-xs font-medium uppercase tracking-wide">
+            <span class="experience-card-category">{getCategoryName()}</span>{' '}
+            <span class="opacity-70">{formatPublicationDate(experience.data.startDate)}</span>
+          </p>
+        </div>
+      </a>
+    </article>
+  ) : (
+    <article class="experience-card rounded-lg overflow-hidden shadow-lg">
+      <a href={`/experiences/${experience.slug}`} class="block">
+        <div class="relative h-48 overflow-hidden">
+          <img
+            src={experience.data.image}
+            alt={experience.data.title}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div class="absolute bottom-4 left-4">
+            <span class="experience-card-badge bg-gray-600 text-white text-xs font-semibold px-3 py-1 rounded uppercase">
+              {getCategoryName()}
+            </span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="experience-card-title text-xl font-bold mb-4 line-clamp-2">
+            {experience.data.title}
+          </h3>
+          <div class="experience-card-meta space-y-2 text-sm">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-location-dot experience-icon" />
+              <span>{experience.data.location}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-calendar-days experience-icon" />
+              <span>{formatDateRange(experience.data.startDate, experience.data.endDate)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-tag experience-icon" />
+              <span class="experience-price font-semibold">{experience.data.price}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </article>
+  )
+}
+
+<style>
+  .experience-card {
+    background: transparent;
+    border: none;
+  }
+
+  .experience-card-title {
+    color: var(--experience-card-title, #ffffff);
+  }
+
+  .experience-card-meta {
+    color: var(--experience-card-meta, #cbd5e1);
+  }
+
+  .experience-icon {
+    color: var(--experience-icon, #ffffff);
+  }
+
+  .experience-price {
+    color: var(--experience-price, #ffffff);
+  }
+
+  :global([data-theme='light']) .experience-card {
+    background: transparent;
+    border: none;
+  }
+
+  :global([data-theme='light']) .experience-card-title {
+    color: var(--experience-card-title, #0f172a);
+  }
+
+  :global([data-theme='light']) .experience-card-meta {
+    color: var(--experience-card-meta, #475569);
+  }
+
+  :global([data-theme='light']) .experience-icon {
+    color: var(--experience-icon, #0f172a);
+  }
+
+  :global([data-theme='light']) .experience-price {
+    color: var(--experience-price, #0f172a);
+  }
+
+  .experience-card-category {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .experience-card-category {
+    color: #000000;
+  }
+</style>

@@ -1,0 +1,314 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const experiences = await getCollection('experiences');
+  return experiences.map((experience) => ({
+    params: { slug: experience.slug },
+    props: { experience },
+  }));
+}
+
+interface Props {
+  experience: {
+    id: string;
+    slug: string;
+    body: string;
+    data: {
+      title: string;
+      description: string;
+      image: string;
+      category: string;
+      location: string;
+      startDate: Date;
+      endDate: Date;
+      price: string;
+    };
+  };
+}
+
+const { experience } = Astro.props;
+
+// Get category data from content collection
+const categories = await getCollection('event-category');
+const categoryMap = new Map(categories.map((cat) => [cat.data.id, cat]));
+const experienceCategory = categoryMap.get(experience.data.category);
+
+// Get category name or fallback to capitalized category ID
+function getCategoryName(): string {
+  return (
+    experienceCategory?.data.name ||
+    experience.data.category.charAt(0).toUpperCase() + experience.data.category.slice(1)
+  );
+}
+
+// Format date range
+function formatDateRange(startDate: Date, endDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  const start = startDate.toLocaleDateString('en-US', options);
+  const end = endDate.toLocaleDateString('en-US', options);
+  return `${start} - ${end}`;
+}
+---
+
+<Layout title={experience.data.title} description={experience.data.description} mainClass="pt-0">
+  <article class="events-article">
+    <!-- Hero Image -->
+    <div
+      class="events-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
+    >
+      <img
+        src={experience.data.image}
+        alt={experience.data.title}
+        class="absolute h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
+      <!-- Title -->
+      <h1
+        class="events-hero-title relative z-10 text-center text-4xl font-bold text-white md:text-5xl lg:text-6xl px-4"
+      >
+        {experience.data.title}
+      </h1>
+    </div>
+
+    <!-- Content -->
+    <div class="events-article-content container mx-auto max-w-4xl px-4 py-16 md:px-8">
+      <!-- Back Link -->
+      <a
+        href="/experiences"
+        class="events-back-link mb-8 inline-flex items-center gap-2 text-sm font-medium transition-colors"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        Back to Experiences
+      </a>
+
+      <!-- Category Badge -->
+      <div class="mb-4">
+        <span
+          class="experience-article-badge bg-gray-600 inline-block rounded px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
+        >
+          {getCategoryName()}
+        </span>
+      </div>
+
+      <!-- Meta -->
+      <div class="events-article-meta mb-8 flex flex-wrap items-center gap-4 text-sm">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-calendar-days"></i>
+          <time datetime={experience.data.startDate.toISOString()}>
+            {formatDateRange(experience.data.startDate, experience.data.endDate)}
+          </time>
+        </div>
+        <span>•</span>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>{experience.data.location}</span>
+        </div>
+        <span>•</span>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-tag"></i>
+          <span class="font-semibold">{experience.data.price}</span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="events-divider mb-8" />
+
+      <!-- Description -->
+      <div class="events-article-description mb-8 text-lg">
+        <p>{experience.data.description}</p>
+      </div>
+
+      <!-- Content -->
+      <div class="events-article-body prose prose-lg">
+        <slot />
+      </div>
+
+      <!-- Share Section -->
+      <div class="mt-12 border-t pt-8">
+        <p class="events-share-title mb-4 text-sm font-semibold uppercase tracking-wide">
+          Share this experience
+        </p>
+        <div class="flex gap-4">
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(experience.data.title)}&url=${encodeURIComponent(Astro.url.href)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+            aria-label="Share on Twitter"
+          >
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+            aria-label="Share on Facebook"
+          >
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+            aria-label="Share on LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .events-hero-title {
+    color: #ffffff !important;
+    line-height: 1.2;
+  }
+
+  :global([data-theme='light']) .events-hero-title {
+    color: #ffffff !important;
+  }
+
+  .events-article-content {
+    --article-bg: #000000;
+    --article-text: #ffffff;
+    --article-text-secondary: #9ca3af;
+    --article-border: rgba(255, 255, 255, 0.1);
+    --article-link: #3b82f6;
+    --article-link-hover: #60a5fa;
+    background: var(--article-bg);
+  }
+
+  :global([data-theme='light']) .events-article-content {
+    --article-bg: #ffffff;
+    --article-text: #111827;
+    --article-text-secondary: #6b7280;
+    --article-border: rgba(0, 0, 0, 0.1);
+    --article-link: #2563eb;
+    --article-link-hover: #1d4ed8;
+  }
+
+  .events-back-link {
+    color: var(--article-link);
+  }
+
+  .events-back-link:hover {
+    color: var(--article-link-hover);
+  }
+
+  .events-article-title {
+    color: var(--article-text);
+  }
+
+  .events-article-meta {
+    color: var(--article-text-secondary);
+  }
+
+  .events-article-description {
+    color: var(--article-text);
+  }
+
+  .events-divider {
+    border-color: var(--article-border);
+  }
+
+  .events-article-body {
+    color: var(--article-text);
+  }
+
+  .events-share-title {
+    color: var(--article-text-secondary);
+  }
+
+  .events-share-btn {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--article-link);
+  }
+
+  .events-share-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--article-link-hover);
+  }
+
+  /* Prose styles for content */
+  .events-article-body :global(p) {
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+    color: var(--article-text);
+  }
+
+  .events-article-body :global(h2) {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    color: var(--article-text);
+  }
+
+  .events-article-body :global(h3) {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--article-text);
+  }
+
+  .events-article-body :global(ul),
+  .events-article-body :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  .events-article-body :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+    color: var(--article-text);
+  }
+
+  .events-article-body :global(a) {
+    color: var(--article-link);
+    text-decoration: underline;
+  }
+
+  .events-article-body :global(a:hover) {
+    color: var(--article-link-hover);
+  }
+
+  .events-article-body :global(strong) {
+    font-weight: 700;
+  }
+
+  .events-article-body :global(em) {
+    font-style: italic;
+  }
+
+  .events-article-body :global(blockquote) {
+    border-left: 4px solid var(--article-border);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--article-text-secondary);
+  }
+
+  .experience-article-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+
+  :global([data-theme='light']) .experience-article-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+</style>

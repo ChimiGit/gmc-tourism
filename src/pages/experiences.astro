@@ -1,0 +1,135 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allExperiences = await getCollection('experiences');
+const sortedExperiences = allExperiences.sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+);
+
+// Select specific featured experiences for the signature grid
+// If there are enough, pick 5 specific ones, otherwise just take the first 5
+const signatureExperiences = sortedExperiences.filter((e) => e.data.featured).slice(0, 5);
+if (signatureExperiences.length < 5) {
+  const remaining = sortedExperiences
+    .filter((e) => !e.data.featured)
+    .slice(0, 5 - signatureExperiences.length);
+  signatureExperiences.push(...remaining);
+}
+---
+
+<Layout
+  title="Signature GMC experiences"
+  description="Discover unique experiences and adventures in Gelephu Mindfulness City"
+  mainClass="pt-0"
+>
+  <div class="min-h-screen">
+    <!-- Hero Section -->
+    <div
+      class="events-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
+    >
+      <img
+        src="/backgrounds/home-background.jpg"
+        alt="Experiences"
+        class="absolute h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 z-10 bg-gradient-to-b from-black/50 via-black/30 to-black/60">
+      </div>
+      <!-- Title -->
+      <div class="relative z-10 text-center px-4">
+        <h1 class="events-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+          Experiences
+        </h1>
+        <p class="events-hero-subtitle mt-4 text-lg text-white md:text-xl">
+          Discover unique experiences and adventures
+        </p>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="events-content-section container mx-auto px-4 py-16 text-center md:px-8">
+      <!-- Signature Experiences Section -->
+      <div class="mb-24">
+        <div class="signature-grid grid grid-cols-1 md:grid-cols-4 gap-4 h-auto md:h-[600px]">
+          {
+            signatureExperiences.map((experience, index) => (
+              <a
+                href={`/experiences/${experience.slug}`}
+                class={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1 md:row-span-1'}`}
+              >
+                <img
+                  src={experience.data.image}
+                  alt={experience.data.title}
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                <div class="absolute bottom-0 left-0 p-6 text-left w-full">
+                  <h3
+                    class={`font-regular text-white mb-1 ${index === 0 ? 'text-2xl md:text-3xl' : 'text-lg md:text-xl'}`}
+                  >
+                    {experience.data.title}
+                  </h3>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .events-hero-title {
+    color: #ffffff !important;
+    line-height: 1.2;
+  }
+
+  .events-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .events-hero-title,
+  :global([data-theme='light']) .events-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .events-content-section {
+    --events-content-bg: #000000;
+    --events-heading: #ffffff;
+    --events-body: #9ca3af;
+    --events-card-bg: transparent;
+    --events-card-border: transparent;
+    background: var(--events-content-bg);
+  }
+
+  :global([data-theme='light']) .events-content-section {
+    --events-content-bg: #ffffff;
+    --events-heading: #111827;
+    --events-body: #6b7280;
+    --events-card-bg: transparent;
+    --events-card-border: transparent;
+  }
+
+  .events-section-title {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .events-section-title {
+    color: #ffffff !important;
+  }
+
+  .events-empty-text {
+    color: var(--events-body);
+  }
+
+  /* Signature grid item titles - keep white in both themes */
+  .signature-grid h3 {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .signature-grid h3 {
+    color: #ffffff !important;
+  }
+</style>
