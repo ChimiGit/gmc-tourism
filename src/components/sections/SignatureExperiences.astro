@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content';
+
+const allExperiences = await getCollection('experiences');
+const sortedExperiences = allExperiences.sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+);
+
+// Select specific featured experiences for the signature grid
+// If there are enough, pick 5, otherwise fill with non-featured
+const limit = 5;
+const experiences = sortedExperiences.filter((e) => e.data.featured).slice(0, limit);
+if (experiences.length < limit) {
+  const remaining = sortedExperiences
+    .filter((e) => !e.data.featured)
+    .slice(0, limit - experiences.length);
+  experiences.push(...remaining);
+}
+---
+
+<!-- Signature Experiences Section -->
+<section class="events-section py-16 px-4 sm:px-6 lg:px-8" data-animate-section="signature">
+  <div class="events-container max-w-7xl mx-auto">
+    <h2 class="events-section-title mb-12 text-center text-3xl font-bold" data-animate-title>
+      Signature GMC experiences
+    </h2>
+
+    <div
+      class="signature-grid grid grid-cols-1 md:grid-cols-4 gap-4 h-auto md:h-[600px]"
+      data-animate-grid
+    >
+      {
+        experiences.map((experience, index) => (
+          <a
+            href={`/experiences/${experience.slug}`}
+            class={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1 md:row-span-1'}`}
+            data-animate-item
+          >
+            <img
+              src={experience.data.image}
+              alt={experience.data.title}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+            <div class="absolute bottom-0 left-0 p-6 text-left w-full">
+              <h3
+                class={`font-regular text-white mb-1 ${index === 0 ? 'text-2xl md:text-3xl' : 'text-lg md:text-xl'}`}
+              >
+                {experience.data.title}
+              </h3>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .events-section {
+    --events-bg: #050505;
+    --events-heading: #f8fafc;
+    --events-body: #cbd5f5;
+    --events-border: rgba(255, 255, 255, 0.12);
+    --events-icon: #ffffff;
+    --events-button-bg: rgba(255, 255, 255, 0.05);
+    background: var(--events-bg);
+    color: var(--events-body);
+  }
+
+  :global([data-theme='light']) .events-section {
+    --events-bg: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), transparent 60%) #f7f8fc;
+    --events-heading: #0f172a;
+    --events-body: #475569;
+    --events-border: rgba(15, 23, 42, 0.15);
+    --events-icon: #0f172a;
+    --events-button-bg: rgba(15, 23, 42, 0.05);
+  }
+
+  .events-section-title {
+    color: var(--events-heading);
+  }
+
+  /* Signature grid item titles - keep white in both themes */
+  .signature-grid h3 {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .signature-grid h3 {
+    color: #ffffff !important;
+  }
+
+  /* GSAP animation initial states */
+  [data-animate-title] {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  [data-animate-item] {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  // Register ScrollTrigger plugin
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize animations when DOM is ready
+  function initAnimations() {
+    // Animate Signature Experiences Section
+    const signatureSection = document.querySelector('[data-animate-section="signature"]');
+    if (signatureSection) {
+      const signatureTitle = signatureSection.querySelector('[data-animate-title]');
+      const signatureItems = signatureSection.querySelectorAll('[data-animate-item]');
+
+      // Animate title
+      if (signatureTitle) {
+        gsap.to(signatureTitle, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: signatureSection,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+
+      // Animate grid items with stagger
+      if (signatureItems.length > 0) {
+        gsap.to(signatureItems, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: signatureSection.querySelector('[data-animate-grid]'),
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+    }
+  }
+
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnimations);
+  } else {
+    initAnimations();
+  }
+</script>
+
