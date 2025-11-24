@@ -2,9 +2,19 @@
 // Fullscreen hero with video background and overlays
 ---
 
-<section class="relative h-screen w-full overflow-hidden bg-black hero-force-white">
-  <!-- Video Background -->
+<section class="relative h-screen w-full overflow-hidden hero-force-white snap-start snap-always">
+  <!-- Background Image -->
   <div class="absolute inset-0 h-full w-full overflow-hidden">
+    <img
+      src="/backgrounds/home-background.jpg"
+      alt="GMC Tourism Background"
+      class="absolute h-full w-full scale-110 object-cover object-center"
+    />
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+  </div>
+
+  <!-- Video Background (Commented out - using image instead) -->
+  <!-- <div class="absolute inset-0 h-full w-full overflow-hidden">
     <video
       id="hero-video"
       autoplay
@@ -17,7 +27,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
-  </div>
+  </div> -->
 
   <!-- Overlay for fade effect -->
   <div id="overlay" class="pointer-events-none absolute inset-0 z-30 bg-black opacity-100"></div>
@@ -109,19 +119,19 @@
     }, 5000);
   }
 
-  // Video parallax effect
-  const video = document.getElementById('hero-video');
-  if (video) {
-    window.addEventListener(
-      'scroll',
-      () => {
-        const scrollY = window.scrollY;
-        const parallaxSpeed = 0.15;
-        video.style.transform = `scale(1.1) translateY(${scrollY * parallaxSpeed}px)`;
-      },
-      { passive: true }
-    );
-  }
+  // Video parallax effect (Commented out - using image instead)
+  // const video = document.getElementById('hero-video');
+  // if (video) {
+  //   window.addEventListener(
+  //     'scroll',
+  //     () => {
+  //       const scrollY = window.scrollY;
+  //       const parallaxSpeed = 0.15;
+  //       video.style.transform = `scale(1.1) translateY(${scrollY * parallaxSpeed}px)`;
+  //     },
+  //     { passive: true }
+  //   );
+  // }
 </script>
 
 <style>
@@ -130,9 +140,10 @@
       opacity 1s ease-out,
       transform 1s ease-out;
   }
-  #hero-video {
+  /* Video styles (Commented out - using image instead) */
+  /* #hero-video {
     transition: transform 0.5s ease-out;
-  }
+  } */
   /* Ensure hero text stays white in light theme as well */
   html[data-theme='light'] .hero-force-white :is(h1, h2, h3, h4, h5, h6, p, span, div) {
     color: #ffffff !important;

@@ -61,9 +61,22 @@ const gallery = defineCollection({
   }),
 });
 
+const about = defineCollection({
+  type: 'content',
+  schema: z.object({
+    cards: z.array(
+      z.object({
+        title: z.string().optional(),
+        content: z.string(),
+      })
+    ),
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
   experiences,
   gallery,
+  about,
 };

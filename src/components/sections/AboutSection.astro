@@ -1,0 +1,398 @@
+---
+import { getCollection } from 'astro:content';
+
+const aboutContent = await getCollection('about');
+const about = aboutContent[0]; // Get the first (and likely only) about entry
+---
+
+<section
+  class="about-section relative h-screen w-full overflow-hidden snap-start snap-always"
+  style="background-color: #090909;"
+>
+  <!-- Background Video -->
+  <div class="absolute inset-0 h-full w-full overflow-hidden">
+    <video
+      id="about-video"
+      class="absolute h-full w-full scale-110 object-cover object-center"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/backgrounds/home-background.jpg"
+      disablepictureinpicture
+      webkit-playsinline
+      controls={false}
+    >
+      <source src="/assets/aboutus.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <!-- Dark Overlay similar to Hero section -->
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+  </div>
+
+  <!-- Content Container -->
+  <div
+    class="relative z-20 flex h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12"
+  >
+    <div class="container mx-auto max-w-6xl px-4">
+      <!-- Carousel Container -->
+      <div class="about-carousel relative mx-auto max-w-5xl">
+        <!-- Title -->
+        <h2 class="about-title mb-8 text-5xl md:text-6xl font-bold text-white text-center">
+          About GMC Tourism
+        </h2>
+
+        <!-- Single Card with Dynamic Content -->
+        <div
+          class="carousel-card bg-white/60 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-sm text-black text-center"
+        >
+          <div
+            class="carousel-content flex items-center justify-center min-h-[200px]"
+            data-carousel-content
+          >
+            <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl" data-carousel-text>
+              {about?.data.cards[0]?.content}
+            </p>
+          </div>
+        </div>
+
+        <!-- Hidden data for other cards -->
+        <div class="hidden" data-cards-data>
+          {
+            about?.data.cards.map((card) => (
+              <div data-card-title={card.title} data-card-content={card.content} />
+            ))
+          }
+        </div>
+
+        <!-- Navigation Buttons -->
+        {
+          about?.data.cards && about.data.cards.length > 1 && (
+            <div class="flex items-center justify-center gap-4 mt-8">
+              <div class="carousel-indicators flex gap-2" data-carousel-indicators>
+                {about.data.cards.map((_, index) => (
+                  <button
+                    class="carousel-indicator w-2 h-2 rounded-full bg-white/60 hover:bg-white/80 transition-colors"
+                    data-carousel-indicator={index}
+                    aria-label={`Go to card ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    position: relative;
+  }
+
+  #about-video {
+    pointer-events: none;
+    transition: transform 0.5s ease-out;
+  }
+
+  .about-carousel {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  .about-title {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .about-title {
+    color: #ffffff !important;
+  }
+
+  .carousel-content {
+    /* Flex centering handled in HTML classes */
+  }
+
+  .carousel-card {
+    color: #000000 !important;
+  }
+
+  .carousel-card p,
+  .carousel-card [data-carousel-text] {
+    color: #000000 !important;
+  }
+
+  :global([data-theme='dark']) .carousel-card {
+    color: #000000 !important;
+  }
+
+  :global([data-theme='dark']) .carousel-card p,
+  :global([data-theme='dark']) .carousel-card [data-carousel-text] {
+    color: #000000 !important;
+  }
+
+  :global([data-theme='light']) .carousel-card {
+    color: #000000 !important;
+  }
+
+  :global([data-theme='light']) .carousel-card p,
+  :global([data-theme='light']) .carousel-card [data-carousel-text] {
+    color: #000000 !important;
+  }
+
+  #about-video::-webkit-media-controls {
+    display: none !important;
+  }
+
+  #about-video::-webkit-media-controls-enclosure {
+    display: none !important;
+  }
+
+  #about-video::-webkit-media-controls-panel {
+    display: none !important;
+  }
+
+  #about-video::-webkit-media-controls-play-button {
+    display: none !important;
+  }
+
+  #about-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+  }
+
+  .carousel-indicator.active {
+    background-color: rgba(255, 255, 255, 1) !important;
+    width: 2rem;
+  }
+</style>
+
+<script>
+  // Ensure background video plays
+  function initializeAboutVideo() {
+    const aboutVideo = document.getElementById('about-video') as HTMLVideoElement | null;
+    if (!aboutVideo) {
+      console.error('About video element not found');
+      return;
+    }
+
+    // Force mute
+    aboutVideo.muted = true;
+    aboutVideo.defaultMuted = true;
+
+    // Set volume to 0 as backup
+    aboutVideo.volume = 0;
+
+    // Try to play the video
+    const playVideo = () => {
+      const playPromise = aboutVideo.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('About video is playing');
+          })
+          .catch((error) => {
+            console.log('Video autoplay prevented, will retry on user interaction:', error);
+
+            // Try to play on any user interaction
+            const playOnInteraction = () => {
+              aboutVideo.play().catch((e) => console.log('Retry failed:', e));
+              document.removeEventListener('click', playOnInteraction);
+              document.removeEventListener('touchstart', playOnInteraction);
+              document.removeEventListener('scroll', playOnInteraction);
+            };
+
+            document.addEventListener('click', playOnInteraction, { once: true });
+            document.addEventListener('touchstart', playOnInteraction, { once: true });
+            document.addEventListener('scroll', playOnInteraction, { once: true });
+          });
+      }
+    };
+
+    // Wait for video to be loaded enough
+    if (aboutVideo.readyState >= 3) {
+      // Video is already loaded
+      playVideo();
+    } else {
+      aboutVideo.addEventListener('loadeddata', playVideo, { once: true });
+      aboutVideo.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    // Ensure video continues playing when it's in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && aboutVideo.paused) {
+            aboutVideo.play().catch((e) => console.log('IntersectionObserver play failed:', e));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(aboutVideo);
+
+    // Ensure video doesn't pause
+    aboutVideo.addEventListener('pause', () => {
+      if (aboutVideo.readyState >= 3) {
+        aboutVideo.play().catch((e) => console.log('Resume after pause failed:', e));
+      }
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAboutVideo);
+  } else {
+    initializeAboutVideo();
+  }
+
+  // Carousel functionality - Text switching only
+  const cardsData = document.querySelector('[data-cards-data]');
+  const textElement = document.querySelector('[data-carousel-text]') as HTMLElement | null;
+  const indicators = document.querySelectorAll('[data-carousel-indicator]');
+
+  if (cardsData && textElement) {
+    let currentIndex = 0;
+    const allCards = Array.from(cardsData.children);
+
+    function updateCarousel() {
+      if (currentIndex < 0 || currentIndex >= allCards.length) return;
+
+      const currentCard = allCards[currentIndex] as HTMLElement;
+      const content = currentCard.dataset.cardContent || '';
+
+      // Animate text change with GSAP - slide from right to left
+      import('gsap').then(({ gsap }) => {
+        const tl = gsap.timeline();
+
+        // Fade out and slide to left
+        tl.to(textElement, {
+          opacity: 0,
+          x: -50,
+          duration: 0.3,
+          ease: 'power2.in',
+        });
+
+        // Update content
+        tl.call(() => {
+          if (textElement) {
+            textElement.textContent = content;
+          }
+        });
+
+        // Reset position to right and fade in from right
+        tl.set(textElement, {
+          x: 50,
+        });
+
+        // Fade in and slide to center
+        tl.to(textElement, {
+          opacity: 1,
+          x: 0,
+          duration: 0.4,
+          ease: 'power2.out',
+        });
+      });
+
+      // Update indicators
+      indicators.forEach((indicator, index) => {
+        if (index === currentIndex) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      });
+    }
+
+    function goToCard(index: number) {
+      currentIndex = index;
+      updateCarousel();
+    }
+
+    // Event listeners
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => goToCard(index));
+    });
+
+    // Initialize - set first indicator as active
+    if (indicators.length > 0) {
+      indicators[0].classList.add('active');
+    }
+  }
+
+  // Scroll-triggered animation for About section with bouncy slide-up effect
+  function initAboutSectionAnimation() {
+    const aboutSection = document.querySelector('.about-section');
+    const aboutCarousel = document.querySelector('.about-carousel');
+
+    if (!aboutSection || !aboutCarousel) return;
+
+    // Import GSAP and ScrollTrigger for animation
+    import('gsap').then(({ gsap }) => {
+      import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Bouncy slide-up animation with "thak thak" effect
+        // Triggers after scrolling 20px from the top of the page
+        gsap.fromTo(
+          aboutCarousel,
+          {
+            opacity: 0,
+            y: 150,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.4,
+            ease: 'elastic.out(1, 0.6)',
+            scrollTrigger: {
+              trigger: 'body',
+              start: '20px top', // Triggers after scrolling 20px
+              toggleActions: 'play none none none',
+              once: true, // Only play once
+            },
+            onComplete: () => {
+              // Add a subtle bounce effect for "thak thak"
+              gsap.to(aboutCarousel, {
+                y: -10,
+                duration: 0.15,
+                ease: 'power2.out',
+                yoyo: true,
+                repeat: 1,
+              });
+            },
+          }
+        );
+      });
+    });
+
+    // Video parallax effect similar to Hero section
+    const aboutVideo = document.getElementById('about-video') as HTMLVideoElement | null;
+    if (aboutVideo) {
+      window.addEventListener(
+        'scroll',
+        () => {
+          const aboutSectionRect = aboutSection.getBoundingClientRect();
+          // Only apply parallax when section is in view
+          if (aboutSectionRect.top < window.innerHeight && aboutSectionRect.bottom > 0) {
+            const scrollY = window.scrollY;
+            const sectionTop = (aboutSection as HTMLElement).offsetTop;
+            const parallaxSpeed = 0.15;
+            const relativeScroll = scrollY - sectionTop;
+            aboutVideo.style.transform = `scale(1.1) translateY(${relativeScroll * parallaxSpeed}px)`;
+          }
+        },
+        { passive: true }
+      );
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAboutSectionAnimation);
+  } else {
+    initAboutSectionAnimation();
+  }
+</script>

@@ -14,10 +14,29 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+    overflow-y: scroll;
   }
 
   body {
-    @apply min-h-screen bg-black font-sans text-base text-slate-100 antialiased;
+    @apply min-h-screen font-sans text-base text-slate-100 antialiased;
+    background-color: #090909;
+  }
+
+  html.dark-bg {
+    background-color: #090909;
+  }
+
+  /* Dark mode background */
+  :global([data-theme='dark']) body,
+  :global([data-theme='dark']) html,
+  :global([data-theme='dark']) html.dark-bg {
+    background-color: #090909 !important;
+  }
+
+  /* Light mode background */
+  :global([data-theme='light']) html.dark-bg {
+    background-color: #f5f5f5 !important;
   }
 
   a {
@@ -73,8 +92,12 @@
 
 /* Global light theme overrides */
 [data-theme='light'] body {
-  background-color: #ffffff !important;
+  background-color: #f5f5f5 !important;
   color: #0f172a !important; /* slate-900 */
+}
+
+[data-theme='light'] html {
+  background-color: #f5f5f5 !important;
 }
 [data-theme='light'] p,
 [data-theme='light'] .markdown {

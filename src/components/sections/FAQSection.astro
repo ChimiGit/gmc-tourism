@@ -4,51 +4,44 @@ interface FAQ {
   id: string;
   question: string;
   answer: string;
-  category: 'international' | 'bhutan' | 'investment';
 }
 
 const faqs: FAQ[] = [
   {
-    id: 'investment-visa',
-    category: 'investment',
-    question: 'What is Gelephu Mindfulness City (GMC) and what is its founding vision?',
+    id: 'gmc-what',
+    question: 'What is the Gelephu Mindfulness City (GMC)?',
     answer:
-      'Submit a letter of intent to the Bhutan Development Authority, then our investment concierge will prepare your due diligence, site visits, and business registration within four weeks.',
+      'Gelephu Mindfulness City (GMC) is a Special Administrative Region (SAR) in the Kingdom of Bhutan, designed as a premier destination for mindful, sustainable, and transformative travel.',
   },
   {
-    id: 'bhutan-entry',
-    category: 'bhutan',
-    question: 'Where is GMC located, how was it established, and what is its governance structure?',
+    id: 'gmc-vision',
+    question: 'What is the vision behind GMC?',
     answer:
-      'Independent travel is allowed inside the Special Administrative Region. Outside the SAR you must be accompanied by a licensed Bhutanese guide as per national regulations.',
+      'GMC is designed as a place where spirituality, wellness, and eco-conscious living come together, offering unique opportunities for retreats, eco-tourism, and cultural exchange.',
   },
   {
-    id: 'international-connectivity',
-    category: 'international',
-    question: 'Who leads GMC and what are its management principles?',
+    id: 'sar-context',
+    question: 'What is a Special Administrative Region (SAR) in this context?',
     answer:
-      'Phase one opens direct routes from Delhi, Bangkok, Singapore, and Dubai. Additional regional connections are being negotiated with Dhaka and Kathmandu.',
+      'A Special Administrative Region (SAR) is a designated area with its own governance structure and legal framework, operating within the Kingdom of Bhutan while maintaining certain autonomous characteristics.',
   },
   {
-    id: 'climate',
-    category: 'bhutan',
-    question: 'What climate should I expect throughout the year?',
+    id: 'investment-approach',
+    question: "What is GMC's approach to investments?",
     answer:
-      'Gelephu enjoys a subtropical climate—mild winters (18‑22°C) and warm summers with refreshing monsoon rains. Most outdoor events run October through April.',
+      "GMC offers a dynamic investment framework designed to attract sustainable and mindful businesses that align with the region's values of wellness, spirituality, and eco-consciousness.",
   },
   {
-    id: 'property',
-    category: 'investment',
-    question: `What is the 'Diamond Strategy' and how are GMC and Bhutan expected to evolve?`,
+    id: 'legal-framework',
+    question: 'What legal framework does GMC offer to investors?',
     answer:
-      'Yes. Long-term leases of up to 50 years are available within approved innovation districts, renewable once after a performance review.',
+      'GMC provides a comprehensive legal framework that includes long-term leases, business registration support, and investment concierge services to facilitate smooth entry for investors.',
   },
   {
-    id: 'visitors',
-    category: 'international',
-    question: 'What makes GMC different from Bhutan and other jurisdictions?',
+    id: 'gmc-location',
+    question: 'Where is GMC located?',
     answer:
-      'Unlike the rest of Bhutan, the SAR uses a dynamic sustainability fee that adjusts to seasonal demand, ensuring mindful growth without strict volume caps.',
+      'GMC is located in Gelephu, Bhutan, with a new international airport under development and improved road and rail connections to welcome travelers from around the world.',
   },
 ];
 ---
@@ -56,21 +49,17 @@ const faqs: FAQ[] = [
 <section id="faq-section" class="faq-section relative overflow-hidden px-4 py-16 md:px-8 lg:px-16">
   <div class="faq-background" aria-hidden="true"></div>
 
-  <div class="relative z-10 mx-auto w-full max-w-4xl space-y-10">
-    <div class="faq-header">
-      <div class="space-y-4 text-center md:text-left">
-        <h2 class="faq-heading text-3xl font-semibold md:text-4xl text-center">
-          Frequently Asked Questions
-        </h2>
-      </div>
-    </div>
+  <div class="relative z-10 mx-auto w-full max-w-4xl space-y-8">
+    <!-- Centered Heading -->
+    <h2 class="faq-heading text-4xl md:text-5xl font-bold text-center mb-12">
+      Frequently Asked Questions
+    </h2>
 
-    <Divider className="relative left-1/2 w-screen -translate-x-1/2 my-4" />
-
-    <div class="faq-list divide-y divide-white/10 border-b border-white/10" data-faq-list>
+    <!-- FAQ List -->
+    <div class="faq-list space-y-0" data-faq-list>
       {
         faqs.map((faq, index) => (
-          <article class="faq-item" data-faq-item data-category={faq.category}>
+          <article class="faq-item border-b border-gray-300" data-faq-item>
             <button
               type="button"
               class="faq-toggle flex w-full items-center justify-between gap-4 py-6 text-left"
@@ -79,22 +68,17 @@ const faqs: FAQ[] = [
               aria-expanded="false"
               aria-controls={`faq-panel-${faq.id}`}
             >
-              <div class="flex flex-1 items-center gap-4">
-                <span class="faq-number text-sm font-medium uppercase tracking-[0.3em]">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  <h3
-                    id={`faq-question-${faq.id}`}
-                    class="faq-heading text-lg font-semibold md:text-2xl"
-                  >
-                    {faq.question}
-                  </h3>
-                </div>
+              <div class="flex flex-1 items-center gap-3">
+                <span class="faq-number text-base font-normal text-gray-400">/{index + 1}</span>
+                <h3
+                  id={`faq-question-${faq.id}`}
+                  class="faq-question text-lg md:text-xl font-bold text-black"
+                >
+                  {faq.question}
+                </h3>
               </div>
-              <span class="faq-icon relative flex h-8 w-8 items-center justify-center rounded-full">
-                <span class="faq-line vertical" />
-                <span class="faq-line horizontal" />
+              <span class="faq-icon relative flex h-6 w-6 items-center justify-center">
+                <i class="fa-solid fa-plus text-black text-lg" />
               </span>
             </button>
             <div
@@ -105,33 +89,21 @@ const faqs: FAQ[] = [
               aria-labelledby={`faq-question-${faq.id}`}
               hidden
             >
-              <p class="faq-body pb-6 pl-12 pr-2">{faq.answer}</p>
+              <p class="faq-body pb-6 pl-12 pr-2 text-gray-700">{faq.answer}</p>
             </div>
           </article>
         ))
       }
     </div>
 
-    <div class="flex justify-center md:justify-start">
+    <!-- View All Link -->
+    <div class="flex justify-center mt-8">
       <a
         href="/faq"
-        class="faq-link group inline-flex items-center gap-2 text-base font-medium transition"
+        class="faq-link group inline-flex items-center gap-2 text-base font-medium text-black transition"
       >
-        View all FAQs
-        <svg
-          class="h-5 w-5 transition group-hover:translate-x-1"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M5 12h14m-6-6 6 6-6 6"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"></path>
-        </svg>
+        View All
+        <i class="fa-solid fa-arrow-right text-black"></i>
       </a>
     </div>
   </div>
@@ -258,105 +230,60 @@ const faqs: FAQ[] = [
 
 <style>
   .faq-section {
-    --faq-bg: #050505;
-    --faq-heading: #f8fafc;
-    --faq-body: #cbd5f5;
-    --faq-number: #94a3b8;
-    --faq-tag: #94a3b8;
-    --faq-border: rgba(255, 255, 255, 0.12);
-    --faq-icon: #ffffff;
-    --faq-button-bg: rgba(255, 255, 255, 0.05);
-    background: var(--faq-bg);
-    color: var(--faq-body);
+    background: #f5f5f5;
+    color: #000000;
   }
 
-  :global([data-theme='light'] .faq-section) {
-    --faq-bg: radial-gradient(circle at top, rgba(59, 130, 246, 0.2), transparent 60%) #f7f8fc;
-    --faq-heading: #0f172a;
-    --faq-body: #475569;
-    --faq-number: #94a3b8;
-    --faq-tag: #94a3b8;
-    --faq-border: rgba(15, 23, 42, 0.15);
-    --faq-icon: #0f172a;
-    --faq-button-bg: rgba(15, 23, 42, 0.05);
+  .faq-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
   }
 
-  :global([data-theme='light'] .faq-background::after) {
-    opacity: 0.55;
+  .faq-background::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background-image: url('/Bridge 3.png');
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
   }
 
-  .faq-header {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .faq-header {
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-    }
+  :global([data-theme='dark']) .faq-background::after {
+    background-image: url('/Bridge light.png');
   }
 
   .faq-heading {
-    color: var(--faq-heading);
+    color: #000000;
+    font-weight: 700;
   }
 
-  .faq-body {
-    color: var(--faq-body);
-  }
-
-  .faq-tag {
-    color: var(--faq-tag);
-    text-transform: uppercase;
+  .faq-question {
+    color: #000000;
+    font-weight: 700;
   }
 
   .faq-number {
-    color: var(--faq-number);
+    color: #9ca3af;
+    font-weight: 400;
   }
 
-  .faq-select {
-    color: var(--faq-heading);
-    background-color: var(--faq-button-bg);
-    border: 1px solid var(--faq-border);
+  .faq-body {
+    color: #374151;
   }
 
-  .faq-filter {
-    color: var(--faq-body);
-    align-self: flex-start;
+  .faq-icon i {
+    transition: transform 0.3s ease;
   }
 
-  .faq-select option {
-    color: #0f172a;
-  }
-
-  .faq-list {
-    border-color: var(--faq-border);
-  }
-
-  .faq-icon {
-    border-color: var(--faq-border);
-  }
-
-  .faq-icon .faq-line {
-    position: absolute;
-    display: block;
-    width: 14px;
-    height: 2px;
-    background: var(--faq-icon);
-    transition:
-      transform 0.3s ease,
-      opacity 0.3s ease;
-  }
-
-  .faq-icon .faq-line.vertical {
-    transform: rotate(90deg);
-  }
-
-  .faq-item.is-active .faq-icon .faq-line.vertical {
-    transform: rotate(0deg);
-    opacity: 0;
+  .faq-item.is-active .faq-icon i {
+    transform: rotate(45deg);
   }
 
   .faq-panel {
@@ -373,14 +300,78 @@ const faqs: FAQ[] = [
   }
 
   .faq-link {
-    color: var(--faq-heading);
+    color: #000000;
   }
 
   .faq-link:hover {
-    color: var(--faq-body);
+    opacity: 0.7;
+  }
+
+  .faq-link i {
+    transition: transform 0.2s ease;
+  }
+
+  .faq-link:hover i {
+    transform: translateX(4px);
   }
 
   .faq-item.is-hidden {
     display: none;
+  }
+
+  /* Light theme styling */
+  :global([data-theme='light']) .faq-section {
+    background: #f5f5f5;
+  }
+
+  :global([data-theme='light']) .faq-heading,
+  :global([data-theme='light']) .faq-question {
+    color: #000000;
+  }
+
+  :global([data-theme='light']) .faq-number {
+    color: #9ca3af;
+  }
+
+  :global([data-theme='light']) .faq-body {
+    color: #000000;
+  }
+
+  :global([data-theme='light']) .faq-link {
+    color: #000000;
+  }
+
+  :global([data-theme='light']) .faq-icon i {
+    color: #000000;
+  }
+
+  /* Dark theme styling */
+  :global([data-theme='dark']) .faq-section {
+    background: #090909;
+  }
+
+  :global([data-theme='dark']) .faq-heading,
+  :global([data-theme='dark']) .faq-question {
+    color: #ffffff;
+  }
+
+  :global([data-theme='dark']) .faq-number {
+    color: #9ca3af;
+  }
+
+  :global([data-theme='dark']) .faq-body {
+    color: #d1d5db;
+  }
+
+  :global([data-theme='dark']) .faq-link {
+    color: #ffffff;
+  }
+
+  :global([data-theme='dark']) .faq-icon i {
+    color: #ffffff;
+  }
+
+  :global([data-theme='dark']) .faq-item {
+    border-color: rgba(255, 255, 255, 0.1);
   }
 </style>

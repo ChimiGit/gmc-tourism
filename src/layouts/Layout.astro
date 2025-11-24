@@ -29,7 +29,7 @@ const {
 ---
 
 <!doctype html>
-<html lang={SITE.language} class="bg-black">
+<html lang={SITE.language} class="dark-bg">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,7 +39,7 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Seo {title} {description} {ogImage} {canonical} {structuredData} noIndex={noIndex} />
   </head>
-  <body class:list={['min-h-screen bg-black text-slate-100 antialiased', bodyClass]}>
+  <body class:list={['min-h-screen text-slate-100 antialiased', bodyClass]}>
     <Header />
     <main class={mainClass}>
       <slot />
