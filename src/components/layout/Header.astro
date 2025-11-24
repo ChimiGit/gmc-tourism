@@ -1,5 +1,10 @@
 ---
 import ThemeManager from '../ui/ThemeManager.astro';
+import { getImageUrl } from '../../utils/images';
+
+// Get dynamic logo URLs
+const logoImage = getImageUrl('/logo.svg');
+const logoLightImage = getImageUrl('/logo-light.svg');
 ---
 
 <header id="site-header" class="fixed top-0 left-0 z-50 w-full">
@@ -8,11 +13,11 @@ import ThemeManager from '../ui/ThemeManager.astro';
     id="navbar"
     class="flex w-full items-center justify-between px-4 py-2 transition-all duration-300 md:px-12"
   >
-    <div id="logo-container" class="relative z-10">
+    <div id="logo-container" class="relative z-10" data-logo-dark={logoImage} data-logo-light={logoLightImage}>
       <a href="/" class="relative block h-10 w-10 md:h-12 md:w-12">
         <img
           id="site-logo"
-          src="/logo-light.svg"
+          src={logoLightImage}
           alt="GMC Tourism Logo"
           class="h-full w-full object-contain transition-all duration-300"
         />

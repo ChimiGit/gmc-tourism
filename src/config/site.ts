@@ -1,3 +1,5 @@
+import { getImageUrl } from '../utils/images';
+
 export const SITE = {
   name: 'GMC Tourism',
   title: 'GMC Tourism · Explore Bhutan with Confidence',
@@ -5,7 +7,7 @@ export const SITE = {
     'Lightning-fast tourism starter kit showcasing destinations, itineraries, and travel stories with Astro, Tailwind CSS, and MDX.',
   url: 'https://gmctourism.com',
   language: 'en',
-  ogImage: '/assets/logo.svg',
+  ogImage: getImageUrl('/assets/logo.svg'),
   themeColor: '#0f172a',
   author: {
     name: 'GMC Tourism',
@@ -26,6 +28,8 @@ export const siteStructuredData: StructuredData = {
   name: SITE.name,
   description: SITE.description,
   url: SITE.url,
-  logo: `${SITE.url}/assets/logo.svg`,
+  logo: getImageUrl('/assets/logo.svg').startsWith('http')
+    ? getImageUrl('/assets/logo.svg')
+    : `${SITE.url}${getImageUrl('/assets/logo.svg')}`,
   sameAs: [SITE.social.twitter, SITE.social.facebook, SITE.social.instagram].filter(Boolean),
 };

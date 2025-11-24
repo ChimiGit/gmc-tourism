@@ -48,7 +48,11 @@
       const menuLinks = document.querySelectorAll('#menu-items a, #menu-items button');
 
       if (theme === 'light') {
-        if (logo) logo.src = '/logo.svg';
+        if (logo) {
+          const container = logo.closest('[data-logo-dark]');
+          const darkUrl = container?.getAttribute('data-logo-dark');
+          logo.src = darkUrl || '/logo.svg';
+        }
         if (menuOverlayElement) {
           menuOverlayElement.classList.remove('bg-black', 'text-white');
           menuOverlayElement.classList.add('bg-white', 'text-black');
@@ -67,7 +71,11 @@
           (link as HTMLElement).classList.add('text-gray-600', 'hover:text-black');
         });
       } else {
-        if (logo) logo.src = '/logo-light.svg';
+        if (logo) {
+          const container = logo.closest('[data-logo-light]');
+          const lightUrl = container?.getAttribute('data-logo-light');
+          logo.src = lightUrl || '/logo-light.svg';
+        }
         if (menuOverlayElement) {
           menuOverlayElement.classList.remove('bg-white', 'text-black');
           menuOverlayElement.classList.add('bg-black', 'text-white');

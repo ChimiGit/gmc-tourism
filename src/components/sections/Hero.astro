@@ -1,12 +1,13 @@
 ---
 // Fullscreen hero with video background and overlays
+import { getImageUrl, getAssetUrl } from '../../utils/images';
 ---
 
 <section class="relative h-screen w-full overflow-hidden hero-force-white snap-start snap-always">
   <!-- Background Image -->
   <div class="absolute inset-0 h-full w-full overflow-hidden">
     <img
-      src="/backgrounds/home-background.jpg"
+      src={getImageUrl('/backgrounds/home-background.jpg')}
       alt="GMC Tourism Background"
       class="absolute h-full w-full scale-110 object-cover object-center"
     />
@@ -23,7 +24,7 @@
       playsinline
       class="absolute h-full w-full scale-110 object-cover object-center"
     >
-      <source src="/assets/hero.mp4" type="video/mp4" />
+      <source src={getAssetUrl('/assets/hero.mp4')} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
     <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>

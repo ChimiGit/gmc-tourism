@@ -1,5 +1,10 @@
 ---
 import Divider from '../ui/Divider.astro';
+import { getImageUrl } from '../../utils/images';
+
+// Get dynamic image URLs
+const bridgeImage = getImageUrl('/Bridge 3.png');
+const bridgeLightImage = getImageUrl('/Bridge light.png');
 interface FAQ {
   id: string;
   question: string;
@@ -46,7 +51,11 @@ const faqs: FAQ[] = [
 ];
 ---
 
-<section id="faq-section" class="faq-section relative overflow-hidden px-4 py-16 md:px-8 lg:px-16">
+<section
+  id="faq-section"
+  class="faq-section relative overflow-hidden px-4 py-16 md:px-8 lg:px-16"
+  style={`--bridge-image: url('${bridgeImage}'); --bridge-light-image: url('${bridgeLightImage}');`}
+>
   <div class="faq-background" aria-hidden="true"></div>
 
   <div class="relative z-10 mx-auto w-full max-w-4xl space-y-8">
@@ -246,7 +255,7 @@ const faqs: FAQ[] = [
     left: 0;
     right: 0;
     height: 60%;
-    background-image: url('/Bridge 3.png');
+    background-image: var(--bridge-image);
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: contain;
@@ -255,7 +264,7 @@ const faqs: FAQ[] = [
   }
 
   :global([data-theme='dark']) .faq-background::after {
-    background-image: url('/Bridge light.png');
+    background-image: var(--bridge-light-image);
   }
 
   .faq-heading {

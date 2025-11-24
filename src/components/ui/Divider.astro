@@ -1,4 +1,6 @@
 ---
+import { getImageUrl } from '../../utils/images';
+
 interface DividerProps {
   className?: string;
   width?: string | number;
@@ -9,6 +11,10 @@ const { className = '', width = '50%', height = '30px' } = Astro.props as Divide
 
 const widthValue = typeof width === 'number' ? `${width}px` : width;
 const heightValue = typeof height === 'number' ? `${height}px` : height;
+
+// Get dynamic image URLs
+const dividerImage = getImageUrl('/divider.svg');
+const dividerLightImage = getImageUrl('/divider-light.svg');
 ---
 
 <div
@@ -22,9 +28,11 @@ const heightValue = typeof height === 'number' ? `${height}px` : height;
       position: 'relative',
       overflow: 'hidden',
     }}
+    data-divider-dark={dividerImage}
+    data-divider-light={dividerLightImage}
   >
     <img
-      src="/divider-light.svg"
+      src={dividerLightImage}
       alt=""
       class="h-full w-full object-contain"
       aria-hidden="true"
@@ -41,8 +49,17 @@ const heightValue = typeof height === 'number' ? `${height}px` : height;
 
       function updateDivider(img) {
         const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-        // Light mode: divider.svg, Dark mode: divider-light.svg
-        img.src = theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+        const container = img.closest('[data-divider-dark]');
+        if (container) {
+          const darkUrl = container.getAttribute('data-divider-dark');
+          const lightUrl = container.getAttribute('data-divider-light');
+          // Light mode: divider.svg, Dark mode: divider-light.svg
+          img.src =
+            theme === 'light' ? darkUrl || '/divider.svg' : lightUrl || '/divider-light.svg';
+        } else {
+          // Fallback to original behavior
+          img.src = theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+        }
       }
 
       // Update all divider images
@@ -53,7 +70,17 @@ const heightValue = typeof height === 'number' ? `${height}px` : height;
       // Listen for theme change events from ThemeManager
       window.addEventListener('themechange', (e) => {
         dividerImages.forEach((img) => {
-          img.src = e.detail.theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+          const container = img.closest('[data-divider-dark]');
+          if (container) {
+            const darkUrl = container.getAttribute('data-divider-dark');
+            const lightUrl = container.getAttribute('data-divider-light');
+            img.src =
+              e.detail.theme === 'light'
+                ? darkUrl || '/divider.svg'
+                : lightUrl || '/divider-light.svg';
+          } else {
+            img.src = e.detail.theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+          }
         });
       });
 

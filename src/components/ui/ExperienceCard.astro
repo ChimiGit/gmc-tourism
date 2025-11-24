@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { getImageUrl } from '../../utils/images';
 
 interface Props {
   experience: CollectionEntry<'experiences'>;
@@ -42,7 +43,7 @@ function formatPublicationDate(startDate: Date): string {
       <a href={`/experiences/${experience.slug}`} class="block">
         <div class="experience-card-image relative h-64 overflow-hidden rounded-xl">
           <img
-            src={experience.data.image}
+            src={getImageUrl(experience.data.image)}
             alt={experience.data.title}
             class="h-full w-full object-cover"
             loading="lazy"
@@ -62,7 +63,7 @@ function formatPublicationDate(startDate: Date): string {
       <a href={`/experiences/${experience.slug}`} class="block">
         <div class="relative h-48 overflow-hidden">
           <img
-            src={experience.data.image}
+            src={getImageUrl(experience.data.image)}
             alt={experience.data.title}
             class="w-full h-full object-cover"
             loading="lazy"

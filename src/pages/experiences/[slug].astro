@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { getImageUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
   const experiences = await getCollection('experiences');
@@ -63,7 +64,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
       class="events-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
     >
       <img
-        src={experience.data.image}
+        src={getImageUrl(experience.data.image)}
         alt={experience.data.title}
         class="absolute h-full w-full object-cover"
       />

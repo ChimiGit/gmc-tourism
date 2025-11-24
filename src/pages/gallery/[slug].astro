@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { getImageUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
   const galleries = await getCollection('gallery');
@@ -11,13 +12,19 @@ export async function getStaticPaths() {
 }
 
 const { gallery } = Astro.props;
-const { title, description, images } = gallery.data;
+const { title, description, images: rawImages } = gallery.data;
+
+// Process images with dynamic URLs
+const images = rawImages.map((image: { src: string; alt?: string; title?: string }) => ({
+  ...image,
+  src: getImageUrl(image.src),
+}));
 ---
 
 <Layout title={`${title} | Gallery`} description={description} mainClass="pt-0">
   <!-- Hero/Header -->
   <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
-    <img src={gallery.data.coverImage} alt={title} class="absolute h-full w-full object-cover" />
+    <img src={getImageUrl(gallery.data.coverImage)} alt={title} class="absolute h-full w-full object-cover" />
     <div class="absolute inset-0 bg-black/60"></div>
     <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
       <h1 class="gallery-page-title text-3xl font-bold text-white md:text-4xl lg:text-5xl mb-4">
@@ -56,7 +63,7 @@ const { title, description, images } = gallery.data;
               aria-label={`View ${image.title || 'image'}`}
             >
               <img
-                src={image.src}
+                src={getImageUrl(image.src)}
                 alt={image.alt || image.title || ''}
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                 loading="lazy"
