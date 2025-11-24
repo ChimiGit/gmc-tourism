@@ -1,0 +1,177 @@
+---
+import AnimatedLogo from '../ui/AnimatedLogo.astro';
+
+// Animation configuration constants
+const ANIMATION_CONFIG = {
+  SVG: {
+    INITIAL: {
+      scale: 0.8,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+    },
+    EXIT: {
+      opacity: 0,
+      scale: 0.9,
+      duration: 0.8,
+    },
+  },
+  TEXT: {
+    ENTER: {
+      y: 150,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.3,
+    },
+    EXIT: {
+      y: -150,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.3,
+    },
+  },
+  CONTAINER: {
+    EXIT: {
+      height: 0,
+      duration: 0.8,
+      opacity: 0,
+      ease: 'expo.inOut',
+    },
+  },
+  PAUSE_DURATION: 0.8,
+};
+
+const LOADER_TEXT = 'Gelephu Mindfulness City';
+const words = LOADER_TEXT.split(' ');
+---
+
+<div
+  class="loader-container flexCenter absolute top-0 left-0 z-[999999] h-full w-full flex-col bg-black"
+  data-loader-container
+>
+  <div data-svg-container style="visibility: hidden">
+    <AnimatedLogo />
+  </div>
+
+  <div
+    data-text-container
+    class="mt-10 flex items-center justify-center overflow-hidden"
+    style="visibility: hidden"
+  >
+    {words.map((word, idx) => (
+      <span
+        key={idx}
+        class="text1 mr-2 text-2xl font-medium text-white md:text-3xl"
+      >
+        {word}
+      </span>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  function initLoader() {
+    const container = document.querySelector('[data-loader-container]') as HTMLDivElement | null;
+    const textContainer = document.querySelector('[data-text-container]') as HTMLDivElement | null;
+    const svgContainer = document.querySelector('[data-svg-container]') as HTMLDivElement | null;
+
+    if (!container || !textContainer || !svgContainer) return;
+
+    // Check if the user has visited before in this session
+    const hasVisited = sessionStorage.getItem('hasVisited');
+
+    if (!hasVisited) {
+      // First visit: Force scroll to top and lock scrolling
+      window.scrollTo(0, 0);
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Initialize SVG visibility
+    gsap.set(svgContainer, { visibility: 'visible' });
+
+    // Create animation sequence
+    const timeline = gsap
+      .timeline()
+      // 1. Animate SVG entrance
+      .from(svgContainer, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+      })
+
+      // 2. Make text visible and animate entrance
+      .add(() => {
+        gsap.set(textContainer, { visibility: 'visible' });
+      })
+      .from('.text1', {
+        y: 150,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.3,
+      }, '-=0.5')
+
+      // 3. Pause for visual effect
+      .to({}, { duration: 0.8 })
+
+      // 4. Animate text exit
+      .to('.text1', {
+        y: -150,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.3,
+      })
+
+      // 5. Fade out SVG
+      .to(svgContainer, {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.8,
+      }, '-=0.5')
+
+      // 6. Collapse container
+      .to(container, {
+        height: 0,
+        duration: 0.8,
+        opacity: 0,
+        ease: 'expo.inOut',
+        onComplete: () => {
+          // Set flag in sessionStorage to mark visit
+          sessionStorage.setItem('hasVisited', 'true');
+          // Re-enable scrolling (only needed for first visit)
+          document.body.style.overflow = 'auto';
+        },
+      });
+
+    // Cleanup function to ensure scrolling is re-enabled
+    const cleanup = () => {
+      document.body.style.overflow = 'auto';
+    };
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', cleanup);
+
+    return () => {
+      timeline.kill();
+      window.removeEventListener('beforeunload', cleanup);
+    };
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLoader);
+  } else {
+    initLoader();
+  }
+</script>
+
+<style>
+  .flexCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+

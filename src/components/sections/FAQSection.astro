@@ -62,21 +62,19 @@ const faqs: FAQ[] = [
           <article class="faq-item border-b border-gray-300" data-faq-item>
             <button
               type="button"
-              class="faq-toggle flex w-full items-center justify-between gap-4 py-6 text-left"
+              class="faq-toggle flex w-full items-center py-6 text-left"
               data-faq-toggle
               data-target={`faq-panel-${faq.id}`}
               aria-expanded="false"
               aria-controls={`faq-panel-${faq.id}`}
             >
-              <div class="flex flex-1 items-center gap-3">
-                <span class="faq-number text-base font-normal text-gray-400">/{index + 1}</span>
-                <h3
-                  id={`faq-question-${faq.id}`}
-                  class="faq-question text-lg md:text-xl font-bold text-black"
-                >
-                  {faq.question}
-                </h3>
-              </div>
+              <span class="faq-number text-base font-normal text-gray-400">/{index + 1}</span>
+              <h3
+                id={`faq-question-${faq.id}`}
+                class="faq-question text-lg md:text-xl font-bold text-black flex-1"
+              >
+                {faq.question}
+              </h3>
               <span class="faq-icon relative flex h-6 w-6 items-center justify-center">
                 <i class="fa-solid fa-plus text-black text-lg" />
               </span>
@@ -103,7 +101,7 @@ const faqs: FAQ[] = [
         class="faq-link group inline-flex items-center gap-2 text-base font-medium text-black transition"
       >
         View All
-        <i class="fa-solid fa-arrow-right text-black"></i>
+        <i class="fa-solid fa-arrow-right faq-link-icon"></i>
       </a>
     </div>
   </div>
@@ -264,6 +262,10 @@ const faqs: FAQ[] = [
     font-weight: 700;
   }
 
+  .faq-toggle {
+    gap: 2rem; /* Equal spacing between number, title, and icon */
+  }
+
   .faq-question {
     color: #000000;
     font-weight: 700;
@@ -365,6 +367,14 @@ const faqs: FAQ[] = [
 
   :global([data-theme='dark']) .faq-link {
     color: #ffffff;
+  }
+
+  .faq-link-icon {
+    color: #000000;
+  }
+
+  :global([data-theme='dark']) .faq-link-icon {
+    color: #ffffff !important;
   }
 
   :global([data-theme='dark']) .faq-icon i {

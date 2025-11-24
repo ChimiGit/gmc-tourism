@@ -5,6 +5,7 @@ import FAQSection from '../components/sections/FAQSection.astro';
 import SignatureExperiences from '../components/sections/SignatureExperiences.astro';
 import LatestEvents from '../components/sections/LatestEvents.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
+import Loader from '../components/sections/Loader.astro';
 ---
 
 <Layout
@@ -12,6 +13,7 @@ import AboutSection from '../components/sections/AboutSection.astro';
   description="Discover Bhutan through curated journeys, seamless planning, and immersive stories."
   mainClass="pt-0"
 >
+  <Loader />
   <Hero />
   <AboutSection />
   <SignatureExperiences />
