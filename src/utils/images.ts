@@ -22,9 +22,9 @@ export function getImageBaseUrl(): string {
 
 /**
  * Get a dynamic URL for internal links
- * Combines base URL with the path
+ * Combines base URL with the path, always including the base path
  * @param path - The internal path (e.g., '/gallery' or '/events')
- * @returns Full URL or relative path
+ * @returns Full URL or path with base path
  */
 export function getLinkUrl(path: string): string {
   if (!path) return '';
@@ -34,16 +34,27 @@ export function getLinkUrl(path: string): string {
     return path;
   }
 
-  const baseUrl = getBaseUrl();
+  // Get base path (always available from Astro config)
+  const basePath = import.meta.env.PUBLIC_BASE_PATH || import.meta.env.BASE || '/gmc-tourism';
+  const siteUrl = import.meta.env.PUBLIC_SITE_URL || '';
 
-  // If no base URL is set, return the path as-is (for local development)
-  if (!baseUrl) {
-    return path;
+  // Normalize base path
+  let normalizedBasePath = basePath;
+  if (!normalizedBasePath.startsWith('/')) {
+    normalizedBasePath = `/${normalizedBasePath}`;
+  }
+  if (normalizedBasePath.endsWith('/') && normalizedBasePath.length > 1) {
+    normalizedBasePath = normalizedBasePath.slice(0, -1);
   }
 
   // Ensure path starts with /
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
-  // Combine base URL with path
-  return `${baseUrl}${normalizedPath}`;
+  // If site URL is set, return full URL, otherwise return path with base path
+  if (siteUrl) {
+    return `${siteUrl}${normalizedBasePath}${normalizedPath}`;
+  }
+
+  // For local development, return path with base path
+  return `${normalizedBasePath}${normalizedPath}`;
 }

@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
-import { getImageBaseUrl } from '../../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 interface Props {
   event: CollectionEntry<'events'> | CollectionEntry<'experiences'>;
@@ -41,7 +41,7 @@ function formatPublicationDate(startDate: Date): string {
 {
   variant === 'simple' ? (
     <article class="event-card rounded-xl overflow-hidden">
-      <a href={`${basePath}/${event.slug}`} class="block">
+      <a href={getLinkUrl(`${basePath}/${event.slug}`)} class="block">
         <div class="event-card-image relative h-64 overflow-hidden rounded-xl">
           <img
             src={`${getImageBaseUrl()}${event.data.image}`}
@@ -67,7 +67,7 @@ function formatPublicationDate(startDate: Date): string {
     </article>
   ) : (
     <article class="event-card rounded-lg overflow-hidden shadow-lg">
-      <a href={`${basePath}/${event.slug}`} class="block">
+      <a href={getLinkUrl(`${basePath}/${event.slug}`)} class="block">
         <div class="relative h-48 overflow-hidden">
           <img
             src={`${getImageBaseUrl()}${event.data.image}`}
