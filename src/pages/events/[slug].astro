@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import EventCard from '../../components/ui/EventCard.astro';
 import { getCollection } from 'astro:content';
-import { getImageUrl } from '../../utils/images';
+import { getImageBaseUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
   const events = await getCollection('events');
@@ -81,7 +81,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
       class="events-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
     >
       <img
-        src={getImageUrl(event.data.image)}
+        src={`${getImageBaseUrl()}${event.data.image}`}
         alt={event.data.title}
         class="absolute h-full w-full object-cover"
       />
@@ -148,7 +148,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
       <!-- Main Event Image -->
       <div class="events-content-image mb-12 overflow-hidden rounded-lg">
         <img
-          src={getImageUrl(event.data.image)}
+          src={`${getImageBaseUrl()}${event.data.image}`}
           alt={event.data.title}
           class="h-full w-full object-cover"
           loading="lazy"

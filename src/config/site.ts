@@ -1,4 +1,4 @@
-import { getImageUrl } from '../utils/images';
+import { getImageBaseUrl } from '../utils/images';
 
 export const SITE = {
   name: 'GMC Tourism',
@@ -7,7 +7,7 @@ export const SITE = {
     'Lightning-fast tourism starter kit showcasing destinations, itineraries, and travel stories with Astro, Tailwind CSS, and MDX.',
   url: 'https://gmctourism.com',
   language: 'en',
-  ogImage: getImageUrl('/assets/logo.svg'),
+  ogImage: `${getImageBaseUrl()}/assets/logo.svg`,
   themeColor: '#0f172a',
   author: {
     name: 'GMC Tourism',
@@ -28,8 +28,8 @@ export const siteStructuredData: StructuredData = {
   name: SITE.name,
   description: SITE.description,
   url: SITE.url,
-  logo: getImageUrl('/assets/logo.svg').startsWith('http')
-    ? getImageUrl('/assets/logo.svg')
-    : `${SITE.url}${getImageUrl('/assets/logo.svg')}`,
+  logo: `${getImageBaseUrl()}/assets/logo.svg`.startsWith('http')
+    ? `${getImageBaseUrl()}/assets/logo.svg`
+    : `${SITE.url}${getImageBaseUrl()}/assets/logo.svg`,
   sameAs: [SITE.social.twitter, SITE.social.facebook, SITE.social.instagram].filter(Boolean),
 };

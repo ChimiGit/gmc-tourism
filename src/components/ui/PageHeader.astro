@@ -1,5 +1,5 @@
 ---
-import { getImageUrl } from '../../utils/images';
+import { getImageBaseUrl } from '../../utils/images';
 
 interface Props {
   title: string;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { title, subtitle, image = '/backgrounds/home-background.jpg' } = Astro.props;
-const imageUrl = getImageUrl(image);
+const imageUrl = `${getImageBaseUrl()}${image}`;
 ---
 
 <section class="page-header relative h-[40vh] min-h-[400px] w-full overflow-hidden">

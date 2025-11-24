@@ -1,10 +1,10 @@
 ---
 import ThemeManager from '../ui/ThemeManager.astro';
-import { getImageUrl } from '../../utils/images';
+import { getImageBaseUrl } from '../../utils/images';
 
 // Get dynamic logo URLs
-const logoImage = getImageUrl('/logo.svg');
-const logoLightImage = getImageUrl('/logo-light.svg');
+const logoImage = `${getImageBaseUrl()}/logo.svg`;
+const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 ---
 
 <header id="site-header" class="fixed top-0 left-0 z-50 w-full">

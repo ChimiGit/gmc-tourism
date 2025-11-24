@@ -1,5 +1,5 @@
 ---
-import { getImageUrl } from '../../utils/images';
+import { getImageBaseUrl } from '../../utils/images';
 
 interface DividerProps {
   className?: string;
@@ -13,8 +13,8 @@ const widthValue = typeof width === 'number' ? `${width}px` : width;
 const heightValue = typeof height === 'number' ? `${height}px` : height;
 
 // Get dynamic image URLs
-const dividerImage = getImageUrl('/divider.svg');
-const dividerLightImage = getImageUrl('/divider-light.svg');
+const dividerImage = `${getImageBaseUrl()}/divider.svg`;
+const dividerLightImage = `${getImageBaseUrl()}/divider-light.svg`;
 ---
 
 <div

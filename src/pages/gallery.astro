@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getImageUrl } from '../utils/images';
+import { getImageBaseUrl } from '../utils/images';
 
 const galleries = await getCollection('gallery');
 const sortedGalleries = galleries.sort((a, b) => {
@@ -19,7 +19,7 @@ const sortedGalleries = galleries.sort((a, b) => {
   <!-- Hero Section -->
   <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
     <img
-      src={getImageUrl('/backgrounds/home-background.jpg')}
+      src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
       alt="Gallery"
       class="absolute h-full w-full object-cover"
     />
@@ -47,7 +47,7 @@ const sortedGalleries = galleries.sort((a, b) => {
               class="group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1"
             >
               <img
-                src={getImageUrl(gallery.data.coverImage)}
+                src={`${getImageBaseUrl()}${gallery.data.coverImage}`}
                 alt={gallery.data.title}
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
               />

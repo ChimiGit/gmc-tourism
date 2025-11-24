@@ -1,10 +1,10 @@
 ---
 import Divider from '../ui/Divider.astro';
-import { getImageUrl } from '../../utils/images';
+import { getImageBaseUrl } from '../../utils/images';
 
 // Get dynamic image URLs
-const bridgeImage = getImageUrl('/Bridge 3.png');
-const bridgeLightImage = getImageUrl('/Bridge light.png');
+const bridgeImage = `${getImageBaseUrl()}/Bridge 3.png`;
+const bridgeLightImage = `${getImageBaseUrl()}/Bridge light.png`;
 interface FAQ {
   id: string;
   question: string;
