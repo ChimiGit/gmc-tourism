@@ -6,7 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://gmctourism.com',
+  output: 'static',
+  site: 'https://chimigit.github.io',
+  base: '/gmc-tourism',
   compressHTML: true,
   integrations: [mdx(), sitemap()],
   markdown: {
