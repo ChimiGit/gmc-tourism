@@ -1,0 +1,225 @@
+---
+import { getCollection } from 'astro:content';
+import Divider from '../ui/Divider.astro';
+
+// Get all galleries and sort by date (most recent first)
+const allGalleries = await getCollection('gallery');
+const sortedGalleries = allGalleries.sort((a, b) => {
+  const dateA = a.data.date || new Date(0);
+  const dateB = b.data.date || new Date(0);
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Get only the 3 most recent galleries
+const recentGalleries = sortedGalleries.slice(0, 3);
+---
+
+<!-- Gallery Section -->
+<section class="gallery-section py-16 px-4 sm:px-6 lg:px-8" data-animate-section="gallery">
+  <div class="gallery-container max-w-7xl mx-auto">
+    <h2
+      class="gallery-section-title mb-4 text-center text-4xl md:text-5xl font-bold"
+      data-animate-title
+    >
+      Gallery
+    </h2>
+    <div data-animate-divider>
+      <Divider className="mb-12" />
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animate-grid>
+      {
+        recentGalleries.map((gallery) => (
+          <a
+            href={`/gallery/${gallery.slug}`}
+            class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-[4/3] transition-transform hover:-translate-y-1"
+            data-animate-item
+          >
+            <img
+              src={gallery.data.coverImage}
+              alt={gallery.data.title}
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
+            <div class="absolute bottom-0 left-0 p-6 w-full">
+              <h2 class="gallery-card-title text-xl font-bold text-white mb-2">
+                {gallery.data.title}
+              </h2>
+              <p class="gallery-card-text text-sm text-white flex items-center gap-2">
+                <i class="fa-regular fa-images" />
+                {gallery.data.images.length} file(s)
+              </p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <!-- View All Link -->
+    <div class="flex justify-center mt-12">
+      <a
+        href="/gallery"
+        class="view-all-link group inline-flex items-center gap-2 text-base font-medium transition"
+      >
+        Gallery
+        <i class="fa-solid fa-arrow-right view-all-link-icon"></i>
+      </a>
+    </div>
+
+    {
+      recentGalleries.length === 0 && (
+        <div class="text-center py-20">
+          <p class="text-gray-400 text-lg">No galleries found.</p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .gallery-section {
+    --gallery-bg: #090909;
+    --gallery-heading: #f8fafc;
+    --gallery-text: #cbd5f5;
+    background: var(--gallery-bg);
+    color: var(--gallery-text);
+  }
+
+  :global([data-theme='light']) .gallery-section {
+    --gallery-bg: #f5f5f5;
+    --gallery-heading: #0f172a;
+    --gallery-text: #475569;
+  }
+
+  .gallery-section-title {
+    color: var(--gallery-heading);
+  }
+
+  .gallery-item {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  :global([data-theme='light']) .gallery-item {
+    background-color: rgba(15, 23, 42, 0.05);
+  }
+
+  /* Gallery card text - keep white in both themes */
+  .gallery-card-title,
+  .gallery-card-text {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .gallery-card-title,
+  :global([data-theme='light']) .gallery-card-text {
+    color: #ffffff !important;
+  }
+
+  /* GSAP animation initial states */
+  [data-animate-title] {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  [data-animate-item] {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  [data-animate-divider] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .view-all-link {
+    color: var(--gallery-heading);
+  }
+
+  .view-all-link:hover {
+    opacity: 0.7;
+  }
+
+  .view-all-link i {
+    transition: transform 0.2s ease;
+  }
+
+  .view-all-link:hover i {
+    transform: translateX(4px);
+  }
+
+  .view-all-link-icon {
+    color: var(--gallery-heading);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  // Register ScrollTrigger plugin
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize animations when DOM is ready
+  function initAnimations() {
+    // Animate Gallery Section
+    const gallerySection = document.querySelector('[data-animate-section="gallery"]');
+    if (gallerySection) {
+      const galleryTitle = gallerySection.querySelector('[data-animate-title]');
+      const galleryItems = gallerySection.querySelectorAll('[data-animate-item]');
+
+      // Animate title
+      if (galleryTitle) {
+        gsap.to(galleryTitle, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: gallerySection,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+
+      // Animate divider
+      const galleryDivider = gallerySection.querySelector('[data-animate-divider]');
+      if (galleryDivider) {
+        gsap.to(galleryDivider, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: gallerySection,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+
+      // Animate grid items with stagger
+      if (galleryItems.length > 0) {
+        gsap.to(galleryItems, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: gallerySection.querySelector('[data-animate-grid]'),
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+    }
+  }
+
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnimations);
+  } else {
+    initAnimations();
+  }
+</script>

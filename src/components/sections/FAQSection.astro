@@ -51,9 +51,10 @@ const faqs: FAQ[] = [
 
   <div class="relative z-10 mx-auto w-full max-w-4xl space-y-8">
     <!-- Centered Heading -->
-    <h2 class="faq-heading text-4xl md:text-5xl font-bold text-center mb-12">
+    <h2 class="faq-heading text-4xl md:text-5xl font-bold text-center mb-4">
       Frequently Asked Questions
     </h2>
+    <Divider className="mb-12" width="80%" />
 
     <!-- FAQ List -->
     <div class="faq-list space-y-0" data-faq-list>
@@ -71,7 +72,7 @@ const faqs: FAQ[] = [
               <span class="faq-number text-base font-normal text-gray-400">/{index + 1}</span>
               <h3
                 id={`faq-question-${faq.id}`}
-                class="faq-question text-lg md:text-xl font-bold text-black flex-1"
+                class="faq-question text-lg md:text-xl font-normal text-black flex-1"
               >
                 {faq.question}
               </h3>
@@ -97,7 +98,7 @@ const faqs: FAQ[] = [
     <!-- View All Link -->
     <div class="flex justify-center mt-8">
       <a
-        href="/faq"
+        href="https://gmc.bt/faq"
         class="faq-link group inline-flex items-center gap-2 text-base font-medium text-black transition"
       >
         View All
@@ -268,7 +269,7 @@ const faqs: FAQ[] = [
 
   .faq-question {
     color: #000000;
-    font-weight: 700;
+    font-weight: 400;
   }
 
   .faq-number {

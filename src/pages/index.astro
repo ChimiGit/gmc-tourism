@@ -5,6 +5,7 @@ import FAQSection from '../components/sections/FAQSection.astro';
 import SignatureExperiences from '../components/sections/SignatureExperiences.astro';
 import LatestEvents from '../components/sections/LatestEvents.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
+import GallerySection from '../components/sections/GallerySection.astro';
 import Loader from '../components/sections/Loader.astro';
 ---
 
@@ -14,9 +15,12 @@ import Loader from '../components/sections/Loader.astro';
   mainClass="pt-0"
 >
   <Loader />
-  <Hero />
-  <AboutSection />
-  <SignatureExperiences />
-  <LatestEvents />
-  <FAQSection />
+  <div data-page-content class="page-content">
+    <Hero />
+    <AboutSection />
+    <SignatureExperiences />
+    <LatestEvents />
+    <GallerySection />
+    <FAQSection />
+  </div>
 </Layout>

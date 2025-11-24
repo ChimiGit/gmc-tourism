@@ -23,49 +23,59 @@ const heightValue = typeof height === 'number' ? `${height}px` : height;
       overflow: 'hidden',
     }}
   >
-    <img src="/divider.svg" alt="" class="h-full w-full object-contain" aria-hidden="true" />
+    <img
+      src="/divider-light.svg"
+      alt=""
+      class="h-full w-full object-contain"
+      aria-hidden="true"
+      data-divider-img
+    />
   </div>
 </div>
 
-<script>
-  const currentScript = document.currentScript;
-  const dividerContainer = currentScript?.previousElementSibling as HTMLElement | null;
-  const dividerImg = dividerContainer?.querySelector('img') as HTMLImageElement | null;
+<script is:inline>
+  (function () {
+    function initDivider() {
+      // Find all divider images on the page
+      const dividerImages = document.querySelectorAll('[data-divider-img]');
 
-  function updateDivider() {
-    if (!dividerImg) return;
+      function updateDivider(img) {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        // Light mode: divider.svg, Dark mode: divider-light.svg
+        img.src = theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+      }
 
-    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-    dividerImg.src = theme === 'light' ? '/divider.svg' : '/divider-light.svg';
-  }
+      // Update all divider images
+      dividerImages.forEach((img) => {
+        updateDivider(img);
+      });
 
-  // Wait for DOM to be ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      updateDivider();
+      // Listen for theme change events from ThemeManager
+      window.addEventListener('themechange', (e) => {
+        dividerImages.forEach((img) => {
+          img.src = e.detail.theme === 'light' ? '/divider.svg' : '/divider-light.svg';
+        });
+      });
 
-      // Watch for theme changes
+      // Also watch for data-theme attribute changes as a fallback
       const observer = new MutationObserver(() => {
-        updateDivider();
+        dividerImages.forEach((img) => {
+          updateDivider(img);
+        });
       });
 
       observer.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['data-theme'],
       });
-    });
-  } else {
-    // DOM is already ready
-    updateDivider();
+    }
 
-    // Watch for theme changes
-    const observer = new MutationObserver(() => {
-      updateDivider();
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-  }
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDivider);
+    } else {
+      // DOM is already ready, but wait a bit for ThemeManager to initialize
+      setTimeout(initDivider, 0);
+    }
+  })();
 </script>
