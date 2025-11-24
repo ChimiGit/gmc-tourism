@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Divider from '../ui/Divider.astro';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 const allExperiences = await getCollection('experiences');
 const sortedExperiences = allExperiences.sort(
@@ -39,12 +40,12 @@ if (experiences.length < limit) {
       {
         experiences.map((experience, index) => (
           <a
-            href={`/experiences/${experience.slug}`}
+            href={getLinkUrl(`/experiences/${experience.slug}`)}
             class={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1 md:row-span-1'}`}
             data-animate-item
           >
             <img
-              src={experience.data.image}
+              src={`${getImageBaseUrl()}${experience.data.image}`}
               alt={experience.data.title}
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
@@ -65,7 +66,7 @@ if (experiences.length < limit) {
     <!-- View All Link -->
     <div class="flex justify-center mt-12">
       <a
-        href="/experiences"
+        href={getLinkUrl('/experiences')}
         class="view-all-link group inline-flex items-center gap-2 text-base font-medium transition"
       >
         View All

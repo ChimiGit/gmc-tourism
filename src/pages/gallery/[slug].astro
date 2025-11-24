@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getImageBaseUrl } from '../../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
   const galleries = await getCollection('gallery');
@@ -43,7 +43,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
         }
       </div>
       <a
-        href="/gallery"
+        href={getLinkUrl('/gallery')}
         class="inline-block mt-8 text-sm text-white hover:text-blue-400 transition-colors"
       >
         <i class="fa-solid fa-arrow-left mr-2 text-white"></i> Back to Gallery

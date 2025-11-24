@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getImageBaseUrl } from '../../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
   const experiences = await getCollection('experiences');
@@ -81,7 +81,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
     <div class="events-article-content container mx-auto max-w-4xl px-4 py-16 md:px-8">
       <!-- Back Link -->
       <a
-        href="/experiences"
+        href={getLinkUrl('/experiences')}
         class="events-back-link mb-8 inline-flex items-center gap-2 text-sm font-medium transition-colors"
       >
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

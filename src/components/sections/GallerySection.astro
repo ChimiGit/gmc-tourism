@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Divider from '../ui/Divider.astro';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 // Get all galleries and sort by date (most recent first)
 const allGalleries = await getCollection('gallery');
@@ -32,12 +33,12 @@ const recentGalleries = sortedGalleries.slice(0, 3);
       {
         recentGalleries.map((gallery) => (
           <a
-            href={`/gallery/${gallery.slug}`}
+            href={getLinkUrl(`/gallery/${gallery.slug}`)}
             class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1"
             data-animate-item
           >
             <img
-              src={gallery.data.coverImage}
+              src={`${getImageBaseUrl()}${gallery.data.coverImage}`}
               alt={gallery.data.title}
               class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
             />
@@ -59,7 +60,7 @@ const recentGalleries = sortedGalleries.slice(0, 3);
     <!-- View All Link -->
     <div class="flex justify-center mt-12">
       <a
-        href="/gallery"
+        href={getLinkUrl('/gallery')}
         class="view-all-link group inline-flex items-center gap-2 text-base font-medium transition"
       >
         Gallery

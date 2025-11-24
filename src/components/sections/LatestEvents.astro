@@ -2,6 +2,7 @@
 import EventCard from '../ui/EventCard.astro';
 import { getCollection } from 'astro:content';
 import Divider from '../ui/Divider.astro';
+import { getLinkUrl } from '../../utils/images';
 
 const allEvents = await getCollection('events');
 const events = allEvents
@@ -36,7 +37,7 @@ const events = allEvents
     <!-- View All Link -->
     <div class="flex justify-center mt-12">
       <a
-        href="/events"
+        href={getLinkUrl('/events')}
         class="view-all-link group inline-flex items-center gap-2 text-base font-medium transition"
       >
         View All

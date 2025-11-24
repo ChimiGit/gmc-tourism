@@ -1,4 +1,6 @@
 ---
+import { getImageBaseUrl } from '../../utils/images';
+
 export interface SocialLink {
   platform: string;
   url: string;
@@ -22,7 +24,7 @@ const { links = [] } = Astro.props as Props;
         class="brightness-100 contrast-50 transition-transform duration-200 ease-in-out hover:scale-110"
       >
         <img
-          src={`/social_icon/${link.platform}-light.svg`}
+          src={`${getImageBaseUrl()}/social_icon/${link.platform}-light.svg`}
           alt={link.platform}
           width="50"
           height="50"

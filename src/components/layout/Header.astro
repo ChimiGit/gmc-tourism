@@ -1,6 +1,6 @@
 ---
 import ThemeManager from '../ui/ThemeManager.astro';
-import { getImageBaseUrl } from '../../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 // Get dynamic logo URLs
 const logoImage = `${getImageBaseUrl()}/logo.svg`;
@@ -14,7 +14,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
     class="flex w-full items-center justify-between px-4 py-2 transition-all duration-300 md:px-12"
   >
     <div id="logo-container" class="relative z-10" data-logo-dark={logoImage} data-logo-light={logoLightImage}>
-      <a href="/" class="relative block h-10 w-10 md:h-12 md:w-12">
+      <a href={getLinkUrl('/')} class="relative block h-10 w-10 md:h-12 md:w-12">
         <img
           id="site-logo"
           src={logoLightImage}
@@ -94,7 +94,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
         <nav id="menu-items" class="space-y-4 md:space-y-6">
           <div class="menu-item overflow-hidden">
             <a
-              href="/"
+              href={getLinkUrl('/')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Home
@@ -114,7 +114,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href="/experiences"
+              href={getLinkUrl('/experiences')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Experiences
@@ -123,7 +123,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href="/events"
+              href={getLinkUrl('/events')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Events Calendar
@@ -132,7 +132,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href="/gallery"
+              href={getLinkUrl('/gallery')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Gallery
@@ -141,7 +141,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href="/projects-and-partners"
+              href={getLinkUrl('/projects-and-partners')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Projects & Partners
@@ -150,7 +150,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href="/contact"
+              href={getLinkUrl('/contact')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Contact
