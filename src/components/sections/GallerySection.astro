@@ -33,7 +33,7 @@ const recentGalleries = sortedGalleries.slice(0, 3);
         recentGalleries.map((gallery) => (
           <a
             href={`/gallery/${gallery.slug}`}
-            class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-[4/3] transition-transform hover:-translate-y-1"
+            class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1"
             data-animate-item
           >
             <img
