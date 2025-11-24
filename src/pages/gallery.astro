@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getImageBaseUrl } from '../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../utils/images';
 
 const galleries = await getCollection('gallery');
 const sortedGalleries = galleries.sort((a, b) => {
@@ -23,7 +23,7 @@ const sortedGalleries = galleries.sort((a, b) => {
       alt="Gallery"
       class="absolute h-full w-full object-cover"
     />
-    <div class="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
     <div class="relative z-10 text-center px-4">
       <h1
         class="gallery-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl drop-shadow-sm"
@@ -34,16 +34,23 @@ const sortedGalleries = galleries.sort((a, b) => {
         Visual stories from the Kingdom of Happiness
       </p>
     </div>
+    
+    <!-- Bottom gradient fade -->
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 h-16"
+      style="background: linear-gradient(to top, #000000, transparent);"
+    >
+    </div>
   </div>
 
   <!-- Gallery Grid -->
-  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-black text-white min-h-[50vh]">
+  <section class="py-16 px-4 sm:px-6 lg:px-8 text-white min-h-[50vh]">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           sortedGalleries.map((gallery) => (
             <a
-              href={`/gallery/${gallery.slug}`}
+              href={getLinkUrl(`/gallery/${gallery.slug}`)}
               class="group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1"
             >
               <img
@@ -92,7 +99,7 @@ const sortedGalleries = galleries.sort((a, b) => {
   }
 
   :global([data-theme='light']) section {
-    background-color: #f8fafc;
+    background-color: transparent;
     color: #0f172a;
   }
 

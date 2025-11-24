@@ -50,6 +50,13 @@ const sortedEvents = allEvents.sort(
           Discover upcoming events, festivals, and experiences
         </p>
       </div>
+      
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
     </div>
 
     <!-- Navigation Section -->
@@ -299,7 +306,7 @@ const sortedEvents = allEvents.sort(
   }
 
   .events-content-section {
-    --events-content-bg: #000000;
+    --events-content-bg: transparent;
     --events-heading: #ffffff;
     --events-body: #9ca3af;
     --events-card-bg: transparent;
@@ -308,7 +315,7 @@ const sortedEvents = allEvents.sort(
   }
 
   :global([data-theme='light']) .events-content-section {
-    --events-content-bg: #ffffff;
+    --events-content-bg: transparent;
     --events-heading: #111827;
     --events-body: #6b7280;
     --events-card-bg: transparent;

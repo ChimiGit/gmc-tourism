@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { getImageBaseUrl } from '../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../utils/images';
 
 const allExperiences = await getCollection('experiences');
 const sortedExperiences = allExperiences.sort(
@@ -45,6 +45,13 @@ if (signatureExperiences.length < 5) {
           Discover unique experiences and adventures
         </p>
       </div>
+      
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
     </div>
 
     <!-- Content Section -->
@@ -55,7 +62,7 @@ if (signatureExperiences.length < 5) {
           {
             signatureExperiences.map((experience, index) => (
               <a
-                href={`/experiences/${experience.slug}`}
+                href={getLinkUrl(`/experiences/${experience.slug}`)}
                 class={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1 md:row-span-1'}`}
               >
                 <img
@@ -97,7 +104,7 @@ if (signatureExperiences.length < 5) {
   }
 
   .events-content-section {
-    --events-content-bg: #000000;
+    --events-content-bg: transparent;
     --events-heading: #ffffff;
     --events-body: #9ca3af;
     --events-card-bg: transparent;

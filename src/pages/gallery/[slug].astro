@@ -24,10 +24,14 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 <Layout title={`${title} | Gallery`} description={description} mainClass="pt-0">
   <!-- Hero/Header -->
   <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
-    <img src={`${getImageBaseUrl()}${gallery.data.coverImage}`} alt={title} class="absolute h-full w-full object-cover" />
-    <div class="absolute inset-0 bg-black/60"></div>
+    <img
+      src={`${getImageBaseUrl()}${gallery.data.coverImage}`}
+      alt={title}
+      class="absolute h-full w-full object-cover"
+    />
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
     <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-      <h1 class="gallery-page-title text-3xl font-bold text-white md:text-4xl lg:text-5xl mb-4">
+      <h1 class="gallery-page-title text-3xl font-normal text-white md:text-4xl lg:text-5xl mb-4">
         {title}
       </h1>
       <p class="gallery-page-description text-lg text-white">{description}</p>
@@ -48,6 +52,13 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
       >
         <i class="fa-solid fa-arrow-left mr-2 text-white"></i> Back to Gallery
       </a>
+    </div>
+    
+    <!-- Bottom gradient fade -->
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 h-16"
+      style="background: linear-gradient(to top, #000000, transparent);"
+    >
     </div>
   </div>
 
@@ -168,19 +179,17 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
         class="lightbox-sidebar w-full md:w-80 backdrop-blur border-t md:border-t-0 md:border-l p-6 overflow-y-auto shrink-0 hidden md:block"
         id="lightbox-sidebar"
       >
-        <h2 id="lightbox-title" class="text-xl font-bold mb-4"></h2>
+        <h2 id="lightbox-title" class="text-xl font-normal mb-4"></h2>
 
         <div class="space-y-6 text-sm">
           <div class="space-y-1">
-            <h3 class="lightbox-label uppercase text-xs tracking-wide font-semibold">
-              Description
-            </h3>
+            <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Description</h3>
             <p id="lightbox-desc" class="lightbox-text leading-relaxed"></p>
           </div>
 
           <div class="grid grid-cols-1 gap-4">
             <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-semibold">Location</h3>
+              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Location</h3>
               <p id="lightbox-location" class="flex items-center gap-2">
                 <i class="fa-solid fa-location-dot"></i>
                 <span></span>
@@ -188,7 +197,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
             </div>
 
             <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-semibold">Source</h3>
+              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Source</h3>
               <p id="lightbox-source" class="flex items-center gap-2">
                 <i class="fa-solid fa-camera"></i>
                 <span></span>
@@ -196,7 +205,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
             </div>
 
             <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-semibold">Rights</h3>
+              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Rights</h3>
               <p id="lightbox-rights" class="flex items-center gap-2">
                 <i class="fa-solid fa-copyright"></i>
                 <span></span>
@@ -216,7 +225,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
       >
         <!-- Copied content from sidebar via JS or just simplified view -->
         <div class="flex justify-between items-start mb-4">
-          <h2 id="mobile-lightbox-title" class="text-lg font-bold"></h2>
+          <h2 id="mobile-lightbox-title" class="text-lg font-normal"></h2>
           <button id="close-mobile-info" class="p-1"
             ><i class="fa-solid fa-chevron-down"></i></button
           >
@@ -224,11 +233,11 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
         <p id="mobile-lightbox-desc" class="mobile-lightbox-text text-sm mb-4"></p>
         <div class="grid grid-cols-2 gap-4 text-xs">
           <div>
-            <span class="mobile-lightbox-label block uppercase font-semibold">Location</span>
+            <span class="mobile-lightbox-label block uppercase font-normal">Location</span>
             <span id="mobile-lightbox-location"></span>
           </div>
           <div>
-            <span class="mobile-lightbox-label block uppercase font-semibold">Source</span>
+            <span class="mobile-lightbox-label block uppercase font-normal">Source</span>
             <span id="mobile-lightbox-source"></span>
           </div>
         </div>
@@ -269,7 +278,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Gallery content section - theme aware */
   .gallery-content-section {
-    --gallery-content-bg: #000000;
+    --gallery-content-bg: transparent;
     --gallery-content-text: #ffffff;
     --gallery-content-border: rgba(255, 255, 255, 0.1);
     background: var(--gallery-content-bg);
@@ -292,17 +301,17 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
   }
 
   :global([data-theme='light']) .gallery-images-section {
-    --gallery-images-bg: #ffffff;
+    --gallery-images-bg: #f5f5f5;
     --gallery-images-text: #111827;
   }
 
   /* Gallery item - theme aware */
   .gallery-item {
-    background-color: #111827;
+    background-color: transparent;
   }
 
   :global([data-theme='light']) .gallery-item {
-    background-color: #ffffff;
+    background-color: transparent;
     border: 1px solid #e5e7eb;
   }
 
@@ -335,12 +344,12 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Lightbox Modal - theme aware */
   .lightbox-modal {
-    background: rgba(0, 0, 0, 0.95);
+    background: transparent;
     color: #ffffff;
   }
 
   :global([data-theme='light']) .lightbox-modal {
-    background: rgba(255, 255, 255, 0.98);
+    background: transparent;
     color: #111827;
   }
 
@@ -354,11 +363,11 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Lightbox Toolbar */
   .lightbox-toolbar {
-    background: rgba(0, 0, 0, 0.5);
+    background: transparent;
   }
 
   :global([data-theme='light']) .lightbox-toolbar {
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     border-bottom: 1px solid #e5e7eb;
   }
 
@@ -381,11 +390,11 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Lightbox Image Area */
   .lightbox-image-area {
-    background: #000000;
+    background: transparent;
   }
 
   :global([data-theme='light']) .lightbox-image-area {
-    background: #f3f4f6;
+    background: transparent;
   }
 
   /* Navigation Buttons */
@@ -410,13 +419,13 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Lightbox Sidebar */
   .lightbox-sidebar {
-    background: rgba(31, 41, 55, 0.95);
+    background: transparent;
     border-color: rgb(55, 65, 81);
     color: #ffffff;
   }
 
   :global([data-theme='light']) .lightbox-sidebar {
-    background: rgba(249, 250, 251, 0.98);
+    background: transparent;
     border-color: #e5e7eb;
     color: #111827;
   }
@@ -455,12 +464,12 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   /* Mobile Lightbox Overlay */
   .mobile-lightbox-overlay {
-    background: rgba(0, 0, 0, 0.9);
+    background: transparent;
     color: #ffffff;
   }
 
   :global([data-theme='light']) .mobile-lightbox-overlay {
-    background: rgba(255, 255, 255, 0.98);
+    background: transparent;
     color: #111827;
     border-top: 1px solid #e5e7eb;
   }

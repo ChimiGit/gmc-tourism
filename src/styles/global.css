@@ -20,18 +20,18 @@
 
   body {
     @apply min-h-screen font-sans text-base text-slate-100 antialiased;
-    background-color: #090909;
+    background-color: #000000;
   }
 
   html.dark-bg {
-    background-color: #090909;
+    background-color: #000000;
   }
 
   /* Dark mode background */
   :global([data-theme='dark']) body,
   :global([data-theme='dark']) html,
   :global([data-theme='dark']) html.dark-bg {
-    background-color: #090909 !important;
+    background-color: #000000 !important;
   }
 
   /* Light mode background */

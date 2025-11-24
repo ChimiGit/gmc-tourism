@@ -85,13 +85,20 @@ function formatDateRange(startDate: Date, endDate: Date): string {
         alt={event.data.title}
         class="absolute h-full w-full object-cover"
       />
-      <div class="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+      <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
       <!-- Title -->
       <h1
         class="events-hero-title relative z-10 text-center text-4xl font-bold text-white md:text-5xl lg:text-6xl px-4"
       >
         {event.data.title}
       </h1>
+      
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
     </div>
 
     <!-- Content -->
@@ -224,7 +231,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
   }
 
   .events-article-content {
-    --article-bg: #000000;
+    --article-bg: transparent;
     --article-text: #ffffff;
     --article-text-secondary: #9ca3af;
     --article-border: rgba(255, 255, 255, 0.1);
@@ -234,7 +241,7 @@ function formatDateRange(startDate: Date, endDate: Date): string {
   }
 
   :global([data-theme='light']) .events-article-content {
-    --article-bg: #ffffff;
+    --article-bg: transparent;
     --article-text: #111827;
     --article-text-secondary: #6b7280;
     --article-border: rgba(0, 0, 0, 0.1);
