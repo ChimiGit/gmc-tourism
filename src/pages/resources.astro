@@ -1,0 +1,423 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ResourceCard from '../components/ui/ResourceCard.astro';
+import { getCollection } from 'astro:content';
+
+const allResources = await getCollection('resources');
+
+// Sort by featured first, then by title
+const sortedResources = allResources.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// Get unique categories
+const categories = [...new Set(allResources.map((r) => r.data.category))].sort();
+
+// Get unique areas
+const areas = [...new Set(allResources.map((r) => r.data.area))].sort();
+
+// Count by publisher type
+const totalCount = allResources.length;
+const jntoCount = allResources.filter((r) => r.data.publisher === 'jnto').length;
+const nonJntoCount = allResources.filter((r) => r.data.publisher === 'non-jnto').length;
+
+// Format category name for display
+const formatCategoryName = (category: string) => {
+  return category
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+// Format area name for display
+const formatAreaName = (area: string) => {
+  return area.charAt(0).toUpperCase() + area.slice(1);
+};
+---
+
+<Layout
+  title="GMC Tourism Resources"
+  description="Explore marketing materials, travel guides, and brochures for Gelephu Mindfulness City and Bhutan tourism."
+  mainClass="pt-0"
+>
+  <div class="resources-page min-h-screen">
+    <!-- Hero Section -->
+    <div class="resources-hero py-16 text-center">
+      <h1 class="resources-hero-title text-4xl font-bold md:text-5xl lg:text-6xl">
+        GMC Tourism Resources
+      </h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="resources-content mx-auto max-w-7xl px-4 pb-16 md:px-8">
+      <h2 class="resources-section-title mb-8 text-2xl font-semibold md:text-3xl">
+        Marketing materials
+      </h2>
+
+      <div class="flex flex-col gap-8 lg:flex-row">
+        <!-- Sidebar -->
+        <aside class="resources-sidebar w-full shrink-0 lg:w-64">
+          <!-- Search -->
+          <div class="mb-6">
+            <label class="resources-label mb-2 block text-sm font-semibold">Keyword</label>
+            <div class="relative">
+              <input
+                type="text"
+                id="resource-search"
+                placeholder=""
+                class="resources-search-input w-full rounded border py-2 pl-3 pr-10 text-sm"
+              />
+              <button
+                type="button"
+                class="resources-search-btn absolute right-0 top-0 flex h-full items-center justify-center px-3"
+                aria-label="Search"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Publisher Filter -->
+          <div class="mb-6">
+            <label class="resources-label mb-2 block text-sm font-semibold">Publisher</label>
+            <div class="space-y-2">
+              <label class="flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="publisher"
+                  value="all"
+                  checked
+                  class="resources-radio"
+                />
+                <span class="resources-filter-text text-sm">
+                  <span class="text-red-500">All Brochures</span>
+                  <span class="resources-count">({totalCount})</span>
+                </span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="publisher"
+                  value="jnto"
+                  class="resources-radio"
+                />
+                <span class="resources-filter-text text-sm">
+                  JNTO only
+                  <span class="resources-count">({jntoCount})</span>
+                </span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="publisher"
+                  value="non-jnto"
+                  class="resources-radio"
+                />
+                <span class="resources-filter-text text-sm">
+                  Non-JNTO
+                  <span class="resources-count">({nonJntoCount})</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="resources-filter-section mb-6 border-t pt-4">
+            <button
+              type="button"
+              class="resources-accordion-btn flex w-full items-center justify-between text-left"
+              data-accordion="category"
+              aria-expanded="false"
+            >
+              <span class="resources-label text-sm font-semibold">Category</span>
+              <i class="fa-solid fa-plus text-sm transition-transform"></i>
+            </button>
+            <div class="resources-accordion-content mt-3 hidden space-y-2" data-accordion-content="category">
+              {
+                categories.map((category) => (
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="category"
+                      value={category}
+                      class="resources-checkbox"
+                    />
+                    <span class="resources-filter-text text-sm">
+                      {formatCategoryName(category)}
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Area Filter -->
+          <div class="resources-filter-section border-t pt-4">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="resources-label text-sm font-semibold">Area</span>
+              <button
+                type="button"
+                class="resources-map-btn flex items-center gap-1 text-xs underline"
+              >
+                Map <i class="fa-regular fa-map text-xs"></i>
+              </button>
+            </div>
+            <div class="space-y-2">
+              {
+                areas.map((area) => (
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="area"
+                      value={area}
+                      class="resources-checkbox"
+                    />
+                    <span class="resources-filter-text text-sm">
+                      {formatAreaName(area)}
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </div>
+        </aside>
+
+        <!-- Resources Grid -->
+        <div class="flex-1">
+          <div
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            id="resources-grid"
+          >
+            {
+              sortedResources.map((resource) => (
+                <div
+                  class="resource-item"
+                  data-title={resource.data.title.toLowerCase()}
+                  data-description={resource.data.description.toLowerCase()}
+                  data-publisher={resource.data.publisher}
+                  data-category={resource.data.category}
+                  data-area={resource.data.area}
+                >
+                  <ResourceCard resource={resource} />
+                </div>
+              ))
+            }
+          </div>
+
+          <!-- Empty State -->
+          <div class="hidden py-16 text-center" id="empty-state">
+            <p class="resources-empty-text text-lg">No resources found matching your criteria.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  // Get elements
+  const searchInput = document.getElementById('resource-search');
+  const publisherRadios = document.querySelectorAll('input[name="publisher"]');
+  const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+  const areaCheckboxes = document.querySelectorAll('input[name="area"]');
+  const resourceItems = document.querySelectorAll('.resource-item');
+  const resourcesGrid = document.getElementById('resources-grid');
+  const emptyState = document.getElementById('empty-state');
+  const accordionBtns = document.querySelectorAll('.resources-accordion-btn');
+
+  // Accordion functionality
+  accordionBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const accordionId = btn.getAttribute('data-accordion');
+      const content = document.querySelector(`[data-accordion-content="${accordionId}"]`);
+      const icon = btn.querySelector('i');
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+      btn.setAttribute('aria-expanded', !isExpanded);
+      content.classList.toggle('hidden');
+      icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(45deg)';
+    });
+  });
+
+  // Filter function
+  function filterResources() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedPublisher = document.querySelector('input[name="publisher"]:checked')?.value || 'all';
+    
+    const selectedCategories = Array.from(categoryCheckboxes)
+      .filter((cb) => cb.checked)
+      .map((cb) => cb.value);
+    
+    const selectedAreas = Array.from(areaCheckboxes)
+      .filter((cb) => cb.checked)
+      .map((cb) => cb.value);
+
+    let visibleCount = 0;
+
+    resourceItems.forEach((item) => {
+      const title = item.getAttribute('data-title') || '';
+      const description = item.getAttribute('data-description') || '';
+      const publisher = item.getAttribute('data-publisher') || '';
+      const category = item.getAttribute('data-category') || '';
+      const area = item.getAttribute('data-area') || '';
+
+      // Check search match
+      const matchesSearch = !searchTerm || 
+        title.includes(searchTerm) || 
+        description.includes(searchTerm);
+
+      // Check publisher match
+      const matchesPublisher = selectedPublisher === 'all' || publisher === selectedPublisher;
+
+      // Check category match (if any selected)
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
+
+      // Check area match (if any selected)
+      const matchesArea = selectedAreas.length === 0 || selectedAreas.includes(area);
+
+      // Show/hide based on all criteria
+      const isVisible = matchesSearch && matchesPublisher && matchesCategory && matchesArea;
+      item.classList.toggle('hidden', !isVisible);
+
+      if (isVisible) visibleCount++;
+    });
+
+    // Show/hide empty state
+    if (emptyState && resourcesGrid) {
+      if (visibleCount === 0) {
+        resourcesGrid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+      } else {
+        resourcesGrid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+      }
+    }
+  }
+
+  // Event listeners
+  searchInput.addEventListener('input', filterResources);
+  publisherRadios.forEach((radio) => radio.addEventListener('change', filterResources));
+  categoryCheckboxes.forEach((cb) => cb.addEventListener('change', filterResources));
+  areaCheckboxes.forEach((cb) => cb.addEventListener('change', filterResources));
+
+  // Initialize
+  filterResources();
+</script>
+
+<style>
+  .resources-page {
+    --resources-bg: #ffffff;
+    --resources-text: #000000;
+    --resources-text-secondary: #4b5563;
+    --resources-border: #e5e7eb;
+    --resources-input-bg: #ffffff;
+    --resources-input-border: #d1d5db;
+    background: var(--resources-bg);
+  }
+
+  :global([data-theme='dark']) .resources-page {
+    --resources-bg: #000000;
+    --resources-text: #ffffff;
+    --resources-text-secondary: #9ca3af;
+    --resources-border: rgba(255, 255, 255, 0.1);
+    --resources-input-bg: #111111;
+    --resources-input-border: rgba(255, 255, 255, 0.2);
+  }
+
+  .resources-hero {
+    background: var(--resources-bg);
+  }
+
+  .resources-hero-title {
+    color: var(--resources-text);
+  }
+
+  .resources-content {
+    background: var(--resources-bg);
+  }
+
+  .resources-section-title {
+    color: var(--resources-text);
+  }
+
+  .resources-label {
+    color: var(--resources-text);
+  }
+
+  .resources-search-input {
+    background: var(--resources-input-bg);
+    border-color: var(--resources-input-border);
+    color: var(--resources-text);
+  }
+
+  .resources-search-input:focus {
+    outline: none;
+    border-color: var(--resources-text);
+  }
+
+  .resources-search-btn {
+    color: var(--resources-text);
+    background: transparent;
+    border: none;
+  }
+
+  .resources-filter-text {
+    color: var(--resources-text);
+  }
+
+  .resources-count {
+    color: var(--resources-text-secondary);
+  }
+
+  .resources-filter-section {
+    border-color: var(--resources-border);
+  }
+
+  .resources-accordion-btn {
+    color: var(--resources-text);
+  }
+
+  .resources-map-btn {
+    color: var(--resources-text);
+  }
+
+  .resources-empty-text {
+    color: var(--resources-text-secondary);
+  }
+
+  .resources-radio,
+  .resources-checkbox {
+    accent-color: #dc2626;
+  }
+
+  /* Radio and checkbox styling */
+  .resources-radio {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--resources-input-border);
+    background: var(--resources-input-bg);
+  }
+
+  .resources-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--resources-input-border);
+    background: var(--resources-input-bg);
+  }
+
+  /* Smooth accordion transition */
+  .resources-accordion-btn i {
+    transition: transform 0.2s ease;
+  }
+
+  /* Line clamp for descriptions */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+

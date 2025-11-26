@@ -73,10 +73,26 @@ const about = defineCollection({
   }),
 });
 
+const resources = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    image: z.string(),
+    publisher: z.enum(['jnto', 'non-jnto']),
+    category: z.string(),
+    area: z.string(),
+    language: z.string().default('English'),
+    externalUrl: z.string().optional(),
+    featured: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
   experiences,
   gallery,
   about,
+  resources,
 };

@@ -88,6 +88,8 @@ import { getImageBaseUrl } from '../../utils/images';
 </section>
 
 <script>
+  import { gsap } from 'gsap';
+
   // Overlay fade animation
   const overlay = document.getElementById('overlay');
   if (overlay) {
@@ -122,6 +124,72 @@ import { getImageBaseUrl } from '../../utils/images';
       }, 2500);
     }, 5000);
   }
+
+  // Auto-scroll to About section when scrolling 10px from hero
+  let hasAutoScrolled = false;
+  let isAutoScrolling = false;
+
+  // Custom smooth scroll function using GSAP
+  function smoothScrollTo(targetY: number, duration: number = 1200) {
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    
+    gsap.to({ progress: 0 }, {
+      progress: 1,
+      duration: duration / 1000,
+      ease: 'power3.inOut',
+      onUpdate: function() {
+        const progress = this.targets()[0].progress;
+        window.scrollTo(0, startY + (distance * progress));
+      },
+      onComplete: () => {
+        isAutoScrolling = false;
+      }
+    });
+  }
+
+  function initAutoScrollToAbout() {
+    const aboutSection = document.querySelector('.about-section') as HTMLElement | null;
+    if (!aboutSection) return;
+
+    const handleScroll = () => {
+      // Only trigger once and not during auto-scroll
+      if (hasAutoScrolled || isAutoScrolling) return;
+
+      const scrollY = window.scrollY;
+
+      // Trigger when scrolled 10px or more
+      if (scrollY >= 10 && scrollY < window.innerHeight * 0.5) {
+        hasAutoScrolled = true;
+        isAutoScrolling = true;
+
+        // Hide scroll indicator with GSAP
+        if (scrollIndicator) {
+          gsap.to(scrollIndicator, {
+            opacity: 0,
+            duration: 0.3,
+          });
+        }
+
+        // Smooth scroll to About section
+        const targetY = aboutSection.offsetTop;
+        smoothScrollTo(targetY, 1200);
+      }
+    };
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Clean up on page navigation
+    document.addEventListener('astro:before-preparation', () => {
+      window.removeEventListener('scroll', handleScroll);
+    });
+  }
+
+  // Initialize after page load and loader animation
+  setTimeout(() => {
+    initAutoScrollToAbout();
+  }, 6000); // Wait for loader to complete
 
   // Video parallax effect (Commented out - using image instead)
   // const video = document.getElementById('hero-video');

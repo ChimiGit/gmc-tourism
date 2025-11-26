@@ -48,12 +48,12 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
       </div>
       <a
         href={getLinkUrl('/gallery')}
-        class="inline-block mt-8 text-sm text-white hover:text-blue-400 transition-colors"
+        class="back-to-gallery-link inline-block mt-8 text-sm text-white hover:text-blue-400 transition-colors"
       >
         <i class="fa-solid fa-arrow-left mr-2 text-white"></i> Back to Gallery
       </a>
     </div>
-    
+
     <!-- Bottom gradient fade -->
     <div
       class="absolute bottom-0 left-0 right-0 z-20 h-16"
@@ -63,30 +63,30 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
   </div>
 
   <!-- Images Grid -->
-  <section class="gallery-images-section py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
+  <section class="gallery-images-section pt-16 pb-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           images.map((image, index) => (
             <button
-              class="gallery-item group relative aspect-square overflow-hidden rounded-lg cursor-pointer focus:outline-none"
+              class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1 cursor-pointer focus:outline-none"
               data-index={index}
               aria-label={`View ${image.title || 'image'}`}
             >
               <img
                 src={image.src}
                 alt={image.alt || image.title || ''}
-                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-              <div class="absolute bottom-0 left-0 right-0 p-2 bg-linear-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {image.title && (
-                  <p class="gallery-image-title text-xs font-medium truncate text-white px-2">
+              <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
+              {image.title && (
+                <div class="absolute bottom-0 left-0 p-6 w-full">
+                  <h2 class="gallery-card-title text-xl font-bold text-white mb-2">
                     {image.title}
-                  </p>
-                )}
-              </div>
+                  </h2>
+                </div>
+              )}
             </button>
           ))
         }
@@ -99,164 +99,108 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
     id="lightbox"
     class="lightbox-modal fixed inset-0 z-50 h-full w-full max-w-none max-h-none p-0 m-0 border-none open:flex flex-col hidden"
   >
-    <!-- Toolbar -->
-    <div
-      class="lightbox-toolbar flex items-center justify-between p-4 backdrop-blur-sm z-20 absolute top-0 left-0 right-0"
+    <!-- Close Button - Top Right -->
+    <button
+      id="lightbox-close"
+      class="lightbox-close-btn fixed top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300"
+      title="Close (Esc)"
     >
-      <div class="flex items-center gap-4">
-        <span id="lightbox-counter" class="lightbox-counter text-sm font-medium"></span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          id="lightbox-zoom"
-          class="lightbox-button p-2 rounded-full transition-colors"
-          title="Toggle Zoom"
-        >
-          <i class="fa-solid fa-magnifying-glass-plus"></i>
-        </button>
-        <button
-          id="lightbox-share"
-          class="lightbox-button p-2 rounded-full transition-colors"
-          title="Share"
-        >
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
-        <a
-          id="lightbox-download"
-          href="#"
-          download
-          class="lightbox-button p-2 rounded-full transition-colors"
-          title="Download"
-        >
-          <i class="fa-solid fa-download"></i>
-        </a>
-        <button
-          id="lightbox-close"
-          class="lightbox-button p-2 rounded-full transition-colors ml-2"
-          title="Close"
-        >
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
+      <i class="fa-solid fa-xmark text-2xl"></i>
+    </button>
+
+    <!-- Counter - Top Left -->
+    <div class="fixed top-6 left-6 z-30">
+      <span
+        id="lightbox-counter"
+        class="lightbox-counter text-sm font-medium tracking-wider opacity-70"></span>
+    </div>
+
+    <!-- Action Buttons - Top Center -->
+    <div class="fixed top-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1">
+      <button
+        id="lightbox-zoom"
+        class="lightbox-action-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+        title="Toggle Zoom"
+      >
+        <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
+      </button>
+      <a
+        id="lightbox-download"
+        href="#"
+        download
+        class="lightbox-action-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+        title="Download"
+      >
+        <i class="fa-solid fa-download text-sm"></i>
+      </a>
+      <button
+        id="lightbox-share"
+        class="lightbox-action-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+        title="Share"
+      >
+        <i class="fa-solid fa-share-nodes text-sm"></i>
+      </button>
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col md:flex-row h-full overflow-hidden pt-16">
-      <!-- Image Area -->
-      <div
-        class="lightbox-image-area relative flex-1 flex items-center justify-center h-full overflow-hidden group"
-      >
-        <!-- Navigation Buttons -->
-        <button
-          id="prev-btn"
-          class="lightbox-nav-button absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <i class="fa-solid fa-chevron-left text-xl"></i>
-        </button>
-        <button
-          id="next-btn"
-          class="lightbox-nav-button absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <i class="fa-solid fa-chevron-right text-xl"></i>
-        </button>
-
-        <!-- The Image -->
-        <div
-          class="w-full h-full flex items-center justify-center overflow-hidden"
-          id="image-container"
-        >
-          <img
-            id="lightbox-image"
-            src=""
-            alt=""
-            class="max-h-full max-w-full object-contain transition-transform duration-200 cursor-zoom-in"
-          />
-        </div>
-      </div>
-
-      <!-- Sidebar (Metadata) -->
-      <div
-        class="lightbox-sidebar w-full md:w-80 backdrop-blur border-t md:border-t-0 md:border-l p-6 overflow-y-auto shrink-0 hidden md:block"
-        id="lightbox-sidebar"
-      >
-        <h2 id="lightbox-title" class="text-xl font-normal mb-4"></h2>
-
-        <div class="space-y-6 text-sm">
-          <div class="space-y-1">
-            <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Description</h3>
-            <p id="lightbox-desc" class="lightbox-text leading-relaxed"></p>
-          </div>
-
-          <div class="grid grid-cols-1 gap-4">
-            <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Location</h3>
-              <p id="lightbox-location" class="flex items-center gap-2">
-                <i class="fa-solid fa-location-dot"></i>
-                <span></span>
-              </p>
-            </div>
-
-            <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Source</h3>
-              <p id="lightbox-source" class="flex items-center gap-2">
-                <i class="fa-solid fa-camera"></i>
-                <span></span>
-              </p>
-            </div>
-
-            <div class="space-y-1">
-              <h3 class="lightbox-label uppercase text-xs tracking-wide font-normal">Rights</h3>
-              <p id="lightbox-rights" class="flex items-center gap-2">
-                <i class="fa-solid fa-copyright"></i>
-                <span></span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile Sidebar Toggle (Info button equivalent) -->
-        <div class="lightbox-footer mt-8 pt-6 border-t text-xs">Images provided by GMC Tourism</div>
-      </div>
-
-      <!-- Mobile Info Overlay (Initially hidden) -->
-      <div
-        id="mobile-info-overlay"
-        class="mobile-lightbox-overlay absolute bottom-0 left-0 right-0 p-6 transform translate-y-full transition-transform duration-300 md:hidden z-20 max-h-[50vh] overflow-y-auto rounded-t-2xl"
-      >
-        <!-- Copied content from sidebar via JS or just simplified view -->
-        <div class="flex justify-between items-start mb-4">
-          <h2 id="mobile-lightbox-title" class="text-lg font-normal"></h2>
-          <button id="close-mobile-info" class="p-1"
-            ><i class="fa-solid fa-chevron-down"></i></button
-          >
-        </div>
-        <p id="mobile-lightbox-desc" class="mobile-lightbox-text text-sm mb-4"></p>
-        <div class="grid grid-cols-2 gap-4 text-xs">
-          <div>
-            <span class="mobile-lightbox-label block uppercase font-normal">Location</span>
-            <span id="mobile-lightbox-location"></span>
-          </div>
-          <div>
-            <span class="mobile-lightbox-label block uppercase font-normal">Source</span>
-            <span id="mobile-lightbox-source"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile Info Toggle Button -->
+    <div class="flex-1 flex items-center justify-center h-full w-full overflow-hidden group">
+      <!-- Navigation Button - Previous -->
       <button
-        id="toggle-mobile-info"
-        class="lightbox-mobile-button absolute bottom-6 right-6 p-3 rounded-full backdrop-blur md:hidden z-10"
+        id="prev-btn"
+        class="lightbox-nav-btn fixed left-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
       >
-        <i class="fa-solid fa-circle-info text-xl"></i>
+        <i class="fa-solid fa-chevron-left text-lg"></i>
       </button>
+
+      <!-- Navigation Button - Next -->
+      <button
+        id="next-btn"
+        class="lightbox-nav-btn fixed right-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
+      >
+        <i class="fa-solid fa-chevron-right text-lg"></i>
+      </button>
+
+      <!-- Image Container -->
+      <div
+        class="w-full h-full flex items-center justify-center pt-16 pb-24 px-16 md:pt-20 md:pb-28 md:px-20"
+        id="image-container"
+      >
+        <img
+          id="lightbox-image"
+          src=""
+          alt=""
+          class="lightbox-image max-h-full max-w-full object-contain transition-all duration-300 cursor-zoom-in rounded-lg shadow-2xl"
+        />
+      </div>
+    </div>
+
+    <!-- Image Title - Bottom Center -->
+    <div class="lightbox-title-container fixed bottom-0 left-0 right-0 z-30 text-center px-4 py-6">
+      <h2 id="lightbox-title" class="lightbox-title text-lg font-medium"></h2>
+      <p id="lightbox-desc" class="lightbox-desc text-sm mt-1 line-clamp-2 hidden"></p>
+    </div>
+
+    <!-- Hidden elements for JS compatibility -->
+    <div class="hidden">
+      <p id="lightbox-location"><span></span></p>
+      <p id="lightbox-source"><span></span></p>
+      <p id="lightbox-rights"><span></span></p>
+      <div id="lightbox-sidebar"></div>
+      <div id="mobile-info-overlay">
+        <h2 id="mobile-lightbox-title"></h2>
+        <p id="mobile-lightbox-desc"></p>
+        <span id="mobile-lightbox-location"></span>
+        <span id="mobile-lightbox-source"></span>
+        <button id="close-mobile-info"></button>
+      </div>
+      <button id="toggle-mobile-info"></button>
     </div>
   </dialog>
 </Layout>
 
 <style>
   dialog::backdrop {
-    background: rgba(0, 0, 0, 0.95);
+    background: transparent;
   }
 
   dialog[open] {
@@ -273,6 +217,24 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
   :global([data-theme='light']) .gallery-page-title,
   :global([data-theme='light']) .gallery-page-description,
   :global([data-theme='light']) .gallery-page-meta {
+    color: #ffffff !important;
+  }
+
+  /* Back to Gallery link - keep white in both themes */
+  .back-to-gallery-link {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .back-to-gallery-link {
+    color: #ffffff !important;
+  }
+
+  /* Back to Gallery icon - keep white in both themes */
+  .back-to-gallery-link i {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .back-to-gallery-link i {
     color: #ffffff !important;
   }
 
@@ -301,18 +263,12 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
   }
 
   :global([data-theme='light']) .gallery-images-section {
-    --gallery-images-bg: #f5f5f5;
-    --gallery-images-text: #111827;
-  }
-
-  /* Gallery item - theme aware */
-  .gallery-item {
     background-color: transparent;
+    color: #0f172a;
   }
 
   :global([data-theme='light']) .gallery-item {
-    background-color: transparent;
-    border: 1px solid #e5e7eb;
+    background-color: #e2e8f0;
   }
 
   /* Icons in gallery section - theme aware */
@@ -333,174 +289,164 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
     color: #ffffff !important;
   }
 
-  /* Gallery image title - keep white (overlay on image) */
-  .gallery-image-title {
+  /* Gallery card text - keep white in both themes */
+  .gallery-card-title,
+  .gallery-card-text {
     color: #ffffff !important;
   }
 
-  :global([data-theme='light']) .gallery-image-title {
+  :global([data-theme='light']) .gallery-card-title,
+  :global([data-theme='light']) .gallery-card-text {
     color: #ffffff !important;
   }
 
-  /* Lightbox Modal - theme aware */
+  :global([data-theme='light']) .gallery-item {
+    background-color: #e2e8f0;
+  }
+
+  /* Lightbox Modal - Modern Design */
   .lightbox-modal {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.95);
     color: #ffffff;
   }
 
   :global([data-theme='light']) .lightbox-modal {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.98);
     color: #111827;
   }
 
   .lightbox-modal::backdrop {
-    background: rgba(0, 0, 0, 0.9);
-  }
-
-  :global([data-theme='light']) .lightbox-modal::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  /* Lightbox Toolbar */
-  .lightbox-toolbar {
     background: transparent;
   }
 
-  :global([data-theme='light']) .lightbox-toolbar {
-    background: transparent;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  /* Lightbox Buttons */
-  .lightbox-button {
-    color: #ffffff;
-  }
-
-  .lightbox-button:hover {
+  /* Close Button */
+  .lightbox-close-btn {
     background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  :global([data-theme='light']) .lightbox-button {
-    color: #111827;
+  .lightbox-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
   }
 
-  :global([data-theme='light']) .lightbox-button:hover {
+  :global([data-theme='light']) .lightbox-close-btn {
     background: rgba(0, 0, 0, 0.05);
+    color: #111827;
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  /* Lightbox Image Area */
-  .lightbox-image-area {
-    background: transparent;
+  :global([data-theme='light']) .lightbox-close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
   }
 
-  :global([data-theme='light']) .lightbox-image-area {
-    background: transparent;
+  /* Action Buttons */
+  .lightbox-action-btn {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .lightbox-action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+  }
+
+  :global([data-theme='light']) .lightbox-action-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111827;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  :global([data-theme='light']) .lightbox-action-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
   }
 
   /* Navigation Buttons */
-  .lightbox-nav-button {
-    background: rgba(0, 0, 0, 0.5);
-    color: #ffffff;
-  }
-
-  .lightbox-nav-button:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-
-  :global([data-theme='light']) .lightbox-nav-button {
-    background: rgba(255, 255, 255, 0.9);
-    color: #111827;
-    border: 1px solid #e5e7eb;
-  }
-
-  :global([data-theme='light']) .lightbox-nav-button:hover {
-    background: rgba(255, 255, 255, 1);
-  }
-
-  /* Lightbox Sidebar */
-  .lightbox-sidebar {
-    background: transparent;
-    border-color: rgb(55, 65, 81);
-    color: #ffffff;
-  }
-
-  :global([data-theme='light']) .lightbox-sidebar {
-    background: transparent;
-    border-color: #e5e7eb;
-    color: #111827;
-  }
-
-  /* Lightbox Text Elements */
-  .lightbox-counter,
-  .lightbox-label,
-  .lightbox-text,
-  .lightbox-footer {
-    color: #ffffff;
-  }
-
-  :global([data-theme='light']) .lightbox-counter,
-  :global([data-theme='light']) .lightbox-label,
-  :global([data-theme='light']) .lightbox-text,
-  :global([data-theme='light']) .lightbox-footer {
-    color: #111827;
-  }
-
-  .lightbox-footer {
-    border-color: rgb(55, 65, 81);
-  }
-
-  :global([data-theme='light']) .lightbox-footer {
-    border-color: #e5e7eb;
-  }
-
-  /* Lightbox Icons */
-  .lightbox-modal i {
-    color: #ffffff;
-  }
-
-  :global([data-theme='light']) .lightbox-modal i {
-    color: #111827;
-  }
-
-  /* Mobile Lightbox Overlay */
-  .mobile-lightbox-overlay {
-    background: transparent;
-    color: #ffffff;
-  }
-
-  :global([data-theme='light']) .mobile-lightbox-overlay {
-    background: transparent;
-    color: #111827;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .mobile-lightbox-text,
-  .mobile-lightbox-label {
-    color: #ffffff;
-  }
-
-  :global([data-theme='light']) .mobile-lightbox-text,
-  :global([data-theme='light']) .mobile-lightbox-label {
-    color: #111827;
-  }
-
-  /* Mobile Info Toggle Button */
-  .lightbox-mobile-button {
+  .lightbox-nav-btn {
     background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
     color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .lightbox-mobile-button:hover {
+  .lightbox-nav-btn:hover {
     background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.05);
   }
 
-  :global([data-theme='light']) .lightbox-mobile-button {
+  :global([data-theme='light']) .lightbox-nav-btn {
     background: rgba(0, 0, 0, 0.05);
     color: #111827;
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  :global([data-theme='light']) .lightbox-mobile-button:hover {
+  :global([data-theme='light']) .lightbox-nav-btn:hover {
     background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Image */
+  .lightbox-image {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  :global([data-theme='light']) .lightbox-image {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Counter */
+  .lightbox-counter {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  :global([data-theme='light']) .lightbox-counter {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Title Container */
+  .lightbox-title-container {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 60%,
+      transparent 100%
+    );
+  }
+
+  :global([data-theme='light']) .lightbox-title-container {
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.7) 60%,
+      transparent 100%
+    );
+  }
+
+  /* Title and Description */
+  .lightbox-title {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .lightbox-desc {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  :global([data-theme='light']) .lightbox-title {
+    color: #111827;
+    text-shadow: none;
+  }
+
+  :global([data-theme='light']) .lightbox-desc {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Icons */
+  .lightbox-modal i {
+    color: inherit;
   }
 </style>
 
@@ -554,18 +500,25 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
     imgEl.src = data.src;
     imgEl.alt = data.alt || data.title || '';
 
-    // Update Text (Desktop)
-    titleEl.textContent = data.title || 'Untitled';
-    descEl.textContent = data.description || 'No description available.';
-    locEl.textContent = data.location || 'Unknown';
-    sourceEl.textContent = data.source || 'Unknown';
-    rightsEl.textContent = data.rights || 'Unknown';
+    // Update Title
+    titleEl.textContent = data.title || '';
 
-    // Update Text (Mobile)
-    mobileTitle.textContent = data.title || 'Untitled';
-    mobileDesc.textContent = data.description || 'No description available.';
-    mobileLoc.textContent = data.location || 'Unknown';
-    mobileSource.textContent = data.source || 'Unknown';
+    // Update Description (show only if exists)
+    if (data.description) {
+      descEl.textContent = data.description;
+      descEl.classList.remove('hidden');
+    } else {
+      descEl.classList.add('hidden');
+    }
+
+    // Update hidden elements for compatibility
+    locEl.textContent = data.location || '';
+    sourceEl.textContent = data.source || '';
+    rightsEl.textContent = data.rights || '';
+    mobileTitle.textContent = data.title || '';
+    mobileDesc.textContent = data.description || '';
+    mobileLoc.textContent = data.location || '';
+    mobileSource.textContent = data.source || '';
 
     // Update Buttons
     downloadBtn.href = data.src;

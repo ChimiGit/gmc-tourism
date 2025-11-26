@@ -58,121 +58,114 @@ function formatDateRange(startDate: Date, endDate: Date): string {
 ---
 
 <Layout title={experience.data.title} description={experience.data.description} mainClass="pt-0">
-  <article class="events-article">
-    <!-- Hero Image -->
-    <div
-      class="events-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
-    >
+  <article class="experience-page">
+    <!-- Hero Section -->
+    <div class="experience-hero relative h-[70vh] w-full overflow-hidden">
       <img
         src={`${getImageBaseUrl()}${experience.data.image}`}
         alt={experience.data.title}
-        class="absolute h-full w-full object-cover"
+        class="absolute h-full w-full object-cover scale-105"
       />
-      <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
-      <!-- Title -->
-      <h1
-        class="events-hero-title relative z-10 text-center text-4xl font-bold text-white md:text-5xl lg:text-6xl px-4"
-      >
-        {experience.data.title}
-      </h1>
-      
-      <!-- Bottom gradient fade -->
-      <div
-        class="absolute bottom-0 left-0 right-0 z-20 h-16"
-        style="background: linear-gradient(to top, #000000, transparent);"
-      >
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+
+      <!-- Hero Content -->
+      <div class="absolute bottom-0 left-0 right-0 z-20 px-6 pb-12 md:px-12 lg:px-20">
+        <div class="max-w-5xl mx-auto">
+          <!-- Category Badge -->
+          <span class="category-badge inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+            {getCategoryName()}
+          </span>
+          
+          <!-- Title -->
+          <h1 class="experience-title text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            {experience.data.title}
+          </h1>
+          
+          <!-- Quick Info with Price -->
+          <div class="flex flex-wrap items-center gap-6 text-white/80 text-sm">
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-calendar"></i>
+              <time datetime={experience.data.startDate.toISOString()}>
+                {formatDateRange(experience.data.startDate, experience.data.endDate)}
+              </time>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>{experience.data.location}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-tag"></i>
+              <span class="font-semibold text-lg">{experience.data.price}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Content -->
-    <div class="events-article-content container mx-auto max-w-4xl px-4 py-16 md:px-8">
-      <!-- Back Link -->
-      <a
-        href={getLinkUrl('/experiences')}
-        class="events-back-link mb-8 inline-flex items-center gap-2 text-sm font-medium transition-colors"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"
-          ></path>
-        </svg>
-        Back to Experiences
-      </a>
-
-      <!-- Category Badge -->
-      <div class="mb-4">
-        <span
-          class="experience-article-badge bg-gray-600 inline-block rounded px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
-        >
-          {getCategoryName()}
-        </span>
-      </div>
-
-      <!-- Meta -->
-      <div class="events-article-meta mb-8 flex flex-wrap items-center gap-4 text-sm">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-calendar-days"></i>
-          <time datetime={experience.data.startDate.toISOString()}>
-            {formatDateRange(experience.data.startDate, experience.data.endDate)}
-          </time>
-        </div>
-        <span>•</span>
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-location-dot"></i>
-          <span>{experience.data.location}</span>
-        </div>
-        <span>•</span>
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-tag"></i>
-          <span class="font-normal">{experience.data.price}</span>
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <hr class="events-divider mb-8" />
-
-      <!-- Description -->
-      <div class="events-article-description mb-8 text-lg">
-        <p>{experience.data.description}</p>
-      </div>
-
-      <!-- Content -->
-      <div class="events-article-body prose prose-lg">
-        <slot />
-      </div>
-
-      <!-- Share Section -->
-      <div class="mt-12 border-t pt-8">
-        <p class="events-share-title mb-4 text-sm font-normal uppercase tracking-wide">
-          Share this experience
-        </p>
-        <div class="flex gap-4">
+    <!-- Main Content Area -->
+    <div class="experience-content relative">
+      <div class="px-6 md:px-12 lg:px-20 py-16">
+        <div class="max-w-5xl mx-auto">
+          <!-- Back Button -->
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(experience.data.title)}&url=${encodeURIComponent(Astro.url.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-            aria-label="Share on Twitter"
+            href={getLinkUrl('/experiences')}
+            class="back-btn mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
           >
-            <i class="fa-brands fa-twitter"></i>
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Experiences</span>
           </a>
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-            aria-label="Share on Facebook"
-          >
-            <i class="fa-brands fa-facebook-f"></i>
-          </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="events-share-btn flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-            aria-label="Share on LinkedIn"
-          >
-            <i class="fa-brands fa-linkedin-in"></i>
-          </a>
+
+          <!-- Description -->
+        <div class="experience-description mb-10">
+          <h2 class="text-2xl font-semibold mb-4">About This Experience</h2>
+          <p class="text-lg leading-relaxed opacity-80">{experience.data.description}</p>
+        </div>
+
+        <!-- Body Content -->
+        <div class="experience-body prose prose-lg max-w-none">
+          <slot />
+        </div>
+
+        <!-- Share Section -->
+        <div class="mt-16">
+          <h3 class="text-xl font-semibold mb-6">Share this experience</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(experience.data.title)}&url=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="share-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+              aria-label="Share on X (Twitter)"
+            >
+              <i class="fa-brands fa-x-twitter text-xl"></i>
+            </a>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="share-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+              aria-label="Share on Facebook"
+            >
+              <i class="fa-brands fa-facebook-f text-xl"></i>
+            </a>
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="share-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+              aria-label="Share on LinkedIn"
+            >
+              <i class="fa-brands fa-linkedin-in text-xl"></i>
+            </a>
+            <button
+              class="share-btn w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+              aria-label="Copy link"
+              onclick="navigator.clipboard.writeText(window.location.href); const icon = this.querySelector('i'); if(icon) { icon.className = 'fa-solid fa-check text-xl'; setTimeout(() => { icon.className = 'fa-solid fa-link text-xl'; }, 2000); }"
+            >
+              <i class="fa-solid fa-link text-xl"></i>
+            </button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -180,143 +173,190 @@ function formatDateRange(startDate: Date, endDate: Date): string {
 </Layout>
 
 <style>
-  .events-hero-title {
+  /* Hero Section */
+  .experience-hero img {
+    transition: transform 0.5s ease-out;
+  }
+
+  .experience-title {
     color: #ffffff !important;
-    line-height: 1.2;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   }
 
-  :global([data-theme='light']) .events-hero-title {
-    color: #ffffff !important;
+  /* Back Button */
+  .back-btn {
+    color: rgba(255, 255, 255, 0.7);
   }
 
-  .events-article-content {
-    --article-bg: transparent;
-    --article-text: #ffffff;
-    --article-text-secondary: #9ca3af;
-    --article-border: rgba(255, 255, 255, 0.1);
-    --article-link: #3b82f6;
-    --article-link-hover: #60a5fa;
-    background: var(--article-bg);
+  .back-btn:hover {
+    color: #ffffff;
+    transform: translateX(-4px);
   }
 
-  :global([data-theme='light']) .events-article-content {
-    --article-bg: transparent;
-    --article-text: #111827;
-    --article-text-secondary: #6b7280;
-    --article-border: rgba(0, 0, 0, 0.1);
-    --article-link: #2563eb;
-    --article-link-hover: #1d4ed8;
+  :global([data-theme='light']) .back-btn {
+    color: #64748b;
   }
 
-  .events-back-link {
-    color: var(--article-link);
+  :global([data-theme='light']) .back-btn:hover {
+    color: #0f172a;
   }
 
-  .events-back-link:hover {
-    color: var(--article-link-hover);
+  /* Category Badge */
+  .category-badge {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .events-article-title {
-    color: var(--article-text);
+  /* Content Area */
+  .experience-content {
+    background: #000000;
+    color: #ffffff;
   }
 
-  .events-article-meta {
-    color: var(--article-text-secondary);
+  :global([data-theme='light']) .experience-content {
+    background: #f8fafc;
+    color: #0f172a;
   }
 
-  .events-article-description {
-    color: var(--article-text);
+  /* Description */
+  .experience-description h2 {
+    color: #ffffff;
   }
 
-  .events-divider {
-    border-color: var(--article-border);
+  :global([data-theme='light']) .experience-description h2 {
+    color: #0f172a;
   }
 
-  .events-article-body {
-    color: var(--article-text);
+  .experience-description p {
+    color: rgba(255, 255, 255, 0.8);
   }
 
-  .events-share-title {
-    color: var(--article-text-secondary);
+  :global([data-theme='light']) .experience-description p {
+    color: #4b5563;
   }
 
-  .events-share-btn {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--article-link);
+  /* Share Section */
+  .experience-content h3 {
+    color: #ffffff;
   }
 
-  .events-share-btn:hover {
-    background: rgba(59, 130, 246, 0.2);
-    color: var(--article-link-hover);
+  :global([data-theme='light']) .experience-content h3 {
+    color: #0f172a;
   }
 
-  /* Prose styles for content */
-  .events-article-body :global(p) {
+  /* Share Buttons */
+  .share-btn {
+    color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+  }
+
+  .share-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .share-btn {
+    color: #64748b;
+  }
+
+  :global([data-theme='light']) .share-btn:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Body Content Prose */
+  .experience-body {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  :global([data-theme='light']) .experience-body {
+    color: #374151;
+  }
+
+  .experience-body :global(p) {
     margin-bottom: 1.5rem;
-    line-height: 1.75;
-    color: var(--article-text);
+    line-height: 1.8;
   }
 
-  .events-article-body :global(h2) {
-    font-size: 1.875rem;
+  .experience-body :global(h2) {
+    font-size: 1.75rem;
     font-weight: 600;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     margin-bottom: 1.25rem;
-    color: var(--article-text);
+    color: #ffffff;
   }
 
-  .events-article-body :global(h3) {
-    font-size: 1.5rem;
+  :global([data-theme='light']) .experience-body :global(h2) {
+    color: #0f172a;
+  }
+
+  .experience-body :global(h3) {
+    font-size: 1.375rem;
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    color: var(--article-text);
+    color: #ffffff;
   }
 
-  .events-article-body :global(ul),
-  .events-article-body :global(ol) {
+  :global([data-theme='light']) .experience-body :global(h3) {
+    color: #0f172a;
+  }
+
+  .experience-body :global(ul),
+  .experience-body :global(ol) {
     margin-bottom: 1.5rem;
-    padding-left: 2rem;
+    padding-left: 1.5rem;
   }
 
-  .events-article-body :global(li) {
-    margin-bottom: 0.5rem;
+  .experience-body :global(li) {
+    margin-bottom: 0.75rem;
     line-height: 1.75;
-    color: var(--article-text);
   }
 
-  .events-article-body :global(a) {
-    color: var(--article-link);
+  .experience-body :global(a) {
+    color: #60a5fa;
     text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
-  .events-article-body :global(a:hover) {
-    color: var(--article-link-hover);
+  .experience-body :global(a:hover) {
+    color: #93c5fd;
   }
 
-  .events-article-body :global(strong) {
-    font-weight: 700;
+  :global([data-theme='light']) .experience-body :global(a) {
+    color: #2563eb;
   }
 
-  .events-article-body :global(em) {
-    font-style: italic;
+  :global([data-theme='light']) .experience-body :global(a:hover) {
+    color: #1d4ed8;
   }
 
-  .events-article-body :global(blockquote) {
-    border-left: 4px solid var(--article-border);
+  .experience-body :global(blockquote) {
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
     padding-left: 1.5rem;
     margin: 2rem 0;
     font-style: italic;
-    color: var(--article-text-secondary);
+    color: rgba(255, 255, 255, 0.7);
   }
 
-  .experience-article-badge {
-    background-color: #4b5563 !important; /* bg-gray-600 */
-    color: #ffffff !important; /* text-white */
+  :global([data-theme='light']) .experience-body :global(blockquote) {
+    border-color: #e5e7eb;
+    color: #6b7280;
   }
 
-  :global([data-theme='light']) .experience-article-badge {
-    background-color: #4b5563 !important; /* bg-gray-600 */
-    color: #ffffff !important; /* text-white */
+  .experience-body :global(img) {
+    border-radius: 1rem;
+    margin: 2rem 0;
+  }
+
+  .experience-body :global(hr) {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 3rem 0;
+  }
+
+  :global([data-theme='light']) .experience-body :global(hr) {
+    border-color: #e5e7eb;
   }
 </style>
