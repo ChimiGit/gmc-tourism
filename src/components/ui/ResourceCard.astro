@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { resource } = Astro.props;
-const { title, description, image, language } = resource.data;
+const { title, description, image } = resource.data;
 const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
 ---
 
@@ -46,13 +46,6 @@ const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
     <p class="resource-description">
       {description}
     </p>
-    
-    <!-- Language Badge -->
-    <div class="resource-footer">
-      <span class="resource-badge">
-        {language}
-      </span>
-    </div>
   </div>
 </a>
 
@@ -64,7 +57,6 @@ const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
     --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
     --title-color: #1a1a1a;
     --desc-color: #64748b;
-    --badge-bg: #1e3a5f;
     
     display: flex;
     flex-direction: column;
@@ -85,7 +77,7 @@ const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
 
   .resource-image-wrapper {
     position: relative;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   }
@@ -162,27 +154,6 @@ const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
     overflow: hidden;
   }
 
-  .resource-footer {
-    margin-top: auto;
-    padding-top: 0.5rem;
-  }
-
-  .resource-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 1rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    color: #ffffff;
-    background: var(--badge-bg);
-    border-radius: 6px;
-    transition: background 0.3s ease;
-  }
-
-  .resource-card:hover .resource-badge {
-    background: #0f2847;
-  }
 
   /* Dark theme */
   :global([data-theme='dark']) .resource-card {
@@ -192,16 +163,12 @@ const resourceUrl = getLinkUrl(`/resources/${resource.slug}`);
     --card-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.5);
     --title-color: #f8fafc;
     --desc-color: #94a3b8;
-    --badge-bg: #1e40af;
   }
 
   :global([data-theme='dark']) .resource-image-wrapper {
     background: linear-gradient(135deg, #1e1e1e 0%, #0f0f0f 100%);
   }
 
-  :global([data-theme='dark']) .resource-card:hover .resource-badge {
-    background: #1e3a8a;
-  }
 
   :global([data-theme='dark']) .resource-image-overlay {
     background: linear-gradient(

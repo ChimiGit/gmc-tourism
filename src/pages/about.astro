@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import OurPartners from '../components/sections/OurPartners.astro';
+import { getImageBaseUrl } from '../utils/images';
+---
+
+<Layout
+  title="About Us | GMC Tourism"
+  description="Learn about GMC Tourism and our mission to showcase the beauty of Gelephu Mindfulness City and Bhutan."
+  mainClass="pt-0"
+>
+  <!-- Hero Section -->
+  <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
+    <!-- Video Background -->
+    <video
+      id="about-hero-video"
+      class="absolute h-full w-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    >
+      <source src={`${getImageBaseUrl()}/assets/aboutus.mp4`} type="video/mp4" />
+      <!-- Fallback image -->
+      <img
+        src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+        alt="About Us"
+        class="absolute h-full w-full object-cover"
+      />
+    </video>
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+    <div class="relative z-10 text-center px-4">
+      <h1
+        class="about-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl drop-shadow-sm"
+      >
+        About Us
+      </h1>
+      <p class="about-hero-subtitle mt-4 text-lg text-white md:text-xl drop-shadow-sm">
+        Discover the story behind GMC Tourism
+      </p>
+    </div>
+    
+    <!-- Bottom gradient fade -->
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 h-16"
+      style="background: linear-gradient(to top, #000000, transparent);"
+    >
+    </div>
+  </div>
+
+  <!-- About Content Section -->
+  <section class="about-content-section py-16 px-4 sm:px-6 lg:px-8 min-h-[50vh]">
+    <div class="max-w-4xl mx-auto">
+      <div class="prose prose-lg max-w-none">
+        <h2 class="about-content-title text-3xl md:text-4xl font-bold mb-6">
+          Welcome to GMC Tourism
+        </h2>
+        <p class="about-content-text text-lg leading-relaxed mb-6">
+          GMC Tourism is dedicated to showcasing the beauty, culture, and experiences of Gelephu Mindfulness City and the Kingdom of Bhutan. We provide curated travel information, resources, and insights to help visitors discover the unique charm of this special region.
+        </p>
+        <p class="about-content-text text-lg leading-relaxed mb-6">
+          Our mission is to promote sustainable tourism while preserving the rich cultural heritage and natural beauty of Bhutan. Through our platform, we connect travelers with authentic experiences, local events, and valuable resources.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Partners Section -->
+  <OurPartners />
+</Layout>
+
+<script>
+  // Ensure video plays
+  function initializeAboutHeroVideo() {
+    const aboutVideo = document.getElementById('about-hero-video') as HTMLVideoElement | null;
+    if (!aboutVideo) return;
+
+    // Force mute
+    aboutVideo.muted = true;
+    aboutVideo.defaultMuted = true;
+    aboutVideo.volume = 0;
+
+    // Try to play the video
+    const playVideo = () => {
+      const playPromise = aboutVideo.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('About hero video is playing');
+          })
+          .catch((error) => {
+            console.log('Video autoplay prevented, will retry on user interaction:', error);
+            const playOnInteraction = () => {
+              aboutVideo.play().catch((e) => console.log('Retry failed:', e));
+              document.removeEventListener('click', playOnInteraction);
+              document.removeEventListener('touchstart', playOnInteraction);
+              document.removeEventListener('scroll', playOnInteraction);
+            };
+            document.addEventListener('click', playOnInteraction, { once: true });
+            document.addEventListener('touchstart', playOnInteraction, { once: true });
+            document.addEventListener('scroll', playOnInteraction, { once: true });
+          });
+      }
+    };
+
+    // Wait for video to be loaded
+    if (aboutVideo.readyState >= 3) {
+      playVideo();
+    } else {
+      aboutVideo.addEventListener('loadeddata', playVideo, { once: true });
+      aboutVideo.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    // Ensure video continues playing when in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && aboutVideo.paused) {
+            aboutVideo.play().catch((e) => console.log('IntersectionObserver play failed:', e));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(aboutVideo);
+
+    // Ensure video doesn't pause
+    aboutVideo.addEventListener('pause', () => {
+      if (aboutVideo.readyState >= 3) {
+        aboutVideo.play().catch((e) => console.log('Resume after pause failed:', e));
+      }
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAboutHeroVideo);
+  } else {
+    initializeAboutHeroVideo();
+  }
+</script>
+
+<style>
+  .about-hero-title {
+    color: #ffffff !important;
+  }
+
+  .about-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .about-hero-title,
+  :global([data-theme='light']) .about-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .about-content-section {
+    --about-bg: #000000;
+    --about-text: #ffffff;
+    background: var(--about-bg);
+  }
+
+  :global([data-theme='light']) .about-content-section {
+    --about-bg: #f5f5f5;
+    --about-text: #000000;
+  }
+
+  .about-content-title {
+    color: var(--about-text);
+  }
+
+  .about-content-text {
+    color: var(--about-text);
+  }
+
+  #about-hero-video {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #about-hero-video::-webkit-media-controls {
+    display: none !important;
+  }
+
+  #about-hero-video::-webkit-media-controls-enclosure {
+    display: none !important;
+  }
+
+  #about-hero-video::-webkit-media-controls-panel {
+    display: none !important;
+  }
+
+  #about-hero-video::-webkit-media-controls-play-button {
+    display: none !important;
+  }
+
+  #about-hero-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+  }
+</style>
+

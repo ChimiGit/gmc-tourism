@@ -29,8 +29,8 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
       <source src={`${getImageBaseUrl()}/assets/aboutus.mp4`} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
-    <!-- Dark Overlay similar to Hero section -->
-    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60"></div>
+    <!-- Dark Overlay -->
+    <div class="absolute inset-0 z-10 bg-black/70"></div>
   </div>
 
   <!-- Content Container -->
@@ -47,7 +47,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
 
         <!-- Single Card with Dynamic Content -->
         <div
-          class="carousel-card bg-white/60 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-sm text-black text-center"
+          class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center"
         >
           <div
             class="carousel-content flex items-center justify-center min-h-[200px]"
@@ -88,6 +88,13 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     </div>
   </div>
 
+  <!-- Top gradient to hide line from hero section -->
+  <div
+    class="absolute top-0 left-0 right-0 z-20 h-16"
+    style="background: linear-gradient(to bottom, #000000 0%, #000000 30%, rgba(0, 0, 0, 0.8) 60%, transparent 100%);"
+  >
+  </div>
+
   <!-- Bottom gradient -->
   <div
     class="absolute bottom-0 left-0 right-0 z-20 h-16"
@@ -123,31 +130,58 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     /* Flex centering handled in HTML classes */
   }
 
+  .liquid-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+  }
+
   .carousel-card {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   .carousel-card p,
   .carousel-card [data-carousel-text] {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   :global([data-theme='dark']) .carousel-card {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   :global([data-theme='dark']) .carousel-card p,
   :global([data-theme='dark']) .carousel-card [data-carousel-text] {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   :global([data-theme='light']) .carousel-card {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   :global([data-theme='light']) .carousel-card p,
   :global([data-theme='light']) .carousel-card [data-carousel-text] {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   #about-video::-webkit-media-controls {

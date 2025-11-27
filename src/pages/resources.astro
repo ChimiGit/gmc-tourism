@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ResourceCard from '../components/ui/ResourceCard.astro';
 import { getCollection } from 'astro:content';
+import { getImageBaseUrl } from '../utils/images';
 
 const allResources = await getCollection('resources');
 
@@ -44,18 +45,35 @@ const formatAreaName = (area: string) => {
 >
   <div class="resources-page min-h-screen">
     <!-- Hero Section -->
-    <div class="resources-hero py-16 text-center">
-      <h1 class="resources-hero-title text-4xl font-bold md:text-5xl lg:text-6xl">
-        GMC Tourism Resources
-      </h1>
+    <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
+      <img
+        src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+        alt="GMC Tourism Resources"
+        class="absolute h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60">
+      </div>
+      <div class="relative z-10 text-center px-4">
+        <h1
+          class="resources-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl drop-shadow-sm"
+        >
+          GMC Tourism Resources
+        </h1>
+        <p class="resources-hero-subtitle mt-4 text-lg text-white md:text-xl drop-shadow-sm">
+          Explore marketing materials, travel guides, and brochures
+        </p>
+      </div>
+
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
     </div>
 
     <!-- Main Content -->
-    <div class="resources-content mx-auto max-w-7xl px-4 pb-16 md:px-8">
-      <h2 class="resources-section-title mb-8 text-2xl font-semibold md:text-3xl">
-        Marketing materials
-      </h2>
-
+    <div class="resources-content mx-auto max-w-7xl px-4 pb-16 md:px-8 mt-16">
       <div class="flex flex-col gap-8 lg:flex-row">
         <!-- Sidebar -->
         <aside class="resources-sidebar w-full shrink-0 lg:w-64">
@@ -84,37 +102,21 @@ const formatAreaName = (area: string) => {
             <label class="resources-label mb-2 block text-sm font-semibold">Publisher</label>
             <div class="space-y-2">
               <label class="flex cursor-pointer items-center gap-2">
-                <input
-                  type="radio"
-                  name="publisher"
-                  value="all"
-                  checked
-                  class="resources-radio"
-                />
+                <input type="radio" name="publisher" value="all" checked class="resources-radio" />
                 <span class="resources-filter-text text-sm">
-                  <span class="text-red-500">All Brochures</span>
+                  <span>All Brochures</span>
                   <span class="resources-count">({totalCount})</span>
                 </span>
               </label>
               <label class="flex cursor-pointer items-center gap-2">
-                <input
-                  type="radio"
-                  name="publisher"
-                  value="jnto"
-                  class="resources-radio"
-                />
+                <input type="radio" name="publisher" value="jnto" class="resources-radio" />
                 <span class="resources-filter-text text-sm">
                   JNTO only
                   <span class="resources-count">({jntoCount})</span>
                 </span>
               </label>
               <label class="flex cursor-pointer items-center gap-2">
-                <input
-                  type="radio"
-                  name="publisher"
-                  value="non-jnto"
-                  class="resources-radio"
-                />
+                <input type="radio" name="publisher" value="non-jnto" class="resources-radio" />
                 <span class="resources-filter-text text-sm">
                   Non-JNTO
                   <span class="resources-count">({nonJntoCount})</span>
@@ -134,7 +136,10 @@ const formatAreaName = (area: string) => {
               <span class="resources-label text-sm font-semibold">Category</span>
               <i class="fa-solid fa-plus text-sm transition-transform"></i>
             </button>
-            <div class="resources-accordion-content mt-3 hidden space-y-2" data-accordion-content="category">
+            <div
+              class="resources-accordion-content mt-3 hidden space-y-2"
+              data-accordion-content="category"
+            >
               {
                 categories.map((category) => (
                   <label class="flex cursor-pointer items-center gap-2">
@@ -154,29 +159,25 @@ const formatAreaName = (area: string) => {
           </div>
 
           <!-- Area Filter -->
-          <div class="resources-filter-section border-t pt-4">
-            <div class="mb-3 flex items-center gap-2">
+          <div class="resources-filter-section mb-6 border-t pt-4">
+            <button
+              type="button"
+              class="resources-accordion-btn flex w-full items-center justify-between text-left"
+              data-accordion="area"
+              aria-expanded="false"
+            >
               <span class="resources-label text-sm font-semibold">Area</span>
-              <button
-                type="button"
-                class="resources-map-btn flex items-center gap-1 text-xs underline"
-              >
-                Map <i class="fa-regular fa-map text-xs"></i>
-              </button>
-            </div>
-            <div class="space-y-2">
+              <i class="fa-solid fa-plus text-sm transition-transform"></i>
+            </button>
+            <div
+              class="resources-accordion-content mt-3 hidden space-y-2"
+              data-accordion-content="area"
+            >
               {
                 areas.map((area) => (
                   <label class="flex cursor-pointer items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="area"
-                      value={area}
-                      class="resources-checkbox"
-                    />
-                    <span class="resources-filter-text text-sm">
-                      {formatAreaName(area)}
-                    </span>
+                    <input type="checkbox" name="area" value={area} class="resources-checkbox" />
+                    <span class="resources-filter-text text-sm">{formatAreaName(area)}</span>
                   </label>
                 ))
               }
@@ -186,10 +187,7 @@ const formatAreaName = (area: string) => {
 
         <!-- Resources Grid -->
         <div class="flex-1">
-          <div
-            class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            id="resources-grid"
-          >
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" id="resources-grid">
             {
               sortedResources.map((resource) => (
                 <div
@@ -244,12 +242,13 @@ const formatAreaName = (area: string) => {
   // Filter function
   function filterResources() {
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const selectedPublisher = document.querySelector('input[name="publisher"]:checked')?.value || 'all';
-    
+    const selectedPublisher =
+      document.querySelector('input[name="publisher"]:checked')?.value || 'all';
+
     const selectedCategories = Array.from(categoryCheckboxes)
       .filter((cb) => cb.checked)
       .map((cb) => cb.value);
-    
+
     const selectedAreas = Array.from(areaCheckboxes)
       .filter((cb) => cb.checked)
       .map((cb) => cb.value);
@@ -264,15 +263,15 @@ const formatAreaName = (area: string) => {
       const area = item.getAttribute('data-area') || '';
 
       // Check search match
-      const matchesSearch = !searchTerm || 
-        title.includes(searchTerm) || 
-        description.includes(searchTerm);
+      const matchesSearch =
+        !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
 
       // Check publisher match
       const matchesPublisher = selectedPublisher === 'all' || publisher === selectedPublisher;
 
       // Check category match (if any selected)
-      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
+      const matchesCategory =
+        selectedCategories.length === 0 || selectedCategories.includes(category);
 
       // Check area match (if any selected)
       const matchesArea = selectedAreas.length === 0 || selectedAreas.includes(area);
@@ -308,13 +307,22 @@ const formatAreaName = (area: string) => {
 
 <style>
   .resources-page {
-    --resources-bg: #ffffff;
+    --resources-bg: #000000;
+    --resources-text: #ffffff;
+    --resources-text-secondary: #9ca3af;
+    --resources-border: rgba(255, 255, 255, 0.1);
+    --resources-input-bg: #111111;
+    --resources-input-border: rgba(255, 255, 255, 0.2);
+    background: var(--resources-bg);
+  }
+
+  :global([data-theme='light']) .resources-page {
+    --resources-bg: #f5f5f5;
     --resources-text: #000000;
     --resources-text-secondary: #4b5563;
     --resources-border: #e5e7eb;
     --resources-input-bg: #ffffff;
     --resources-input-border: #d1d5db;
-    background: var(--resources-bg);
   }
 
   :global([data-theme='dark']) .resources-page {
@@ -326,12 +334,17 @@ const formatAreaName = (area: string) => {
     --resources-input-border: rgba(255, 255, 255, 0.2);
   }
 
-  .resources-hero {
-    background: var(--resources-bg);
+  .resources-hero-title {
+    color: #ffffff !important;
   }
 
-  .resources-hero-title {
-    color: var(--resources-text);
+  .resources-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .resources-hero-title,
+  :global([data-theme='light']) .resources-hero-subtitle {
+    color: #ffffff !important;
   }
 
   .resources-content {
@@ -420,4 +433,3 @@ const formatAreaName = (area: string) => {
     overflow: hidden;
   }
 </style>
-

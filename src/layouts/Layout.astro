@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 import Seo from '../components/layout/Seo.astro';
 import Header from '../components/layout/Header.astro';
@@ -38,6 +39,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <ViewTransitions /> -->
     <Seo {title} {description} {ogImage} {canonical} {structuredData} noIndex={noIndex} />
   </head>
   <body class:list={['min-h-screen text-slate-100 antialiased', bodyClass]}>
@@ -48,3 +50,108 @@ const {
     <Footer />
   </body>
 </html>
+
+<script is:inline>
+  // Smooth page transitions and link prefetching
+  document.addEventListener('DOMContentLoaded', () => {
+    // Prefetch links on hover and touchstart for instant navigation
+    const links = document.querySelectorAll('a[href]');
+    const base = document.querySelector('base')?.getAttribute('href') || '';
+
+    const prefetch = (url) => {
+      // Skip if already prefetched
+      if (document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+        return;
+      }
+
+      if (document.createElement('link').relList.supports('prefetch')) {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = url.startsWith('/') ? base + url : url;
+        link.as = 'document';
+        document.head.appendChild(link);
+      }
+    };
+
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+
+      // Skip external links, anchors, and special protocols
+      if (
+        !href ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('http://') ||
+        href.startsWith('https://') ||
+        (link.hasAttribute('target') && link.getAttribute('target') === '_blank')
+      ) {
+        return;
+      }
+
+      // Prefetch on hover
+      link.addEventListener(
+        'mouseenter',
+        () => {
+          prefetch(href);
+        },
+        { once: true }
+      );
+
+      // Prefetch on touchstart for mobile
+      link.addEventListener(
+        'touchstart',
+        () => {
+          prefetch(href);
+        },
+        { once: true, passive: true }
+      );
+    });
+  });
+</script>
+
+<style>
+  /* Smooth view transitions */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: fade-in;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Prevent flash of unstyled content during transitions and smooth scroll */
+  html {
+    view-transition-name: root;
+    scroll-behavior: smooth;
+  }
+
+  /* Optimize paint during transitions */
+  [data-page-content] {
+    will-change: opacity;
+  }
+</style>

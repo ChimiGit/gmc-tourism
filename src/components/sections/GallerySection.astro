@@ -34,23 +34,44 @@ const recentGalleries = sortedGalleries.slice(0, 3);
         recentGalleries.map((gallery) => (
           <a
             href={getLinkUrl(`/gallery/${gallery.slug}`)}
-            class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-transform hover:-translate-y-1"
+            class="gallery-item group relative block overflow-hidden rounded-xl bg-gray-900 aspect-4/3 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
             data-animate-item
           >
-            <img
-              src={`${getImageBaseUrl()}${gallery.data.coverImage}`}
-              alt={gallery.data.title}
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-            />
-            <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
-            <div class="absolute bottom-0 left-0 p-6 w-full">
-              <h2 class="gallery-card-title text-xl font-bold text-white mb-2">
-                {gallery.data.title}
-              </h2>
-              <p class="gallery-card-text text-sm text-white flex items-center gap-2">
-                <i class="fa-regular fa-images" />
-                {gallery.data.images.length} file(s)
-              </p>
+            <!-- Card Image -->
+            <div class="relative h-full w-full overflow-hidden">
+              <img
+                src={`${getImageBaseUrl()}${gallery.data.coverImage}`}
+                alt={gallery.data.title}
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              
+              <!-- Category Tag (using description as category) -->
+              {gallery.data.description && (
+                <div class="absolute top-3 right-3 z-10">
+                  <span class="gallery-category-tag liquid-glass-badge inline-block px-3 py-1 rounded-full text-xs font-medium text-white">
+                    Gallery
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <!-- Bottom Overlay with Text -->
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-4">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h2 class="gallery-card-title text-base font-semibold text-white mb-1 truncate">
+                    {gallery.data.title}
+                  </h2>
+                  <p class="gallery-card-text text-xs text-white/80 flex items-center gap-1.5">
+                    <i class="fa-regular fa-images text-[10px]" />
+                    <span>{gallery.data.images.length} file(s)</span>
+                  </p>
+                </div>
+                <!-- Download/View Icon -->
+                <div class="gallery-icon liquid-glass-button flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                  <i class="fa-solid fa-arrow-right text-white text-xs"></i>
+                </div>
+              </div>
             </div>
           </a>
         ))
@@ -99,10 +120,54 @@ const recentGalleries = sortedGalleries.slice(0, 3);
 
   .gallery-item {
     background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .gallery-item:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
   }
 
   :global([data-theme='light']) .gallery-item {
     background-color: rgba(15, 23, 42, 0.05);
+  }
+
+  .liquid-glass-badge {
+    background: rgba(107, 114, 128, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='dark']) .liquid-glass-badge,
+  :global([data-theme='light']) .liquid-glass-badge {
+    color: #ffffff !important;
+  }
+
+  .liquid-glass-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: none;
+    box-shadow: 
+      0 4px 16px 0 rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .liquid-glass-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 6px 20px 0 rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .liquid-glass-button i {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='dark']) .liquid-glass-button i,
+  :global([data-theme='light']) .liquid-glass-button i {
+    color: #ffffff !important;
   }
 
   /* Gallery card text - keep white in both themes */

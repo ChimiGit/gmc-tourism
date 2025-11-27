@@ -7,7 +7,7 @@ import { getImageBaseUrl } from '../../utils/images';
 
 <button
   id="theme-toggle"
-  class="inline-flex items-center justify-center p-0 bg-transparent border-0 text-inherit focus:outline-none focus-visible:outline-none focus:ring-0"
+  class="relative z-[60] inline-flex items-center justify-center p-0 bg-transparent border-0 text-inherit focus:outline-none focus-visible:outline-none focus:ring-0"
   aria-label="Toggle theme"
   title="Toggle theme"
 >
@@ -19,7 +19,6 @@ import { getImageBaseUrl } from '../../utils/images';
   (function () {
     const html = document.documentElement;
     const THEME_KEY = 'theme';
-    const toggleBtn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
     const toggleIcon = document.getElementById('theme-toggle-icon') as HTMLElement | null;
 
     function applyTheme(theme: 'light' | 'dark') {
@@ -52,7 +51,7 @@ import { getImageBaseUrl } from '../../utils/images';
         if (logo) {
           const container = logo.closest('[data-logo-dark]');
           const darkUrl = container?.getAttribute('data-logo-dark');
-          logo.src = darkUrl || `${getImageBaseUrl()}/logo-dark.svg`;
+          if (darkUrl) logo.src = darkUrl;
         }
         if (menuOverlayElement) {
           menuOverlayElement.classList.remove('bg-black', 'text-white');
@@ -75,7 +74,7 @@ import { getImageBaseUrl } from '../../utils/images';
         if (logo) {
           const container = logo.closest('[data-logo-light]');
           const lightUrl = container?.getAttribute('data-logo-light');
-          logo.src = lightUrl || `${getImageBaseUrl()}/logo-light.svg`;
+          if (lightUrl) logo.src = lightUrl;
         }
         if (menuOverlayElement) {
           menuOverlayElement.classList.remove('bg-white', 'text-black');
@@ -106,18 +105,28 @@ import { getImageBaseUrl } from '../../utils/images';
     }
 
     // Init ASAP
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initTheme);
-    } else {
+    function initThemeManager() {
       initTheme();
+      
+      // Use event delegation for theme toggle - works after DOM swaps
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const toggleBtn = target.closest('#theme-toggle');
+        
+        if (toggleBtn) {
+          e.preventDefault();
+          const current = (html.getAttribute('data-theme') || 'dark') as 'dark' | 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        }
+      });
     }
 
-    // Toggle
-    toggleBtn?.addEventListener('click', () => {
-      const current = (html.getAttribute('data-theme') || 'dark') as 'dark' | 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initThemeManager);
+    } else {
+      initThemeManager();
+    }
 
     // React if other tabs change it
     window.addEventListener('storage', (e) => {
@@ -125,9 +134,14 @@ import { getImageBaseUrl } from '../../utils/images';
         applyTheme(e.newValue as 'light' | 'dark');
       }
     });
-  })();
 
-  function getImageBaseUrl() {
-    throw new Error('Function not implemented.');
-  }
+    // Re-initialize theme after View Transitions
+    document.addEventListener('astro:after-swap', () => {
+      initTheme(); // Re-apply theme to new DOM
+    });
+
+    document.addEventListener('astro:page-load', () => {
+      initTheme(); // Re-apply theme to new DOM
+    });
+  })();
 </script>

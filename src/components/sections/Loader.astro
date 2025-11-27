@@ -60,7 +60,7 @@ const words = LOADER_TEXT.split(' ');
   >
     {
       words.map((word) => (
-        <span class="text1 mr-2 text-2xl font-medium text-white md:text-3xl">{word}</span>
+        <span class="text1 mr-2 text-2xl font-medium md:text-3xl loader-text">{word}</span>
       ))
     }
   </div>
@@ -185,5 +185,14 @@ const words = LOADER_TEXT.split(' ');
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .loader-text {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .loader-text,
+  :global([data-theme='dark']) .loader-text {
+    color: #ffffff !important;
   }
 </style>

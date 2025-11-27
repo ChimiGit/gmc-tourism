@@ -88,6 +88,16 @@ const resources = defineCollection({
   }),
 });
 
+const partners = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    logo: z.string(),
+    website: z.string().optional(),
+    order: z.number().default(0),
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
@@ -95,4 +105,5 @@ export const collections = {
   gallery,
   about,
   resources,
+  partners,
 };
