@@ -117,8 +117,8 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
             <a
               href={getLinkUrl('/about')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
-            >
-              About
+              >
+                About
             </a>
           </div>
 
@@ -309,13 +309,13 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
           menuToggleBtn.addEventListener(
             'click',
             (e) => {
-              e.preventDefault();
+            e.preventDefault();
               e.stopPropagation();
-              if (isMenuOpen) {
-                closeMenu();
-              } else {
-                openMenu();
-              }
+            if (isMenuOpen) {
+              closeMenu();
+            } else {
+              openMenu();
+            }
             },
             false
           ); // Use bubble phase
@@ -338,40 +338,40 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
                   target.parentElement === menuClose));
 
             if (isCloseButton) {
-              e.preventDefault();
+            e.preventDefault();
               e.stopPropagation();
               e.stopImmediatePropagation();
-              closeMenu();
+            closeMenu();
               return false;
-            }
+          }
 
             // Don't handle menu toggle here - let the direct listener handle it
             // Check for backdrop
             if (target.closest('#menu-backdrop')) {
-              e.preventDefault();
-              closeMenu();
+            e.preventDefault();
+            closeMenu();
               return;
-            }
+          }
 
             // Check for submenu toggle
             const submenuToggle = target.closest('.submenu-toggle');
-            if (submenuToggle) {
-              e.preventDefault();
-              const submenuId = submenuToggle.getAttribute('data-submenu');
+          if (submenuToggle) {
+            e.preventDefault();
+            const submenuId = submenuToggle.getAttribute('data-submenu');
               const submenuContent = document.querySelector(
                 `[data-submenu-content="${submenuId}"]`
               );
-              if (submenuContent) {
-                submenuContent.classList.toggle('hidden');
-              }
-              return;
+            if (submenuContent) {
+              submenuContent.classList.toggle('hidden');
             }
+              return;
+          }
 
             // Check for menu links
             if (target.closest('#menu-items a')) {
-              closeMenu();
+            closeMenu();
               return;
-            }
+          }
           },
           false
         ); // Use bubble phase, not capture
