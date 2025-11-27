@@ -68,7 +68,8 @@ import { getImageBaseUrl } from '../../utils/images';
     <!-- Scroll Indicator -->
     <div
       id="scroll-indicator"
-      class="absolute bottom-12 left-1/2 -translate-x-1/2 transform opacity-0"
+      class="absolute bottom-12 left-1/2 -translate-x-1/2 transform"
+      style="opacity: 0.8; transform: translate(-50%, 0);"
     >
       <div class="flex flex-col items-center">
         <div class="h-12 w-px bg-white"></div>
@@ -106,21 +107,21 @@ import { getImageBaseUrl } from '../../utils/images';
     }, 1000);
   }
 
-  // Scroll indicator fade in
+  // Scroll indicator animation (no fade in, just the up/down movement)
   const scrollIndicator = document.getElementById('scroll-indicator');
   if (scrollIndicator) {
-    setTimeout(() => {
-      scrollIndicator.style.transition = 'opacity 1s, transform 1s';
-      scrollIndicator.style.opacity = '0.8';
+    // Set initial state - already centered and visible
+    scrollIndicator.style.opacity = '0.8';
+    scrollIndicator.style.transform = 'translate(-50%, 0)';
+    scrollIndicator.style.transition = 'transform 1.25s ease-in-out';
 
-      // Animate scroll indicator
-      setInterval(() => {
-        scrollIndicator.style.transform = 'translate(-50%, 0)';
-        setTimeout(() => {
-          scrollIndicator.style.transform = 'translate(-50%, 24px)';
-        }, 1250);
-      }, 2500);
-    }, 5000);
+    // Animate scroll indicator up and down
+    setInterval(() => {
+      scrollIndicator.style.transform = 'translate(-50%, 0)';
+      setTimeout(() => {
+        scrollIndicator.style.transform = 'translate(-50%, 24px)';
+      }, 1250);
+    }, 2500);
   }
 
   // Video parallax effect (Commented out - using image instead)
