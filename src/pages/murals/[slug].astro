@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 export async function getStaticPaths() {
@@ -11,24 +11,9 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  mural: {
-    id: string;
-    slug: string;
-    body: string;
-    data: {
-      title: string;
-      description: string;
-      image: string;
-      pillar: '1' | '2' | '3';
-      pillarName: string;
-      artist?: string;
-      location?: string;
-      project: string;
-      featured: boolean;
-    };
-  };
-}
+type Props = {
+  mural: CollectionEntry<'murals'>;
+};
 
 const { mural } = Astro.props;
 const { Content } = await render(mural);
@@ -54,7 +39,7 @@ const relatedMurals = allMurals
         alt={mural.data.title}
         class="absolute h-full w-full object-cover scale-105"
       />
-      <div class="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
 
       <!-- Hero Content -->
       <div class="absolute bottom-0 left-0 right-0 z-20 px-6 pb-12 md:px-12 lg:px-20">
@@ -135,6 +120,223 @@ const relatedMurals = allMurals
           <div class="mural-body prose prose-lg max-w-none">
             <Content />
           </div>
+
+          <!-- Artist Information Section -->
+          {
+            mural.data.artistInfo && (
+              <div class="artist-info-section mt-16 pt-12 border-t">
+                <h2 class="text-3xl font-bold mb-8">Artist Information</h2>
+                <div class="artist-info-card grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <!-- Artist Photo -->
+                  {
+                    mural.data.artistInfo.photo && (
+                      <div class="artist-photo">
+                        <img
+                          src={`${getImageBaseUrl()}${mural.data.artistInfo.photo}`}
+                          alt={mural.data.artistInfo.name}
+                          class="w-full h-auto rounded-lg object-cover shadow-lg"
+                        />
+                      </div>
+                    )
+                  }
+
+                  <!-- Artist Details -->
+                  <div
+                    class={`artist-details ${mural.data.artistInfo.photo ? 'lg:col-span-2' : 'lg:col-span-3'}`}
+                  >
+                    <h3 class="text-2xl font-semibold mb-4">{mural.data.artistInfo.name}</h3>
+
+                    {
+                      mural.data.artistInfo.birthYear && mural.data.artistInfo.birthplace && (
+                        <p class="text-sm opacity-70 mb-6">
+                          Born {mural.data.artistInfo.birthYear} from {mural.data.artistInfo.birthplace}
+                        </p>
+                      )
+                    }
+
+                    {
+                      mural.data.artistInfo.bio && (
+                        <div class="mb-6">
+                          <p class="leading-relaxed opacity-90">{mural.data.artistInfo.bio}</p>
+                        </div>
+                      )
+                    }
+
+                    <div class="artist-details-grid space-y-4">
+                      {
+                        mural.data.artistInfo.education && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-graduation-cap" />
+                              <span>Education</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.education}</p>
+                          </div>
+                        )
+                      }
+
+                      {
+                        mural.data.artistInfo.experience && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-briefcase" />
+                              <span>Experience</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.experience}</p>
+                          </div>
+                        )
+                      }
+
+                      {
+                        mural.data.artistInfo.inspiration && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-lightbulb" />
+                              <span>Inspiration</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.inspiration}</p>
+                          </div>
+                        )
+                      }
+
+                      {
+                        mural.data.artistInfo.mediums && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-palette" />
+                              <span>Artistic Mediums</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.mediums}</p>
+                          </div>
+                        )
+                      }
+
+                      {
+                        mural.data.artistInfo.vastBhutan && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-heart" />
+                              <span>VAST Bhutan</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.vastBhutan}</p>
+                          </div>
+                        )
+                      }
+
+                      {
+                        mural.data.artistInfo.recentProject && (
+                          <div class="artist-detail-item">
+                            <h4 class="font-semibold mb-1 flex items-center gap-2">
+                              <i class="fa-solid fa-paintbrush" />
+                              <span>Recent Project</span>
+                            </h4>
+                            <p class="opacity-80">{mural.data.artistInfo.recentProject}</p>
+                          </div>
+                        )
+                      }
+                    </div>
+
+                    <!-- Contact Information -->
+                    {
+                      mural.data.artistInfo.contact && (
+                        <div class="artist-contact mt-8 pt-6 border-t">
+                          <h4 class="font-semibold mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-envelope" />
+                            <span>Connect</span>
+                          </h4>
+                          <div class="flex flex-wrap items-center gap-4">
+                            {
+                              mural.data.artistInfo.contact.tiktok && (
+                                <a
+                                  href={mural.data.artistInfo.contact.tiktok}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="TikTok"
+                                >
+                                  <i class="fa-brands fa-tiktok text-xl"></i>
+                                </a>
+                              )
+                            }
+                            {
+                              mural.data.artistInfo.contact.instagram && (
+                                <a
+                                  href={mural.data.artistInfo.contact.instagram}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="Instagram"
+                                >
+                                  <i class="fa-brands fa-instagram text-xl"></i>
+                                </a>
+                              )
+                            }
+                            {
+                              mural.data.artistInfo.contact.facebook && (
+                                <a
+                                  href={mural.data.artistInfo.contact.facebook}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="Facebook"
+                                >
+                                  <i class="fa-brands fa-facebook-f text-xl"></i>
+                                </a>
+                              )
+                            }
+                            {
+                              mural.data.artistInfo.contact.twitter && (
+                                <a
+                                  href={mural.data.artistInfo.contact.twitter}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="Twitter"
+                                >
+                                  <i class="fa-brands fa-x-twitter text-xl"></i>
+                                </a>
+                              )
+                            }
+                            {
+                              mural.data.artistInfo.contact.linkedin && (
+                                <a
+                                  href={mural.data.artistInfo.contact.linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="LinkedIn"
+                                >
+                                  <i class="fa-brands fa-linkedin-in text-xl"></i>
+                                </a>
+                              )
+                            }
+                            {
+                              mural.data.artistInfo.contact.email && (
+                                <a
+                                  href={`mailto:${mural.data.artistInfo.contact.email}`}
+                                  class="contact-link w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300"
+                                  aria-label="Email"
+                                >
+                                  <i class="fa-solid fa-envelope text-xl"></i>
+                                </a>
+                              )
+                            }
+                          </div>
+                          {
+                            mural.data.artistInfo.contact.name && (
+                              <p class="text-sm opacity-70 mt-4">
+                                Contact as: {mural.data.artistInfo.contact.name}
+                              </p>
+                            )
+                          }
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              </div>
+            )
+          }
 
           <!-- Related Murals Section -->
           {
@@ -402,5 +604,89 @@ const relatedMurals = allMurals
 
   :global([data-theme='light']) .related-mural-card h3 {
     color: #0f172a;
+  }
+
+  /* Artist Information Section */
+  .artist-info-section h2 {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .artist-info-section h2 {
+    color: #0f172a;
+  }
+
+  .artist-info-section .border-t {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .artist-info-section .border-t {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .artist-info-card {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .artist-info-card {
+    color: #0f172a;
+  }
+
+  .artist-details h3 {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .artist-details h3 {
+    color: #0f172a;
+  }
+
+  .artist-detail-item h4 {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .artist-detail-item h4 {
+    color: #0f172a;
+  }
+
+  .artist-detail-item p {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  :global([data-theme='light']) .artist-detail-item p {
+    color: #4b5563;
+  }
+
+  .artist-contact h4 {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .artist-contact h4 {
+    color: #0f172a;
+  }
+
+  .artist-contact .border-t {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .artist-contact .border-t {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .contact-link {
+    color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+  }
+
+  .contact-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .contact-link {
+    color: #64748b;
+  }
+
+  :global([data-theme='light']) .contact-link:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.05);
   }
 </style>

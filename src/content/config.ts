@@ -121,6 +121,32 @@ const murals = defineCollection({
     pillar: z.enum(['1', '2', '3']),
     pillarName: z.string(),
     artist: z.string().optional(),
+    artistInfo: z
+      .object({
+        name: z.string(),
+        photo: z.string().optional(),
+        bio: z.string().optional(),
+        education: z.string().optional(),
+        experience: z.string().optional(),
+        inspiration: z.string().optional(),
+        mediums: z.string().optional(),
+        vastBhutan: z.string().optional(),
+        recentProject: z.string().optional(),
+        birthYear: z.number().optional(),
+        birthplace: z.string().optional(),
+        contact: z
+          .object({
+            name: z.string().optional(),
+            tiktok: z.string().optional(),
+            instagram: z.string().optional(),
+            facebook: z.string().optional(),
+            twitter: z.string().optional(),
+            linkedin: z.string().optional(),
+            email: z.string().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
     location: z.string().optional(),
     project: z.string(), // References project slug
     featured: z.boolean().default(false),
