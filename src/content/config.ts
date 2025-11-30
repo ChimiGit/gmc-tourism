@@ -98,6 +98,35 @@ const partners = defineCollection({
   }),
 });
 
+const projects = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    image: z.string(),
+    featured: z.boolean().default(false),
+    phase: z.string().optional(),
+    location: z.string().optional(),
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
+  }),
+});
+
+const murals = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    image: z.string(),
+    pillar: z.enum(['1', '2', '3']),
+    pillarName: z.string(),
+    artist: z.string().optional(),
+    location: z.string().optional(),
+    project: z.string(), // References project slug
+    featured: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
@@ -106,4 +135,6 @@ export const collections = {
   about,
   resources,
   partners,
+  projects,
+  murals,
 };

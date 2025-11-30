@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ui/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+import { getImageBaseUrl } from '../utils/images';
+
+const allProjects = await getCollection('projects');
+
+const sortedProjects = allProjects.sort((a, b) => {
+  // Sort by featured first, then by startDate if available, otherwise by title
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  if (a.data.startDate && b.data.startDate) {
+    return b.data.startDate.getTime() - a.data.startDate.getTime();
+  }
+  return a.data.title.localeCompare(b.data.title);
+});
+---
+
+<Layout
+  title="Projects"
+  description="Discover our innovative projects and initiatives in Gelephu Mindfulness City"
+  mainClass="pt-0"
+>
+  <div class="min-h-screen">
+    <!-- Hero Section -->
+    <div
+      class="projects-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
+    >
+      <img
+        src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+        alt="Projects"
+        class="absolute h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60">
+      </div>
+      <!-- Title -->
+      <div class="relative z-10 text-center px-4">
+        <h1 class="projects-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+          Projects
+        </h1>
+        <p class="projects-hero-subtitle mt-4 text-lg text-white md:text-xl">
+          Discover our innovative projects and initiatives
+        </p>
+      </div>
+
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="projects-content-section container mx-auto px-4 py-16 md:px-8">
+      <!-- <h2 class="projects-section-title mb-8 text-center text-3xl font-bold">All Projects</h2> -->
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" id="projects-grid">
+        {sortedProjects.map((project) => <ProjectCard project={project} variant="simple" />)}
+      </div>
+
+      <!-- Empty State -->
+      {
+        sortedProjects.length === 0 && (
+          <div class="py-16 text-center">
+            <p class="projects-empty-text">No projects available at this time.</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .projects-hero-title {
+    color: #ffffff !important;
+    line-height: 1.2;
+  }
+
+  .projects-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .projects-hero-title,
+  :global([data-theme='light']) .projects-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .projects-content-section {
+    --projects-content-bg: transparent;
+    --projects-heading: #ffffff;
+    --projects-body: #9ca3af;
+    --projects-card-bg: transparent;
+    --projects-card-border: transparent;
+    background: var(--projects-content-bg);
+  }
+
+  :global([data-theme='light']) .projects-content-section {
+    --projects-content-bg: transparent;
+    --projects-heading: #111827;
+    --projects-body: #6b7280;
+    --projects-card-bg: transparent;
+    --projects-card-border: transparent;
+  }
+
+  .projects-section-title {
+    color: var(--projects-heading);
+  }
+
+  .projects-empty-text {
+    color: var(--projects-body);
+  }
+</style>

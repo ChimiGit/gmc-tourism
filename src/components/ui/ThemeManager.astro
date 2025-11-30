@@ -2,12 +2,11 @@
 // A single component to initialize and toggle site theme.
 // Usage: place <ThemeManager /> once (e.g., in Header).
 // It sets `data-theme` and toggles `html.dark` for Tailwind class mode.
-import { getImageBaseUrl } from '../../utils/images';
 ---
 
 <button
   id="theme-toggle"
-  class="relative z-[60] inline-flex items-center justify-center p-0 bg-transparent border-0 text-inherit focus:outline-none focus-visible:outline-none focus:ring-0"
+  class="relative z-60 inline-flex items-center justify-center p-0 bg-transparent border-0 text-inherit focus:outline-none focus-visible:outline-none focus:ring-0"
   aria-label="Toggle theme"
   title="Toggle theme"
 >
@@ -107,12 +106,12 @@ import { getImageBaseUrl } from '../../utils/images';
     // Init ASAP
     function initThemeManager() {
       initTheme();
-      
+
       // Use event delegation for theme toggle - works after DOM swaps
       document.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
         const toggleBtn = target.closest('#theme-toggle');
-        
+
         if (toggleBtn) {
           e.preventDefault();
           const current = (html.getAttribute('data-theme') || 'dark') as 'dark' | 'light';

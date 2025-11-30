@@ -1,0 +1,360 @@
+---
+import { getLinkUrl } from '../../utils/images';
+
+interface MenuItem {
+  label: string;
+  href: string;
+  icon: string;
+}
+
+const menuItems: MenuItem[] = [
+  { label: 'Home', href: '/', icon: 'fa-solid fa-home' },
+  { label: 'About', href: '/about', icon: 'fa-solid fa-info-circle' },
+  { label: 'Experiences', href: '/experiences', icon: 'fa-solid fa-compass' },
+  { label: 'Events', href: '/events', icon: 'fa-solid fa-calendar-days' },
+  { label: 'Gallery', href: '/gallery', icon: 'fa-regular fa-images' },
+  { label: 'Resources', href: '/resources', icon: 'fa-solid fa-book' },
+  { label: 'Contact', href: '/contact', icon: 'fa-solid fa-envelope' },
+];
+---
+
+<div
+  id="fab-container"
+  class="fab-container"
+  style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;"
+>
+  <!-- Menu Items -->
+  <div id="fab-menu" class="fab-menu">
+    {
+      menuItems.map((item, index) => (
+        <a
+          href={getLinkUrl(item.href)}
+          class="fab-menu-item"
+          data-index={index}
+          aria-label={item.label}
+          title={item.label}
+        >
+          <i class={item.icon} aria-hidden="true" />
+          <span class="fab-menu-item-label">{item.label}</span>
+        </a>
+      ))
+    }
+  </div>
+
+  <!-- Main FAB Button -->
+  <button
+    id="fab-button"
+    class="fab-button"
+    aria-label="Toggle menu"
+    aria-expanded="false"
+    type="button"
+    style="position: relative; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%); border: none; box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4), 0 8px 30px rgba(99, 102, 241, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10000;"
+  >
+    <i
+      id="fab-icon"
+      class="fa-solid fa-plus"
+      aria-hidden="true"
+      style="font-size: 1.5rem; color: white;"></i>
+  </button>
+
+  <!-- Backdrop -->
+  <div id="fab-backdrop" class="fab-backdrop"></div>
+</div>
+
+<script>
+  (function () {
+    let isOpen = false;
+    let isInitialized = false;
+
+    function initFAB() {
+      if (isInitialized) return;
+
+      const fabButton = document.getElementById('fab-button');
+      const fabMenu = document.getElementById('fab-menu');
+      const fabIcon = document.getElementById('fab-icon');
+      const fabContainer = document.getElementById('fab-container');
+      const fabBackdrop = document.getElementById('fab-backdrop');
+
+      if (!fabButton || !fabMenu || !fabIcon || !fabContainer || !fabBackdrop) {
+        console.error('FAB: Missing required elements', {
+          fabButton,
+          fabMenu,
+          fabIcon,
+          fabContainer,
+          fabBackdrop,
+        });
+        return;
+      }
+
+      // Ensure button is visible
+      fabButton.style.display = 'flex';
+      fabButton.style.visibility = 'visible';
+      fabButton.style.opacity = '1';
+      fabContainer.style.display = 'flex';
+      fabContainer.style.visibility = 'visible';
+      fabContainer.style.opacity = '1';
+
+      function openMenu() {
+        isOpen = true;
+        fabContainer?.classList.add('fab-open');
+        fabButton?.setAttribute('aria-expanded', 'true');
+        fabIcon?.classList.remove('fa-plus');
+        fabIcon?.classList.add('fa-times');
+        fabBackdrop?.classList.add('fab-backdrop-active');
+        document.body.style.overflow = 'hidden';
+
+        // Animate menu items
+        const items = fabMenu?.querySelectorAll('.fab-menu-item');
+        items?.forEach((item, i) => {
+          const element = item as HTMLElement;
+          setTimeout(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0) scale(1)';
+            element.style.pointerEvents = 'auto';
+          }, i * 50);
+        });
+      }
+
+      function closeMenu() {
+        isOpen = false;
+        fabContainer?.classList.remove('fab-open');
+        fabButton?.setAttribute('aria-expanded', 'false');
+        fabIcon?.classList.remove('fa-times');
+        fabIcon?.classList.add('fa-plus');
+        fabBackdrop?.classList.remove('fab-backdrop-active');
+        document.body.style.overflow = 'auto';
+
+        // Hide menu items
+        const items = fabMenu?.querySelectorAll('.fab-menu-item');
+        items?.forEach((item) => {
+          const element = item as HTMLElement;
+          element.style.opacity = '0';
+          element.style.transform = 'translateY(1rem) scale(0.8)';
+          element.style.pointerEvents = 'none';
+        });
+      }
+
+      function toggleMenu() {
+        if (isOpen) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      }
+
+      // Initialize menu items as hidden
+      const items = fabMenu?.querySelectorAll('.fab-menu-item');
+      items.forEach((item) => {
+        const element = item as HTMLElement;
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(1rem) scale(0.8)';
+        element.style.pointerEvents = 'none';
+        element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+
+      // Event listeners
+      fabButton?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      fabBackdrop.addEventListener('click', () => {
+        closeMenu();
+      });
+
+      // Close when clicking on menu items
+      items.forEach((item) => {
+        item.addEventListener('click', () => {
+          setTimeout(() => closeMenu(), 200);
+        });
+      });
+
+      isInitialized = true;
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFAB);
+    } else {
+      initFAB();
+    }
+
+    // Re-initialize after page transitions
+    document.addEventListener('astro:after-swap', () => {
+      isInitialized = false;
+      initFAB();
+    });
+
+    document.addEventListener('astro:page-load', () => {
+      isInitialized = false;
+      initFAB();
+    });
+  })();
+</script>
+
+<style is:global>
+  .fab-container {
+    position: fixed !important;
+    bottom: 2rem !important;
+    right: 2rem !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .fab-button {
+    position: relative;
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%) !important;
+    border: none !important;
+    box-shadow:
+      0 4px 20px rgba(14, 165, 233, 0.4),
+      0 8px 30px rgba(99, 102, 241, 0.3) !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .fab-button:hover {
+    transform: scale(1.1);
+    box-shadow:
+      0 6px 25px rgba(14, 165, 233, 0.5),
+      0 10px 40px rgba(99, 102, 241, 0.4);
+  }
+
+  .fab-button:active {
+    transform: scale(0.95);
+  }
+
+  .fab-button i {
+    font-size: 1.5rem;
+    color: white;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fab-open .fab-button i {
+    transform: rotate(45deg);
+  }
+
+  .fab-menu {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    pointer-events: none;
+    padding-bottom: 4.5rem;
+  }
+
+  .fab-menu-item {
+    display: flex !important;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    color: white !important;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: right center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(1rem) scale(0.8);
+    position: relative;
+    z-index: 10001;
+  }
+
+  .fab-menu-item:hover {
+    background: rgba(14, 165, 233, 0.2);
+    border-color: rgba(14, 165, 233, 0.4);
+    transform: translateY(0) scale(1.05);
+  }
+
+  .fab-menu-item i {
+    font-size: 1.125rem;
+    width: 1.25rem;
+    text-align: center;
+  }
+
+  .fab-menu-item-label {
+    transition: opacity 0.2s;
+  }
+
+  .fab-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9998 !important;
+  }
+
+  .fab-backdrop-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Light theme support */
+  [data-theme='light'] .fab-menu-item {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme='light'] .fab-menu-item:hover {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.3);
+  }
+
+  [data-theme='light'] .fab-backdrop {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 640px) {
+    .fab-container {
+      bottom: 1.5rem;
+      right: 1.5rem;
+    }
+
+    .fab-button {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .fab-button i {
+      font-size: 1.25rem;
+    }
+
+    .fab-menu-item {
+      padding: 0.625rem 0.875rem;
+      font-size: 0.8125rem;
+    }
+
+    .fab-menu-item i {
+      font-size: 1rem;
+      width: 1rem;
+    }
+  }
+</style>

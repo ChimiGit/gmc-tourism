@@ -1,0 +1,162 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  variant?: 'default' | 'simple';
+}
+
+const { project, variant = 'default' } = Astro.props;
+
+// Format date range if dates exist
+function formatDateRange(startDate?: Date, endDate?: Date): string {
+  if (!startDate) return '';
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+  const start = startDate.toLocaleDateString('en-US', options);
+  if (endDate) {
+    const end = endDate.toLocaleDateString('en-US', options);
+    return `${start} - ${end}`;
+  }
+  return start;
+}
+
+function formatPublicationDate(startDate?: Date): string {
+  if (!startDate) return '';
+  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+  return startDate.toLocaleDateString('en-US', options);
+}
+---
+
+{
+  variant === 'simple' ? (
+    <article class="project-card rounded-xl overflow-hidden">
+      <a href={getLinkUrl(`/projects/${project.slug}`)} class="block group">
+        <div class="project-card-image relative h-64 overflow-hidden rounded-xl">
+          <img
+            src={`${getImageBaseUrl()}${project.data.image}`}
+            alt={project.data.title}
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+          {project.data.phase && (
+            <div class="absolute bottom-4 left-4 z-10">
+              <span class="project-card-badge bg-gray-600 text-white text-xs font-normal px-3 py-1 rounded uppercase">
+                {project.data.phase}
+              </span>
+            </div>
+          )}
+        </div>
+        <div class="pt-4">
+          <h3 class="mb-2 line-clamp-2 font-normal text-lg md:text-xl text-white">
+            {project.data.title}
+          </h3>
+          {project.data.startDate && (
+            <p class="text-xs font-normal text-white uppercase">
+              <span class="opacity-70">{formatPublicationDate(project.data.startDate)}</span>
+            </p>
+          )}
+        </div>
+      </a>
+    </article>
+  ) : (
+    <article class="project-card rounded-lg overflow-hidden shadow-lg">
+      <a href={getLinkUrl(`/projects/${project.slug}`)} class="block">
+        <div class="relative h-48 overflow-hidden">
+          <img
+            src={`${getImageBaseUrl()}${project.data.image}`}
+            alt={project.data.title}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          {project.data.phase && (
+            <div class="absolute bottom-4 left-4">
+              <span class="project-card-badge bg-gray-600 text-white text-xs font-semibold px-3 py-1 rounded uppercase">
+                {project.data.phase}
+              </span>
+            </div>
+          )}
+        </div>
+        <div class="p-5">
+          <h3 class="project-card-title text-xl font-regular mb-4 line-clamp-2">
+            {project.data.title}
+          </h3>
+          <p class="project-card-description text-sm mb-4 line-clamp-3">
+            {project.data.description}
+          </p>
+          <div class="project-card-meta space-y-2 text-sm">
+            {project.data.location && (
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-location-dot project-icon" />
+                <span>{project.data.location}</span>
+              </div>
+            )}
+            {project.data.startDate && (
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-calendar-days project-icon" />
+                <span>{formatDateRange(project.data.startDate, project.data.endDate)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </a>
+    </article>
+  )
+}
+
+<style>
+  .project-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .project-card-title {
+    color: var(--project-card-title, #ffffff);
+  }
+
+  .project-card-description {
+    color: var(--project-card-description, #cbd5e1);
+  }
+
+  .project-card-meta {
+    color: var(--project-card-meta, #cbd5e1);
+  }
+
+  .project-icon {
+    color: var(--project-icon, #ffffff);
+  }
+
+  :global([data-theme='light']) .project-card {
+    background: transparent;
+    border: none;
+  }
+
+  :global([data-theme='light']) .project-card-title {
+    color: var(--project-card-title, #0f172a);
+  }
+
+  :global([data-theme='light']) .project-card-description {
+    color: var(--project-card-description, #475569);
+  }
+
+  :global([data-theme='light']) .project-card-meta {
+    color: var(--project-card-meta, #475569);
+  }
+
+  :global([data-theme='light']) .project-icon {
+    color: var(--project-icon, #0f172a);
+  }
+
+  .project-card-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+
+  :global([data-theme='light']) .project-card-badge {
+    background-color: #4b5563 !important; /* bg-gray-600 */
+    color: #ffffff !important; /* text-white */
+  }
+</style>
+

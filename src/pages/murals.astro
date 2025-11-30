@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getImageBaseUrl, getLinkUrl } from '../utils/images';
+
+const allMurals = await getCollection('murals');
+
+// Group murals by pillar
+const muralsByPillar = {
+  '1': allMurals.filter((m) => m.data.pillar === '1'),
+  '2': allMurals.filter((m) => m.data.pillar === '2'),
+  '3': allMurals.filter((m) => m.data.pillar === '3'),
+};
+
+// Sort murals within each pillar
+Object.keys(muralsByPillar).forEach((pillar) => {
+  muralsByPillar[pillar as '1' | '2' | '3'].sort((a, b) =>
+    a.data.title.localeCompare(b.data.title)
+  );
+});
+---
+
+<Layout
+  title="Murals"
+  description="Discover beautiful street murals celebrating Bhutanese culture, creativity, and mindfulness"
+  mainClass="pt-0"
+>
+  <div class="min-h-screen">
+    <!-- Hero Section -->
+    <div
+      class="murals-hero relative h-[50vh] w-full overflow-hidden flex items-center justify-center"
+    >
+      <img
+        src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+        alt="Murals"
+        class="absolute h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-black/30 to-black/60">
+      </div>
+      <!-- Title -->
+      <div class="relative z-10 text-center px-4">
+        <h1 class="murals-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+          Murals
+        </h1>
+        <p class="murals-hero-subtitle mt-4 text-lg text-white md:text-xl">
+          Discover beautiful street murals celebrating Bhutanese culture
+        </p>
+      </div>
+      
+      <!-- Bottom gradient fade -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 h-16"
+        style="background: linear-gradient(to top, #000000, transparent);"
+      >
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="murals-content-section container mx-auto px-4 py-16 md:px-8">
+      {
+        Object.entries(muralsByPillar).map(([pillarNum, murals]) => {
+          if (murals.length === 0) return null;
+          const pillarName = murals[0]?.data.pillarName || `Pillar ${pillarNum}`;
+          return (
+            <div class="mb-16">
+              <h2 class="murals-section-title text-3xl font-bold mb-8">{pillarName}</h2>
+              <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {murals.map((mural) => (
+                  <a
+                    href={getLinkUrl(`/murals/${mural.slug}`)}
+                    class="mural-card group"
+                  >
+                    <div class="mural-card-image relative h-64 overflow-hidden rounded-xl mb-4">
+                      <img
+                        src={`${getImageBaseUrl()}${mural.data.image}`}
+                        alt={mural.data.title}
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                    </div>
+                    <div>
+                      <h3 class="mural-card-title text-lg md:text-xl font-semibold mb-2">
+                        {mural.data.title}
+                      </h3>
+                      <p class="mural-card-description text-sm opacity-70 line-clamp-2 mb-2">
+                        {mural.data.description}
+                      </p>
+                      {mural.data.artist && (
+                        <p class="mural-card-artist text-xs opacity-60">
+                          <i class="fa-solid fa-palette mr-1"></i>
+                          {mural.data.artist}
+                        </p>
+                      )}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        })
+      }
+
+      <!-- Empty State -->
+      {
+        allMurals.length === 0 && (
+          <div class="py-16 text-center">
+            <p class="murals-empty-text">No murals available at this time.</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .murals-hero-title {
+    color: #ffffff !important;
+    line-height: 1.2;
+  }
+
+  .murals-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .murals-hero-title,
+  :global([data-theme='light']) .murals-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .murals-content-section {
+    --murals-content-bg: transparent;
+    --murals-heading: #ffffff;
+    --murals-body: #9ca3af;
+    --murals-card-bg: transparent;
+    --murals-card-border: transparent;
+    background: var(--murals-content-bg);
+  }
+
+  :global([data-theme='light']) .murals-content-section {
+    --murals-content-bg: transparent;
+    --murals-heading: #111827;
+    --murals-body: #6b7280;
+    --murals-card-bg: transparent;
+    --murals-card-border: transparent;
+  }
+
+  .murals-section-title {
+    color: var(--murals-heading);
+  }
+
+  .murals-empty-text {
+    color: var(--murals-body);
+  }
+
+  .mural-card {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .mural-card {
+    color: #0f172a;
+  }
+
+  .mural-card-title {
+    color: #ffffff;
+  }
+
+  :global([data-theme='light']) .mural-card-title {
+    color: #0f172a;
+  }
+
+  .mural-card-description {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  :global([data-theme='light']) .mural-card-description {
+    color: #475569;
+  }
+
+  .mural-card-artist {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  :global([data-theme='light']) .mural-card-artist {
+    color: #64748b;
+  }
+</style>
+
