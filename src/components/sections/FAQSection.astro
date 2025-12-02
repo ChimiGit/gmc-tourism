@@ -1,54 +1,25 @@
 ---
 import Divider from '../ui/Divider.astro';
+import { getCollection, render } from 'astro:content';
 import { getImageBaseUrl } from '../../utils/images';
 
 // Get dynamic image URLs
 const bridgeImage = `${getImageBaseUrl()}/Bridge 3.png`;
 const bridgeLightImage = `${getImageBaseUrl()}/Bridge light.png`;
-interface FAQ {
-  id: string;
-  question: string;
-  answer: string;
-}
 
-const faqs: FAQ[] = [
-  {
-    id: 'gmc-what',
-    question: 'What is the Gelephu Mindfulness City (GMC)?',
-    answer:
-      'Gelephu Mindfulness City (GMC) is a Special Administrative Region (SAR) in the Kingdom of Bhutan, designed as a premier destination for mindful, sustainable, and transformative travel.',
-  },
-  {
-    id: 'gmc-vision',
-    question: 'What is the vision behind GMC?',
-    answer:
-      'GMC is designed as a place where spirituality, wellness, and eco-conscious living come together, offering unique opportunities for retreats, eco-tourism, and cultural exchange.',
-  },
-  {
-    id: 'sar-context',
-    question: 'What is a Special Administrative Region (SAR) in this context?',
-    answer:
-      'A Special Administrative Region (SAR) is a designated area with its own governance structure and legal framework, operating within the Kingdom of Bhutan while maintaining certain autonomous characteristics.',
-  },
-  {
-    id: 'investment-approach',
-    question: "What is GMC's approach to investments?",
-    answer:
-      "GMC offers a dynamic investment framework designed to attract sustainable and mindful businesses that align with the region's values of wellness, spirituality, and eco-consciousness.",
-  },
-  {
-    id: 'legal-framework',
-    question: 'What legal framework does GMC offer to investors?',
-    answer:
-      'GMC provides a comprehensive legal framework that includes long-term leases, business registration support, and investment concierge services to facilitate smooth entry for investors.',
-  },
-  {
-    id: 'gmc-location',
-    question: 'Where is GMC located?',
-    answer:
-      'GMC is located in Gelephu, Bhutan, with a new international airport under development and improved road and rail connections to welcome travelers from around the world.',
-  },
-];
+// Get FAQs from content collection
+const allFaqs = await getCollection('faqs');
+const sortedFaqs = allFaqs.sort((a, b) => a.data.order - b.data.order);
+const faqs = await Promise.all(
+  sortedFaqs.map(async (faq) => {
+    const { Content } = await render(faq);
+    return {
+      id: faq.slug,
+      question: faq.data.question,
+      Content,
+    };
+  })
+);
 ---
 
 <section
@@ -97,7 +68,9 @@ const faqs: FAQ[] = [
               aria-labelledby={`faq-question-${faq.id}`}
               hidden
             >
-              <p class="faq-body pb-6 pl-12 pr-2 text-gray-700">{faq.answer}</p>
+              <div class="faq-body pb-6 pl-12 pr-2 text-gray-700 prose prose-sm max-w-none">
+                <faq.Content />
+              </div>
             </div>
           </article>
         ))

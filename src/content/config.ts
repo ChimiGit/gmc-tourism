@@ -153,6 +153,14 @@ const murals = defineCollection({
   }),
 });
 
+const faqs = defineCollection({
+  type: 'content',
+  schema: z.object({
+    question: z.string(),
+    order: z.number().default(0), // For ordering FAQs
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
@@ -163,4 +171,5 @@ export const collections = {
   partners,
   projects,
   murals,
+  faqs,
 };
