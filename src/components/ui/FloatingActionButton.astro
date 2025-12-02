@@ -35,7 +35,6 @@ const menuItems: MenuItem[] = [
           aria-label={item.label}
           title={item.label}
         >
-          <i class={item.icon} aria-hidden="true" />
           <span class="fab-menu-item-label">{item.label}</span>
         </a>
       ))
@@ -49,7 +48,7 @@ const menuItems: MenuItem[] = [
     aria-label="Toggle menu"
     aria-expanded="false"
     type="button"
-    style="position: relative; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: linear-gradient(135deg, #61697c 0%, #434b72 100%); border: none; box-shadow: 0 4px 20px rgba(97, 105, 124, 0.4), 0 8px 30px rgba(67, 75, 114, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10000;"
+    style="position: relative; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: #262626; border: none; box-shadow: 0 4px 20px rgba(97, 105, 124, 0.4), 0 8px 30px rgba(67, 75, 114, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10000;"
   >
     <i
       id="fab-icon"
@@ -212,7 +211,7 @@ const menuItems: MenuItem[] = [
     width: 3.5rem !important;
     height: 3.5rem !important;
     border-radius: 50%;
-    background: linear-gradient(135deg, #61697c 0%, #434b72 100%) !important;
+    background: #262626 !important;
     border: none !important;
     box-shadow:
       0 4px 20px rgba(97, 105, 124, 0.4),
@@ -265,16 +264,11 @@ const menuItems: MenuItem[] = [
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    background: rgba(15, 23, 42, 0.95) !important;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 2rem;
-    color: white !important;
+    color: #ffffff !important;
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 700;
     white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: right center;
     pointer-events: none;
@@ -285,19 +279,16 @@ const menuItems: MenuItem[] = [
   }
 
   .fab-menu-item:hover {
-    background: rgba(97, 105, 124, 0.2);
-    border-color: rgba(67, 75, 114, 0.4);
-    transform: translateY(0) scale(1.05);
-  }
-
-  .fab-menu-item i {
-    font-size: 1.125rem;
-    width: 1.25rem;
-    text-align: center;
+    transform: translateY(0) scale(1);
   }
 
   .fab-menu-item-label {
-    transition: opacity 0.2s;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+  }
+
+  .fab-menu-item:hover .fab-menu-item-label {
+    transform: scale(1.2);
   }
 
   .fab-backdrop {
@@ -318,14 +309,7 @@ const menuItems: MenuItem[] = [
 
   /* Light theme support */
   [data-theme='light'] .fab-menu-item {
-    background: rgba(255, 255, 255, 0.95);
-    color: #0f172a;
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-
-  [data-theme='light'] .fab-menu-item:hover {
-    background: rgba(97, 105, 124, 0.1);
-    border-color: rgba(67, 75, 114, 0.3);
+    color: #0f172a !important;
   }
 
   [data-theme='light'] .fab-backdrop {
@@ -350,12 +334,7 @@ const menuItems: MenuItem[] = [
 
     .fab-menu-item {
       padding: 0.625rem 0.875rem;
-      font-size: 0.8125rem;
-    }
-
-    .fab-menu-item i {
-      font-size: 1rem;
-      width: 1rem;
+      font-size: 1.25rem;
     }
   }
 </style>

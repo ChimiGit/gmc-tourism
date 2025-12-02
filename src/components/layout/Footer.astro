@@ -2,26 +2,15 @@
 import SocialLinks from '../ui/SocialLinks.astro';
 import Divider from '../ui/Divider.astro';
 import { getLinkUrl } from '../../utils/images';
+import { getCollection } from 'astro:content';
 
-const socialLinks = [
-  {
-    platform: 'facebook',
-    url: 'https://www.facebook.com/people/Gelephu-Mindfulness-City/61565212923092',
-  },
-  {
-    platform: 'instagram',
-    url: 'https://www.instagram.com/gmcbhutan/#',
-  },
-  { platform: 'twitter', url: 'https://x.com/gmcbhutan' },
-  {
-    platform: 'tiktok',
-    url: 'https://www.tiktok.com/@gmc_bhutan',
-  },
-  {
-    platform: 'youtube',
-    url: 'https://www.youtube.com/@gelephumindfulnesscity',
-  },
-];
+const socialLinksEntries = await getCollection('social-links');
+const socialLinks = socialLinksEntries
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((entry) => ({
+    platform: entry.data.platform,
+    url: entry.data.url,
+  }));
 
 const footerLinks = [
   [
@@ -34,9 +23,7 @@ const footerLinks = [
     { label: 'Experiences', href: getLinkUrl('/experiences') },
     { label: 'Resources', href: getLinkUrl('/resources') },
   ],
-  [
-    { label: 'Contact', href: getLinkUrl('/contact') },
-  ],
+  [{ label: 'Contact', href: getLinkUrl('/contact') }],
 ];
 ---
 
