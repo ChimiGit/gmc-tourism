@@ -46,9 +46,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
         </h2>
 
         <!-- Single Card with Dynamic Content -->
-        <div
-          class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center"
-        >
+        <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
           <div
             class="carousel-content flex items-center justify-center min-h-[200px]"
             data-carousel-content
@@ -135,7 +133,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
       0 8px 32px 0 rgba(0, 0, 0, 0.37),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
     position: relative;
@@ -149,12 +147,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   }
 
   .carousel-card {
@@ -424,7 +417,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
       dragEndX = e.clientX;
     }
 
-    function handleMouseUp(e: MouseEvent) {
+    function handleMouseUp() {
       if (!isDragging) return;
       isDragging = false;
       if (carouselCard) {
@@ -454,7 +447,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     if (carouselCard) {
       carouselCard.addEventListener('touchstart', handleTouchStart, { passive: true });
       carouselCard.addEventListener('touchend', handleTouchEnd, { passive: true });
-      
+
       // Mouse drag listeners
       carouselCard.style.cursor = 'grab';
       carouselCard.addEventListener('mousedown', handleMouseDown);
