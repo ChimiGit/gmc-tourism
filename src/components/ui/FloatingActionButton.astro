@@ -54,7 +54,13 @@ const menuItems: MenuItem[] = [
       id="fab-icon"
       class="fa-solid fa-plus"
       aria-hidden="true"
-      style="font-size: 1.5rem; color: white;"></i>
+      style="font-size: 1.5rem; color: white; position: absolute;"></i>
+    <i
+      id="fab-icon-close"
+      class="fa-solid fa-times"
+      aria-hidden="true"
+      style="font-size: 1.5rem; color: white; position: absolute; opacity: 0; transform: rotate(90deg);"
+    ></i>
   </button>
 
   <!-- Backdrop -->
@@ -72,14 +78,16 @@ const menuItems: MenuItem[] = [
       const fabButton = document.getElementById('fab-button');
       const fabMenu = document.getElementById('fab-menu');
       const fabIcon = document.getElementById('fab-icon');
+      const fabIconClose = document.getElementById('fab-icon-close');
       const fabContainer = document.getElementById('fab-container');
       const fabBackdrop = document.getElementById('fab-backdrop');
 
-      if (!fabButton || !fabMenu || !fabIcon || !fabContainer || !fabBackdrop) {
+      if (!fabButton || !fabMenu || !fabIcon || !fabIconClose || !fabContainer || !fabBackdrop) {
         console.error('FAB: Missing required elements', {
           fabButton,
           fabMenu,
           fabIcon,
+          fabIconClose,
           fabContainer,
           fabBackdrop,
         });
@@ -98,8 +106,14 @@ const menuItems: MenuItem[] = [
         isOpen = true;
         fabContainer?.classList.add('fab-open');
         fabButton?.setAttribute('aria-expanded', 'true');
-        fabIcon?.classList.remove('fa-plus');
-        fabIcon?.classList.add('fa-times');
+        if (fabIcon) {
+          fabIcon.style.opacity = '0';
+          fabIcon.style.transform = 'rotate(90deg)';
+        }
+        if (fabIconClose) {
+          fabIconClose.style.opacity = '1';
+          fabIconClose.style.transform = 'rotate(0deg)';
+        }
         fabBackdrop?.classList.add('fab-backdrop-active');
         document.body.style.overflow = 'hidden';
 
@@ -119,8 +133,14 @@ const menuItems: MenuItem[] = [
         isOpen = false;
         fabContainer?.classList.remove('fab-open');
         fabButton?.setAttribute('aria-expanded', 'false');
-        fabIcon?.classList.remove('fa-times');
-        fabIcon?.classList.add('fa-plus');
+        if (fabIcon) {
+          fabIcon.style.opacity = '1';
+          fabIcon.style.transform = 'rotate(0deg)';
+        }
+        if (fabIconClose) {
+          fabIconClose.style.opacity = '0';
+          fabIconClose.style.transform = 'rotate(90deg)';
+        }
         fabBackdrop?.classList.remove('fab-backdrop-active');
         document.body.style.overflow = 'auto';
 
@@ -240,11 +260,17 @@ const menuItems: MenuItem[] = [
   .fab-button i {
     font-size: 1.5rem;
     color: white;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .fab-open .fab-button i {
-    transform: rotate(45deg);
+  .fab-open .fab-button i.fa-plus {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .fab-open .fab-button i.fa-times {
+    opacity: 1;
+    transform: rotate(0deg);
   }
 
   .fab-menu {
@@ -254,7 +280,7 @@ const menuItems: MenuItem[] = [
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.75rem;
+    gap: 0.25rem;
     pointer-events: none;
     padding-bottom: 4.5rem;
   }

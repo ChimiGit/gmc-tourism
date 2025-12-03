@@ -291,16 +291,24 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     initializeAboutVideo();
   }
 
-  // Carousel functionality - Text switching only
+  // Carousel functionality - Text switching only with swipe support
   const cardsData = document.querySelector('[data-cards-data]');
   const textElement = document.querySelector('[data-carousel-text]') as HTMLElement | null;
+  const carouselCard = document.querySelector('.carousel-card') as HTMLElement | null;
   const indicators = document.querySelectorAll('[data-carousel-indicator]');
 
   if (cardsData && textElement) {
     let currentIndex = 0;
     const allCards = Array.from(cardsData.children);
 
-    function updateCarousel() {
+    // Swipe detection variables
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+
+    function updateCarousel(direction: 'left' | 'right' | 'none' = 'none') {
       if (currentIndex < 0 || currentIndex >= allCards.length) return;
 
       const currentCard = allCards[currentIndex] as HTMLElement;
@@ -310,10 +318,14 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
       import('gsap').then(({ gsap }) => {
         const tl = gsap.timeline();
 
-        // Fade out and slide to left
+        // Determine slide direction
+        const slideOutX = direction === 'left' ? -50 : direction === 'right' ? 50 : -50;
+        const slideInX = direction === 'left' ? 50 : direction === 'right' ? -50 : 50;
+
+        // Fade out and slide
         tl.to(textElement, {
           opacity: 0,
-          x: -50,
+          x: slideOutX,
           duration: 0.3,
           ease: 'power2.in',
         });
@@ -325,9 +337,9 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
           }
         });
 
-        // Reset position to right and fade in from right
+        // Reset position and fade in
         tl.set(textElement, {
-          x: 50,
+          x: slideInX,
         });
 
         // Fade in and slide to center
@@ -349,15 +361,106 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
       });
     }
 
-    function goToCard(index: number) {
+    function goToCard(index: number, direction: 'left' | 'right' | 'none' = 'none') {
+      if (index < 0) index = allCards.length - 1;
+      if (index >= allCards.length) index = 0;
       currentIndex = index;
-      updateCarousel();
+      updateCarousel(direction);
+    }
+
+    function nextCard() {
+      goToCard(currentIndex + 1, 'left');
+    }
+
+    function prevCard() {
+      goToCard(currentIndex - 1, 'right');
+    }
+
+    // Swipe event handlers
+    function handleTouchStart(e: TouchEvent) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }
+
+    function handleTouchEnd(e: TouchEvent) {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }
+
+    function handleSwipe() {
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      // Check if it's a horizontal swipe (more horizontal than vertical)
+      if (absDeltaX > minSwipeDistance && absDeltaX > absDeltaY) {
+        if (deltaX > 0) {
+          // Swipe right - go to previous card
+          prevCard();
+        } else {
+          // Swipe left - go to next card
+          nextCard();
+        }
+      }
+    }
+
+    // Mouse drag support
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragEndX = 0;
+
+    function handleMouseDown(e: MouseEvent) {
+      isDragging = true;
+      dragStartX = e.clientX;
+      if (carouselCard) {
+        carouselCard.style.cursor = 'grabbing';
+      }
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      if (!isDragging) return;
+      dragEndX = e.clientX;
+    }
+
+    function handleMouseUp(e: MouseEvent) {
+      if (!isDragging) return;
+      isDragging = false;
+      if (carouselCard) {
+        carouselCard.style.cursor = 'grab';
+      }
+
+      const deltaX = dragEndX - dragStartX;
+      const absDeltaX = Math.abs(deltaX);
+
+      if (absDeltaX > minSwipeDistance) {
+        if (deltaX > 0) {
+          // Drag right - go to previous card
+          prevCard();
+        } else {
+          // Drag left - go to next card
+          nextCard();
+        }
+      }
     }
 
     // Event listeners
     indicators.forEach((indicator, index) => {
       indicator.addEventListener('click', () => goToCard(index));
     });
+
+    // Touch swipe listeners
+    if (carouselCard) {
+      carouselCard.addEventListener('touchstart', handleTouchStart, { passive: true });
+      carouselCard.addEventListener('touchend', handleTouchEnd, { passive: true });
+      
+      // Mouse drag listeners
+      carouselCard.style.cursor = 'grab';
+      carouselCard.addEventListener('mousedown', handleMouseDown);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
 
     // Initialize - set first indicator as active
     if (indicators.length > 0) {
