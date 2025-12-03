@@ -66,14 +66,12 @@ import { getImageBaseUrl } from '../../utils/images';
     </div>
 
     <!-- Scroll Indicator -->
-    <div
-      id="scroll-indicator"
-      class="absolute bottom-12 left-1/2 -translate-x-1/2 transform"
-      style="opacity: 0.8; transform: translate(-50%, 0);"
-    >
+    <div id="scroll-indicator" class="absolute bottom-12 left-1/2" style="opacity: 0.8;">
       <div class="flex flex-col items-center">
         <div class="h-12 w-px bg-white"></div>
-        <div class="mt-4 select-none text-xs font-light uppercase tracking-[0.2em] text-white">
+        <div
+          class="mt-4 select-none text-xs font-light uppercase tracking-[0.2em] text-white whitespace-nowrap"
+        >
           Scroll
         </div>
       </div>
@@ -112,8 +110,8 @@ import { getImageBaseUrl } from '../../utils/images';
   if (scrollIndicator) {
     // Set initial state - already centered and visible
     scrollIndicator.style.opacity = '0.8';
-    scrollIndicator.style.transform = 'translate(-50%, 0)';
     scrollIndicator.style.transition = 'transform 1.25s ease-in-out';
+    scrollIndicator.style.transform = 'translate(-50%, 0)';
 
     // Animate scroll indicator up and down
     setInterval(() => {
@@ -144,6 +142,27 @@ import { getImageBaseUrl } from '../../utils/images';
     transition:
       opacity 1s ease-out,
       transform 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #scroll-indicator > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #scroll-indicator > div > div:first-child {
+    width: 1px;
+    margin: 0 auto;
+  }
+
+  #scroll-indicator > div > div:last-child {
+    text-align: center;
+    width: 100%;
   }
   /* Video styles (Commented out - using image instead) */
   /* #hero-video {
