@@ -1,0 +1,279 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { getImageBaseUrl } from '../utils/images';
+import Divider from '../components/ui/Divider.astro';
+
+// Get FAQs from content collection
+const allFaqs = await getCollection('faqs');
+const sortedFaqs = allFaqs.sort((a, b) => a.data.order - b.data.order);
+const faqs = await Promise.all(
+  sortedFaqs.map(async (faq) => {
+    const { Content } = await render(faq);
+    return {
+      id: faq.slug,
+      question: faq.data.question,
+      Content,
+    };
+  })
+);
+---
+
+<Layout
+  title="FAQ | GMC Tourism"
+  description="Frequently asked questions about Gelephu Mindfulness City, tourism, investments, and more."
+  mainClass="pt-0"
+>
+  <!-- Hero Section -->
+  <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
+    <!-- Background Image -->
+    <img
+      src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+      alt="FAQ"
+      class="absolute h-full w-full object-cover scale-105"
+    />
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/60 via-black/40 to-black/70"></div>
+    <div class="relative z-10 text-center px-4">
+      <h1
+        class="faq-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl drop-shadow-lg mb-4"
+      >
+        Frequently Asked Questions
+      </h1>
+      <p class="faq-hero-subtitle text-lg text-white md:text-xl drop-shadow-md opacity-90">
+        Find answers to common questions about GMC Tourism
+      </p>
+    </div>
+
+    <!-- Bottom gradient fade -->
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 h-16"
+      style="background: linear-gradient(to top, #000000, transparent);"
+    >
+    </div>
+  </div>
+
+  <!-- FAQ Content Section -->
+  <section class="faq-content-section py-16 px-4 sm:px-6 lg:px-8 min-h-[50vh]">
+    <div class="max-w-4xl mx-auto">
+      <div class="mb-12 text-center">
+        <h2 class="faq-content-title text-3xl md:text-4xl font-bold mb-4">Common Questions</h2>
+        <p class="faq-content-subtitle text-lg md:text-xl opacity-80">
+          Everything you need to know about Gelephu Mindfulness City
+        </p>
+      </div>
+
+      <Divider className="mb-12" width="80%" />
+
+      <!-- FAQ List -->
+      <div class="faq-list space-y-0" data-faq-list>
+        {
+          faqs.map((faq, index) => (
+            <article class="faq-item border-b border-gray-300" data-faq-item>
+              <button
+                type="button"
+                class="faq-toggle flex w-full items-center py-6 text-left"
+                data-faq-toggle
+                data-target={`faq-panel-${faq.id}`}
+                aria-expanded="false"
+                aria-controls={`faq-panel-${faq.id}`}
+              >
+                <span class="faq-number text-base font-normal text-gray-400">/{index + 1}</span>
+                <h3
+                  id={`faq-question-${faq.id}`}
+                  class="faq-question text-lg md:text-xl font-normal text-black flex-1 min-w-0"
+                >
+                  {faq.question}
+                </h3>
+                <span class="faq-icon relative flex h-6 w-6 items-center justify-center shrink-0">
+                  <i class="fa-solid fa-plus text-black text-lg" />
+                </span>
+              </button>
+              <div
+                id={`faq-panel-${faq.id}`}
+                class="faq-panel text-base"
+                data-faq-panel
+                role="region"
+                aria-labelledby={`faq-question-${faq.id}`}
+                hidden
+              >
+                <div class="faq-body pb-6 pl-12 pr-2 text-gray-700 prose prose-sm max-w-none">
+                  <faq.Content />
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  const script = document.currentScript;
+  const componentRoot = script?.previousElementSibling;
+  const section = componentRoot?.closest('.faq-content-section');
+
+  if (section) {
+    const toggles = Array.from(section.querySelectorAll('[data-faq-toggle]'));
+    let animating = false;
+    let activeButton = null;
+
+    const collapse = (button, panel) => {
+      button.setAttribute('aria-expanded', 'false');
+      button.parentElement?.classList.remove('is-active');
+      panel.style.height = `${panel.scrollHeight}px`;
+      panel.style.opacity = '1';
+      requestAnimationFrame(() => {
+        panel.style.height = '0px';
+        panel.style.opacity = '0';
+      });
+      setTimeout(() => {
+        panel.hidden = true;
+        panel.classList.remove('is-open');
+        animating = false;
+      }, 320);
+    };
+
+    const expand = (button, panel) => {
+      button.setAttribute('aria-expanded', 'true');
+      button.parentElement?.classList.add('is-active');
+      panel.hidden = false;
+      panel.style.height = '0px';
+      panel.style.opacity = '0';
+      const targetHeight = panel.scrollHeight;
+      requestAnimationFrame(() => {
+        panel.style.height = `${targetHeight}px`;
+        panel.style.opacity = '1';
+      });
+      setTimeout(() => {
+        panel.style.height = 'auto';
+        panel.classList.add('is-open');
+        animating = false;
+      }, 320);
+    };
+
+    const handleToggle = (button) => {
+      if (animating) return;
+      animating = true;
+      const targetId = button.dataset.target;
+      const panel = targetId ? section.querySelector(`#${targetId}`) : null;
+      if (!panel) {
+        animating = false;
+        return;
+      }
+
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+      if (isOpen) {
+        collapse(button, panel);
+        activeButton = null;
+      } else {
+        if (activeButton && activeButton !== button) {
+          const activePanelId = activeButton.dataset.target;
+          const activePanel = activePanelId ? section.querySelector(`#${activePanelId}`) : null;
+          if (activePanel) {
+            collapse(activeButton, activePanel);
+          }
+        }
+        activeButton = button;
+        expand(button, panel);
+      }
+    };
+
+    toggles.forEach((button) => {
+      button.addEventListener('click', () => {
+        handleToggle(button);
+      });
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleToggle(button);
+        }
+      });
+    });
+  }
+</script>
+
+<style>
+  .faq-hero-title {
+    color: #ffffff !important;
+  }
+
+  .faq-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .faq-hero-title,
+  :global([data-theme='light']) .faq-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .faq-content-section {
+    --faq-bg: #f5f5f5;
+    --faq-text: #000000;
+    background: var(--faq-bg);
+  }
+
+  :global([data-theme='dark']) .faq-content-section {
+    --faq-bg: #000000;
+    --faq-text: #ffffff;
+  }
+
+  .faq-content-title {
+    color: var(--faq-text);
+  }
+
+  .faq-content-subtitle {
+    color: var(--faq-text);
+  }
+
+  .faq-toggle {
+    gap: 2rem;
+  }
+
+  .faq-number {
+    flex-shrink: 0;
+    color: #9ca3af;
+    font-weight: 400;
+  }
+
+  .faq-question {
+    color: var(--faq-text);
+    font-weight: 400;
+  }
+
+  .faq-body {
+    color: var(--faq-text);
+    opacity: 0.8;
+  }
+
+  .faq-icon i {
+    transition: transform 0.3s ease;
+    color: var(--faq-text);
+  }
+
+  .faq-item.is-active .faq-icon i {
+    transform: rotate(45deg);
+  }
+
+  .faq-panel {
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transition:
+      height 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .faq-panel.is-open {
+    opacity: 1;
+  }
+
+  :global([data-theme='dark']) .faq-item {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .faq-item {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+</style>
