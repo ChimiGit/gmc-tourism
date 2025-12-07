@@ -1,7 +1,7 @@
 ---
 import Divider from '../ui/Divider.astro';
 import { getCollection, render } from 'astro:content';
-import { getImageBaseUrl } from '../../utils/images';
+import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
 
 // Get dynamic image URLs
 const bridgeImage = `${getImageBaseUrl()}/Bridge 3.png`;
@@ -80,7 +80,7 @@ const faqs = await Promise.all(
     <!-- View All Link -->
     <div class="flex justify-center mt-8">
       <a
-        href="https://gmc.bt/faq"
+        href={getLinkUrl('/faq')}
         class="faq-link group inline-flex items-center gap-2 text-base font-medium text-black transition"
       >
         View All

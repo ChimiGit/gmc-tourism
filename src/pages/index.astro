@@ -4,10 +4,8 @@ import Hero from '../components/sections/Hero.astro';
 import FAQSection from '../components/sections/FAQSection.astro';
 import SignatureExperiences from '../components/sections/SignatureExperiences.astro';
 import LatestEvents from '../components/sections/LatestEvents.astro';
-import OurPartners from '../components/sections/OurPartners.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
 import GallerySection from '../components/sections/GallerySection.astro';
-import Loader from '../components/sections/Loader.astro';
 ---
 
 <Layout
@@ -15,13 +13,11 @@ import Loader from '../components/sections/Loader.astro';
   description="Discover Bhutan through curated journeys, seamless planning, and immersive stories."
   mainClass="pt-0"
 >
-  <Loader />
   <div data-page-content class="page-content">
     <Hero />
     <AboutSection />
     <SignatureExperiences />
     <LatestEvents />
-    <OurPartners />
     <GallerySection />
     <FAQSection />
   </div>

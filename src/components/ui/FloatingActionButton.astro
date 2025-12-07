@@ -16,7 +16,7 @@ const menuItems: MenuItem[] = [
   { label: 'Resources', href: '/resources', icon: 'fa-solid fa-book' },
   { label: 'Projects', href: '/projects', icon: 'fa-solid fa-folder' },
   { label: 'FAQ', href: '/faq', icon: 'fa-solid fa-question-circle' },
-  { label: 'Contact', href: '/contact', icon: 'fa-solid fa-envelope' },
+  { label: 'Contact', href: 'mailto:tourism@gmc.bt', icon: 'fa-solid fa-envelope' },
 ];
 ---
 
@@ -30,7 +30,7 @@ const menuItems: MenuItem[] = [
     {
       menuItems.map((item, index) => (
         <a
-          href={getLinkUrl(item.href)}
+          href={item.href.startsWith('mailto:') ? item.href : getLinkUrl(item.href)}
           class="fab-menu-item"
           data-index={index}
           aria-label={item.label}

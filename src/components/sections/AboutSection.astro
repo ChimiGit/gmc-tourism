@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import Divider from '../ui/Divider.astro';
 import { getImageBaseUrl } from '../../utils/images';
 
 const aboutContent = await getCollection('about');
@@ -38,50 +37,27 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     class="relative z-20 flex h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12"
   >
     <div class="container mx-auto max-w-6xl px-4">
-      <!-- Carousel Container -->
-      <div class="about-carousel relative mx-auto max-w-5xl">
+      <!-- Cards Container -->
+      <div class="about-cards relative mx-auto max-w-5xl">
         <!-- Title -->
-        <h2 class="about-title mb-4 text-4xl md:text-5xl font-bold text-white text-center">
+        <h2 class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center">
           About GMC Tourism
         </h2>
 
-        <!-- Single Card with Dynamic Content -->
-        <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
-          <div
-            class="carousel-content flex items-center justify-center min-h-[200px]"
-            data-carousel-content
-          >
-            <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl" data-carousel-text>
-              {about?.data.cards[0]?.content}
-            </p>
-          </div>
-        </div>
-
-        <!-- Hidden data for other cards -->
-        <div class="hidden" data-cards-data>
+        <!-- All Cards Displayed -->
+        <div class="flex flex-col gap-6">
           {
             about?.data.cards.map((card) => (
-              <div data-card-title={card.title} data-card-content={card.content} />
+              <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
+                <div class="carousel-content flex items-center justify-center min-h-[200px]">
+                  <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
+                    {card.content}
+                  </p>
+                </div>
+              </div>
             ))
           }
         </div>
-
-        <!-- Navigation Buttons -->
-        {
-          about?.data.cards && about.data.cards.length > 1 && (
-            <div class="flex items-center justify-center gap-4 mt-8">
-              <div class="carousel-indicators flex gap-2" data-carousel-indicators>
-                {about.data.cards.map((_, index) => (
-                  <button
-                    class="carousel-indicator w-2 h-2 rounded-full bg-white/60 hover:bg-white/80 transition-colors"
-                    data-carousel-indicator={index}
-                    aria-label={`Go to card ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          )
-        }
       </div>
     </div>
   </div>
@@ -111,7 +87,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     transition: transform 0.5s ease-out;
   }
 
-  .about-carousel {
+  .about-cards {
     opacity: 0;
     transform: translateY(100px);
   }
@@ -196,11 +172,6 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
   #about-video::-webkit-media-controls-start-playback-button {
     display: none !important;
   }
-
-  .carousel-indicator.active {
-    background-color: rgba(255, 255, 255, 1) !important;
-    width: 2rem;
-  }
 </style>
 
 <script>
@@ -284,189 +255,12 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
     initializeAboutVideo();
   }
 
-  // Carousel functionality - Text switching only with swipe support
-  const cardsData = document.querySelector('[data-cards-data]');
-  const textElement = document.querySelector('[data-carousel-text]') as HTMLElement | null;
-  const carouselCard = document.querySelector('.carousel-card') as HTMLElement | null;
-  const indicators = document.querySelectorAll('[data-carousel-indicator]');
-
-  if (cardsData && textElement) {
-    let currentIndex = 0;
-    const allCards = Array.from(cardsData.children);
-
-    // Swipe detection variables
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let touchStartY = 0;
-    let touchEndY = 0;
-    const minSwipeDistance = 50; // Minimum distance for a swipe
-
-    function updateCarousel(direction: 'left' | 'right' | 'none' = 'none') {
-      if (currentIndex < 0 || currentIndex >= allCards.length) return;
-
-      const currentCard = allCards[currentIndex] as HTMLElement;
-      const content = currentCard.dataset.cardContent || '';
-
-      // Animate text change with GSAP - slide from right to left
-      import('gsap').then(({ gsap }) => {
-        const tl = gsap.timeline();
-
-        // Determine slide direction
-        const slideOutX = direction === 'left' ? -50 : direction === 'right' ? 50 : -50;
-        const slideInX = direction === 'left' ? 50 : direction === 'right' ? -50 : 50;
-
-        // Fade out and slide
-        tl.to(textElement, {
-          opacity: 0,
-          x: slideOutX,
-          duration: 0.3,
-          ease: 'power2.in',
-        });
-
-        // Update content
-        tl.call(() => {
-          if (textElement) {
-            textElement.textContent = content;
-          }
-        });
-
-        // Reset position and fade in
-        tl.set(textElement, {
-          x: slideInX,
-        });
-
-        // Fade in and slide to center
-        tl.to(textElement, {
-          opacity: 1,
-          x: 0,
-          duration: 0.4,
-          ease: 'power2.out',
-        });
-      });
-
-      // Update indicators
-      indicators.forEach((indicator, index) => {
-        if (index === currentIndex) {
-          indicator.classList.add('active');
-        } else {
-          indicator.classList.remove('active');
-        }
-      });
-    }
-
-    function goToCard(index: number, direction: 'left' | 'right' | 'none' = 'none') {
-      if (index < 0) index = allCards.length - 1;
-      if (index >= allCards.length) index = 0;
-      currentIndex = index;
-      updateCarousel(direction);
-    }
-
-    function nextCard() {
-      goToCard(currentIndex + 1, 'left');
-    }
-
-    function prevCard() {
-      goToCard(currentIndex - 1, 'right');
-    }
-
-    // Swipe event handlers
-    function handleTouchStart(e: TouchEvent) {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }
-
-    function handleTouchEnd(e: TouchEvent) {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipe();
-    }
-
-    function handleSwipe() {
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
-      const absDeltaX = Math.abs(deltaX);
-      const absDeltaY = Math.abs(deltaY);
-
-      // Check if it's a horizontal swipe (more horizontal than vertical)
-      if (absDeltaX > minSwipeDistance && absDeltaX > absDeltaY) {
-        if (deltaX > 0) {
-          // Swipe right - go to previous card
-          prevCard();
-        } else {
-          // Swipe left - go to next card
-          nextCard();
-        }
-      }
-    }
-
-    // Mouse drag support
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragEndX = 0;
-
-    function handleMouseDown(e: MouseEvent) {
-      isDragging = true;
-      dragStartX = e.clientX;
-      if (carouselCard) {
-        carouselCard.style.cursor = 'grabbing';
-      }
-    }
-
-    function handleMouseMove(e: MouseEvent) {
-      if (!isDragging) return;
-      dragEndX = e.clientX;
-    }
-
-    function handleMouseUp() {
-      if (!isDragging) return;
-      isDragging = false;
-      if (carouselCard) {
-        carouselCard.style.cursor = 'grab';
-      }
-
-      const deltaX = dragEndX - dragStartX;
-      const absDeltaX = Math.abs(deltaX);
-
-      if (absDeltaX > minSwipeDistance) {
-        if (deltaX > 0) {
-          // Drag right - go to previous card
-          prevCard();
-        } else {
-          // Drag left - go to next card
-          nextCard();
-        }
-      }
-    }
-
-    // Event listeners
-    indicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => goToCard(index));
-    });
-
-    // Touch swipe listeners
-    if (carouselCard) {
-      carouselCard.addEventListener('touchstart', handleTouchStart, { passive: true });
-      carouselCard.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-      // Mouse drag listeners
-      carouselCard.style.cursor = 'grab';
-      carouselCard.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    // Initialize - set first indicator as active
-    if (indicators.length > 0) {
-      indicators[0].classList.add('active');
-    }
-  }
-
   // Scroll-triggered animation for About section with bouncy slide-up effect
   function initAboutSectionAnimation() {
     const aboutSection = document.querySelector('.about-section');
-    const aboutCarousel = document.querySelector('.about-carousel');
+    const aboutCards = document.querySelector('.about-cards');
 
-    if (!aboutSection || !aboutCarousel) return;
+    if (!aboutSection || !aboutCards) return;
 
     // Import GSAP and ScrollTrigger for animation
     import('gsap').then(({ gsap }) => {
@@ -476,7 +270,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
         // Bouncy slide-up animation with "thak thak" effect
         // Triggers after scrolling 20px from the top of the page
         gsap.fromTo(
-          aboutCarousel,
+          aboutCards,
           {
             opacity: 0,
             y: 150,
@@ -494,7 +288,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
             },
             onComplete: () => {
               // Add a subtle bounce effect for "thak thak"
-              gsap.to(aboutCarousel, {
+              gsap.to(aboutCards, {
                 y: -10,
                 duration: 0.15,
                 ease: 'power2.out',

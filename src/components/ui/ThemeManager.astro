@@ -2,6 +2,7 @@
 // A single component to initialize and toggle site theme.
 // Usage: place <ThemeManager /> once (e.g., in Header).
 // It sets `data-theme` and toggles `html.dark` for Tailwind class mode.
+import ThemeIcon from './ThemeIcon';
 ---
 
 <button
@@ -10,7 +11,7 @@
   aria-label="Toggle theme"
   title="Toggle theme"
 >
-  <i id="theme-toggle-icon" class="fa-regular fa-moon text-base" aria-hidden="true"></i>
+  <ThemeIcon client:load />
   <span class="sr-only">Toggle theme</span>
 </button>
 
@@ -18,7 +19,6 @@
   (function () {
     const html = document.documentElement;
     const THEME_KEY = 'theme';
-    const toggleIcon = document.getElementById('theme-toggle-icon') as HTMLElement | null;
 
     function applyTheme(theme: 'light' | 'dark') {
       // Persist and expose
@@ -26,17 +26,6 @@
       html.setAttribute('data-theme', theme);
       // Ensure Tailwind dark: works (darkMode: 'class')
       html.classList.toggle('dark', theme === 'dark');
-
-      // Update icon
-      if (toggleIcon) {
-        if (theme === 'light') {
-          toggleIcon.classList.remove('fa-moon', 'fa-regular');
-          toggleIcon.classList.add('fa-sun', 'fa-solid');
-        } else {
-          toggleIcon.classList.remove('fa-sun', 'fa-solid');
-          toggleIcon.classList.add('fa-moon', 'fa-regular');
-        }
-      }
 
       // Header brand and overlay colors (if present)
       const logo = document.getElementById('site-logo') as HTMLImageElement | null;
