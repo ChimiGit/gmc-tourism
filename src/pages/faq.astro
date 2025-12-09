@@ -108,90 +108,102 @@ const faqs = await Promise.all(
   </section>
 </Layout>
 
-<script is:inline>
-  const script = document.currentScript;
-  const componentRoot = script?.previousElementSibling;
-  const section = componentRoot?.closest('.faq-content-section');
+<script>
+  (function () {
+    function initFAQ() {
+      const section = document.querySelector('.faq-content-section');
 
-  if (section) {
-    const toggles = Array.from(section.querySelectorAll('[data-faq-toggle]'));
-    let animating = false;
-    let activeButton = null;
+      if (!section) return;
 
-    const collapse = (button, panel) => {
-      button.setAttribute('aria-expanded', 'false');
-      button.parentElement?.classList.remove('is-active');
-      panel.style.height = `${panel.scrollHeight}px`;
-      panel.style.opacity = '1';
-      requestAnimationFrame(() => {
+      const toggles = Array.from(section.querySelectorAll('[data-faq-toggle]'));
+      let animating = false;
+      let activeButton = null;
+
+      const collapse = (button, panel) => {
+        button.setAttribute('aria-expanded', 'false');
+        button.parentElement?.classList.remove('is-active');
+        panel.style.height = `${panel.scrollHeight}px`;
+        panel.style.opacity = '1';
+        requestAnimationFrame(() => {
+          panel.style.height = '0px';
+          panel.style.opacity = '0';
+        });
+        setTimeout(() => {
+          panel.hidden = true;
+          panel.classList.remove('is-open');
+          animating = false;
+        }, 320);
+      };
+
+      const expand = (button, panel) => {
+        button.setAttribute('aria-expanded', 'true');
+        button.parentElement?.classList.add('is-active');
+        panel.hidden = false;
         panel.style.height = '0px';
         panel.style.opacity = '0';
-      });
-      setTimeout(() => {
-        panel.hidden = true;
-        panel.classList.remove('is-open');
-        animating = false;
-      }, 320);
-    };
+        const targetHeight = panel.scrollHeight;
+        requestAnimationFrame(() => {
+          panel.style.height = `${targetHeight}px`;
+          panel.style.opacity = '1';
+        });
+        setTimeout(() => {
+          panel.style.height = 'auto';
+          panel.classList.add('is-open');
+          animating = false;
+        }, 320);
+      };
 
-    const expand = (button, panel) => {
-      button.setAttribute('aria-expanded', 'true');
-      button.parentElement?.classList.add('is-active');
-      panel.hidden = false;
-      panel.style.height = '0px';
-      panel.style.opacity = '0';
-      const targetHeight = panel.scrollHeight;
-      requestAnimationFrame(() => {
-        panel.style.height = `${targetHeight}px`;
-        panel.style.opacity = '1';
-      });
-      setTimeout(() => {
-        panel.style.height = 'auto';
-        panel.classList.add('is-open');
-        animating = false;
-      }, 320);
-    };
+      const handleToggle = (button) => {
+        if (animating) return;
+        animating = true;
+        const targetId = button.dataset.target;
+        const panel = targetId ? section.querySelector(`#${targetId}`) : null;
+        if (!panel) {
+          animating = false;
+          return;
+        }
 
-    const handleToggle = (button) => {
-      if (animating) return;
-      animating = true;
-      const targetId = button.dataset.target;
-      const panel = targetId ? section.querySelector(`#${targetId}`) : null;
-      if (!panel) {
-        animating = false;
-        return;
-      }
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
 
-      const isOpen = button.getAttribute('aria-expanded') === 'true';
-
-      if (isOpen) {
-        collapse(button, panel);
-        activeButton = null;
-      } else {
-        if (activeButton && activeButton !== button) {
-          const activePanelId = activeButton.dataset.target;
-          const activePanel = activePanelId ? section.querySelector(`#${activePanelId}`) : null;
-          if (activePanel) {
-            collapse(activeButton, activePanel);
+        if (isOpen) {
+          collapse(button, panel);
+          activeButton = null;
+        } else {
+          if (activeButton && activeButton !== button) {
+            const activePanelId = activeButton.dataset.target;
+            const activePanel = activePanelId ? section.querySelector(`#${activePanelId}`) : null;
+            if (activePanel) {
+              collapse(activeButton, activePanel);
+            }
           }
+          activeButton = button;
+          expand(button, panel);
         }
-        activeButton = button;
-        expand(button, panel);
-      }
-    };
+      };
 
-    toggles.forEach((button) => {
-      button.addEventListener('click', () => {
-        handleToggle(button);
-      });
-      button.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
+      toggles.forEach((button) => {
+        button.addEventListener('click', () => {
           handleToggle(button);
-        }
+        });
+        button.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleToggle(button);
+          }
+        });
       });
-    });
-  }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFAQ);
+    } else {
+      initFAQ();
+    }
+
+    // Re-initialize after page transitions
+    document.addEventListener('astro:page-load', initFAQ);
+  })();
 </script>
 
 <style>
