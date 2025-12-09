@@ -7,7 +7,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
 ---
 
 <section
-  class="about-section relative h-screen w-full overflow-hidden"
+  class="about-section relative min-h-screen w-full overflow-hidden"
   style="background-color: #000000;"
 >
   <!-- Background Video -->
@@ -34,13 +34,13 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
 
   <!-- Content Container -->
   <div
-    class="relative z-20 flex h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12"
+    class="relative z-20 flex min-h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12 py-16 pt-24 md:pt-32"
   >
-    <div class="container mx-auto max-w-6xl px-4">
+    <div class="container mx-auto max-w-6xl px-4 w-full">
       <!-- Cards Container -->
-      <div class="about-cards relative mx-auto max-w-5xl">
+      <div class="about-cards relative mx-auto max-w-5xl w-full">
         <!-- Title -->
-        <h2 class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center">
+        <h2 class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center relative z-30">
           About GMC Tourism
         </h2>
 
@@ -49,7 +49,7 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
           {
             about?.data.cards.map((card) => (
               <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
-                <div class="carousel-content flex items-center justify-center min-h-[200px]">
+                <div class="carousel-content flex items-center justify-center">
                   <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
                     {card.content}
                   </p>
@@ -64,8 +64,8 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
 
   <!-- Top gradient to hide line from hero section -->
   <div
-    class="absolute top-0 left-0 right-0 z-20 h-16"
-    style="background: linear-gradient(to bottom, #000000 0%, #000000 30%, rgba(0, 0, 0, 0.8) 60%, transparent 100%);"
+    class="absolute top-0 left-0 right-0 z-15 h-24 md:h-32"
+    style="background: linear-gradient(to bottom, #000000 0%, #000000 40%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);"
   >
   </div>
 
@@ -90,6 +90,8 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
   .about-cards {
     opacity: 0;
     transform: translateY(100px);
+    position: relative;
+    z-index: 30;
   }
 
   .about-title {
