@@ -2,7 +2,7 @@ function getBaseUrl(): string {
   const siteUrl = import.meta.env.PUBLIC_SITE_URL || '';
   // Use PUBLIC_BASE_PATH if set, otherwise fall back to Astro's BASE from config
   // import.meta.env.BASE is always available from astro.config.mjs
-  const basePath = import.meta.env.PUBLIC_BASE_PATH || import.meta.env.BASE || '/gmc-tourism';
+  const basePath = import.meta.env.PUBLIC_BASE_PATH || import.meta.env.BASE || '/tourism';
 
   // Ensure basePath starts with / and doesn't end with /
   let normalizedBasePath = basePath;
@@ -35,7 +35,7 @@ export function getLinkUrl(path: string): string {
   }
 
   // Get base path (always available from Astro config)
-  const basePath = import.meta.env.PUBLIC_BASE_PATH || import.meta.env.BASE || '/gmc-tourism';
+  const basePath = import.meta.env.PUBLIC_BASE_PATH || import.meta.env.BASE || '/tourism';
   const siteUrl = import.meta.env.PUBLIC_SITE_URL || '';
 
   // Normalize base path
