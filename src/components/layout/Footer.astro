@@ -64,6 +64,12 @@ const footerLinks = [
       <div>
         <h3 class="mb-4 text-lg font-medium text-slate-400">Follow us</h3>
         <SocialLinks links={socialLinks} />
+        <a
+          href="mailto:tourism@gmc.bt"
+          class="footer-email-link mt-4 block text-lg text-slate-400 transition-colors hover:text-white"
+        >
+          tourism@gmc.bt
+        </a>
       </div>
     </div>
 
@@ -134,5 +140,17 @@ const footerLinks = [
   html[data-theme='light'] #footer-background-text {
     color: black;
     opacity: 0.05;
+  }
+
+  .footer-email-link {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  html[data-theme='light'] .footer-email-link {
+    color: rgb(51 65 85); /* slate-700 */
+  }
+
+  html[data-theme='light'] .footer-email-link:hover {
+    color: rgb(15 23 42); /* slate-900 */
   }
 </style>
