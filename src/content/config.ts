@@ -180,6 +180,21 @@ const pillars = defineCollection({
   }),
 });
 
+const privacyPolicy = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    lastUpdated: z.date().optional(),
+    documents: z.array(
+      z.object({
+        title: z.string(),
+        description: z.string(),
+        downloadLink: z.string(),
+      })
+    ).optional(),
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
@@ -193,4 +208,5 @@ export const collections = {
   faqs,
   'social-links': socialLinks,
   pillars,
+  'privacy-policy': privacyPolicy,
 };

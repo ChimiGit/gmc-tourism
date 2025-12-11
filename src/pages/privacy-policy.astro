@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { getImageBaseUrl } from '../utils/images';
+import Divider from '../components/ui/Divider.astro';
+
+// Get privacy policy from content collection
+const privacyPolicyEntries = await getCollection('privacy-policy');
+const privacyPolicy = privacyPolicyEntries[0]; // Get the first (and likely only) entry
+
+let Content;
+if (privacyPolicy) {
+  const rendered = await render(privacyPolicy);
+  Content = rendered.Content;
+}
+---
+
+<Layout
+  title="Privacy Policy | GMC Tourism"
+  description="Privacy Policy for Gelephu Mindfulness City Tourism website."
+  mainClass="pt-0"
+>
+  <!-- Hero Section -->
+  <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
+    <!-- Background Image -->
+    <img
+      src={`${getImageBaseUrl()}/backgrounds/home-background.jpg`}
+      alt="Privacy Policy"
+      class="absolute h-full w-full object-cover scale-105"
+    />
+    <div class="absolute inset-0 z-10 bg-linear-to-b from-black/60 via-black/40 to-black/70"></div>
+    <div class="relative z-10 text-center px-4">
+      <h1
+        class="privacy-hero-title text-4xl font-bold text-white md:text-5xl lg:text-6xl drop-shadow-lg mb-4"
+      >
+        {privacyPolicy?.data.title || 'Privacy Policy'}
+      </h1>
+      <p class="privacy-hero-subtitle text-lg text-white md:text-xl drop-shadow-md opacity-90">
+        {
+          privacyPolicy?.data.lastUpdated && (
+            <>
+              Last Updated:{' '}
+              {privacyPolicy.data.lastUpdated.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </>
+          )
+        }
+      </p>
+    </div>
+
+    <!-- Bottom gradient fade -->
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 h-16"
+      style="background: linear-gradient(to top, #000000, transparent);"
+    >
+    </div>
+  </div>
+
+  <!-- Privacy Policy Content Section -->
+  <section class="privacy-content-section py-16 px-4 sm:px-6 lg:px-8 min-h-[50vh]">
+    <div class="max-w-4xl mx-auto">
+      <!-- Policy Documents -->
+      {
+        privacyPolicy?.data.documents && privacyPolicy.data.documents.length > 0 && (
+          <div class="policy-documents space-y-8">
+            {privacyPolicy.data.documents.map((doc, index) => (
+              <div class="policy-document border-b border-gray-300 pb-8 last:border-b-0">
+                <h3 class="policy-document-title text-2xl md:text-3xl font-bold mb-4">
+                  {doc.title}
+                </h3>
+                <p class="policy-document-description text-base md:text-lg mb-4">
+                  {doc.description}
+                </p>
+                <a
+                  href={doc.downloadLink}
+                  class="policy-download-link inline-flex items-center gap-2 text-base md:text-lg font-medium transition-colors hover:opacity-80"
+                  download
+                >
+                  <i class="fa-solid fa-download" />
+                  Link to download {doc.title}
+                </a>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .privacy-hero-title {
+    color: #ffffff !important;
+  }
+
+  .privacy-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .privacy-hero-title,
+  :global([data-theme='light']) .privacy-hero-subtitle {
+    color: #ffffff !important;
+  }
+
+  .privacy-content-section {
+    --privacy-bg: #f5f5f5;
+    --privacy-text: #000000;
+    background: var(--privacy-bg);
+  }
+
+  :global([data-theme='dark']) .privacy-content-section {
+    --privacy-bg: #000000;
+    --privacy-text: #ffffff;
+  }
+
+  .privacy-content-title {
+    color: var(--privacy-text);
+  }
+
+  .policy-document-title {
+    color: var(--privacy-text);
+  }
+
+  .policy-document-description {
+    color: var(--privacy-text);
+  }
+
+  .policy-download-link {
+    color: #3b82f6;
+  }
+
+  .policy-download-link:hover {
+    color: #2563eb;
+  }
+
+  :global([data-theme='dark']) .policy-download-link {
+    color: #60a5fa;
+  }
+
+  :global([data-theme='dark']) .policy-download-link:hover {
+    color: #93c5fd;
+  }
+
+  :global([data-theme='dark']) .policy-document {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme='light']) .policy-document {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+</style>
