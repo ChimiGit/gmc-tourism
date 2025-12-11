@@ -6,25 +6,22 @@ import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
   <div class="container mx-auto max-w-7xl w-full">
     <div class="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
       <!-- Card 1: Tourism Projects and Partners -->
-      <a
+      <!-- <a
         href={getLinkUrl('/projects')}
         class="tourism-card liquid-glass-card group relative block overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl w-full min-h-[220px] sm:min-h-[280px] md:aspect-[21/9] md:min-h-[400px] transition-all duration-300 hover:scale-[1.02]"
       >
-        <!-- Background Image -->
         <div class="absolute inset-0 h-full w-full overflow-hidden">
           <img
             src={`${getImageBaseUrl()}/backgrounds/BIG - Gelephu Minfulness City-115.png`}
             alt="Tourism Projects and Partners"
             class="absolute h-full w-full object-cover object-center scale-105 transition-transform duration-700 group-hover:scale-110"
           />
-          <!-- Dark Overlay -->
           <div
             class="absolute inset-0 z-10 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"
           >
           </div>
         </div>
 
-        <!-- Content -->
         <div
           class="relative z-20 flex h-full flex-col items-center justify-center px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-6 sm:py-8 md:py-12 text-center"
         >
@@ -39,28 +36,25 @@ import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
             Click above to learn more about our partners and projects.
           </p>
         </div>
-      </a>
+      </a> -->
 
       <!-- Card 2: Tourism Resources -->
       <a
         href={getLinkUrl('/resources')}
         class="tourism-card liquid-glass-card group relative block overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl w-full min-h-[220px] sm:min-h-[280px] md:aspect-[21/9] md:min-h-[400px] transition-all duration-300 hover:scale-[1.02]"
       >
-        <!-- Background Image -->
         <div class="absolute inset-0 h-full w-full overflow-hidden">
           <img
             src={`${getImageBaseUrl()}/backgrounds/BIG - Gelephu Minfulness City-141.png`}
             alt="Tourism Resources"
             class="absolute h-full w-full object-cover object-center scale-105 transition-transform duration-700 group-hover:scale-110"
           />
-          <!-- Dark Overlay -->
           <div
             class="absolute inset-0 z-10 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"
           >
           </div>
         </div>
 
-        <!-- Content -->
         <div
           class="relative z-20 flex h-full flex-col items-center justify-center px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-6 sm:py-8 md:py-12 text-center"
         >
@@ -78,12 +72,11 @@ import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
       </a>
 
       <!-- Card 3: GMC Tour Updates -->
-      <a
+      <!-- <a
         href="https://gmc.bt/news"
         target="_blank"
         class="tourism-card liquid-glass-card group relative block overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl w-full min-h-[220px] sm:min-h-[280px] md:aspect-[21/9] md:min-h-[400px] transition-all duration-300 hover:scale-[1.02]"
       >
-        <!-- Background Video -->
         <div class="absolute inset-0 h-full w-full overflow-hidden">
           <video
             id="tourism-updates-video"
@@ -97,21 +90,18 @@ import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
             webkit-playsinline
           >
             <source src={`${getImageBaseUrl()}/assets/tourism-updates.mp4`} type="video/mp4" />
-            <!-- Fallback image if video fails to load -->
             <img
               src={`${getImageBaseUrl()}/backgrounds/bg.png`}
               alt="GMC Tourism Updates"
               class="absolute h-full w-full object-cover object-center"
             />
           </video>
-          <!-- Dark Overlay -->
           <div
             class="absolute inset-0 z-10 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"
           >
           </div>
         </div>
 
-        <!-- Content -->
         <div
           class="relative z-20 flex h-full flex-col items-center justify-center px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-6 sm:py-8 md:py-12 text-center"
         >
@@ -126,199 +116,199 @@ import { getImageBaseUrl, getLinkUrl } from '../../utils/images';
             Click here for access
           </p>
         </div>
-      </a>
+      </a> -->
     </div>
-  </div>
-</section>
 
-<style>
-  .tourism-cards-section {
-    background-color: #000000;
-  }
-
-  :global([data-theme='light']) .tourism-cards-section {
-    background-color: #f5f5f5;
-  }
-
-  .liquid-glass-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow:
-      0 8px 32px 0 rgba(0, 0, 0, 0.37),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .liquid-glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    z-index: 15;
-  }
-
-  .liquid-glass-card:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow:
-      0 12px 40px 0 rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
-  }
-
-  .tourism-card-title {
-    color: #ffffff !important;
-  }
-
-  .tourism-card-subtitle {
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .tourism-card {
-      min-height: 220px !important;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .tourism-card-title {
-      line-height: 1.2;
-      word-wrap: break-word;
-      hyphens: auto;
-    }
-
-    .tourism-card-subtitle {
-      line-height: 1.4;
-      word-wrap: break-word;
-    }
-
-    .liquid-glass-card {
-      border-width: 1px;
-    }
-  }
-
-  @media (min-width: 641px) and (max-width: 768px) {
-    .tourism-card {
-      min-height: 280px !important;
-    }
-  }
-
-  /* Ensure cards don't overflow on any screen size */
-  .tourism-card {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  :global([data-theme='light']) .tourism-card-title,
-  :global([data-theme='light']) .tourism-card-subtitle {
-    color: #ffffff !important;
-  }
-
-  /* Video styling */
-  #tourism-updates-video {
-    pointer-events: none;
-  }
-
-  #tourism-updates-video::-webkit-media-controls {
-    display: none !important;
-  }
-
-  #tourism-updates-video::-webkit-media-controls-enclosure {
-    display: none !important;
-  }
-
-  #tourism-updates-video::-webkit-media-controls-panel {
-    display: none !important;
-  }
-
-  #tourism-updates-video::-webkit-media-controls-play-button {
-    display: none !important;
-  }
-
-  #tourism-updates-video::-webkit-media-controls-start-playback-button {
-    display: none !important;
-  }
-</style>
-
-<script>
-  // Ensure video plays for GMC Tour Updates card
-  function initializeTourismUpdatesVideo() {
-    const video = document.getElementById('tourism-updates-video') as HTMLVideoElement | null;
-    if (!video) {
-      return;
-    }
-
-    // Force mute
-    video.muted = true;
-    video.defaultMuted = true;
-    video.volume = 0;
-
-    // Try to play the video
-    const playVideo = () => {
-      const playPromise = video.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('Tourism updates video is playing');
-          })
-          .catch((error) => {
-            console.log('Video autoplay prevented, will retry on user interaction:', error);
-
-            // Try to play on any user interaction
-            const playOnInteraction = () => {
-              video.play().catch((e) => console.log('Retry failed:', e));
-              document.removeEventListener('click', playOnInteraction);
-              document.removeEventListener('touchstart', playOnInteraction);
-              document.removeEventListener('scroll', playOnInteraction);
-            };
-
-            document.addEventListener('click', playOnInteraction, { once: true });
-            document.addEventListener('touchstart', playOnInteraction, { once: true });
-            document.addEventListener('scroll', playOnInteraction, { once: true });
-          });
+    <style>
+      .tourism-cards-section {
+        background-color: #000000;
       }
-    };
 
-    // Wait for video to be loaded enough
-    if (video.readyState >= 3) {
-      playVideo();
-    } else {
-      video.addEventListener('loadeddata', playVideo, { once: true });
-      video.addEventListener('canplay', playVideo, { once: true });
-    }
+      :global([data-theme='light']) .tourism-cards-section {
+        background-color: #f5f5f5;
+      }
 
-    // Ensure video continues playing when it's in viewport
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && video.paused) {
-            video.play().catch((e) => console.log('IntersectionObserver play failed:', e));
+      .liquid-glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow:
+          0 8px 32px 0 rgba(0, 0, 0, 0.37),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .liquid-glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        z-index: 15;
+      }
+
+      .liquid-glass-card:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow:
+          0 12px 40px 0 rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+      }
+
+      .tourism-card-title {
+        color: #ffffff !important;
+      }
+
+      .tourism-card-subtitle {
+        color: rgba(255, 255, 255, 0.9) !important;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 640px) {
+        .tourism-card {
+          min-height: 220px !important;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .tourism-card-title {
+          line-height: 1.2;
+          word-wrap: break-word;
+          hyphens: auto;
+        }
+
+        .tourism-card-subtitle {
+          line-height: 1.4;
+          word-wrap: break-word;
+        }
+
+        .liquid-glass-card {
+          border-width: 1px;
+        }
+      }
+
+      @media (min-width: 641px) and (max-width: 768px) {
+        .tourism-card {
+          min-height: 280px !important;
+        }
+      }
+
+      /* Ensure cards don't overflow on any screen size */
+      .tourism-card {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      :global([data-theme='light']) .tourism-card-title,
+      :global([data-theme='light']) .tourism-card-subtitle {
+        color: #ffffff !important;
+      }
+
+      /* Video styling */
+      #tourism-updates-video {
+        pointer-events: none;
+      }
+
+      #tourism-updates-video::-webkit-media-controls {
+        display: none !important;
+      }
+
+      #tourism-updates-video::-webkit-media-controls-enclosure {
+        display: none !important;
+      }
+
+      #tourism-updates-video::-webkit-media-controls-panel {
+        display: none !important;
+      }
+
+      #tourism-updates-video::-webkit-media-controls-play-button {
+        display: none !important;
+      }
+
+      #tourism-updates-video::-webkit-media-controls-start-playback-button {
+        display: none !important;
+      }
+    </style>
+
+    <script>
+      // Ensure video plays for GMC Tour Updates card
+      function initializeTourismUpdatesVideo() {
+        const video = document.getElementById('tourism-updates-video') as HTMLVideoElement | null;
+        if (!video) {
+          return;
+        }
+
+        // Force mute
+        video.muted = true;
+        video.defaultMuted = true;
+        video.volume = 0;
+
+        // Try to play the video
+        const playVideo = () => {
+          const playPromise = video.play();
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                console.log('Tourism updates video is playing');
+              })
+              .catch((error) => {
+                console.log('Video autoplay prevented, will retry on user interaction:', error);
+
+                // Try to play on any user interaction
+                const playOnInteraction = () => {
+                  video.play().catch((e) => console.log('Retry failed:', e));
+                  document.removeEventListener('click', playOnInteraction);
+                  document.removeEventListener('touchstart', playOnInteraction);
+                  document.removeEventListener('scroll', playOnInteraction);
+                };
+
+                document.addEventListener('click', playOnInteraction, { once: true });
+                document.addEventListener('touchstart', playOnInteraction, { once: true });
+                document.addEventListener('scroll', playOnInteraction, { once: true });
+              });
+          }
+        };
+
+        // Wait for video to be loaded enough
+        if (video.readyState >= 3) {
+          playVideo();
+        } else {
+          video.addEventListener('loadeddata', playVideo, { once: true });
+          video.addEventListener('canplay', playVideo, { once: true });
+        }
+
+        // Ensure video continues playing when it's in viewport
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && video.paused) {
+                video.play().catch((e) => console.log('IntersectionObserver play failed:', e));
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        observer.observe(video);
+
+        // Ensure video doesn't pause
+        video.addEventListener('pause', () => {
+          if (video.readyState >= 3) {
+            video.play().catch((e) => console.log('Resume after pause failed:', e));
           }
         });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(video);
-
-    // Ensure video doesn't pause
-    video.addEventListener('pause', () => {
-      if (video.readyState >= 3) {
-        video.play().catch((e) => console.log('Resume after pause failed:', e));
       }
-    });
-  }
 
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTourismUpdatesVideo);
-  } else {
-    initializeTourismUpdatesVideo();
-  }
-</script>
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeTourismUpdatesVideo);
+      } else {
+        initializeTourismUpdatesVideo();
+      }
+    </script>
+  </div>
+</section>
