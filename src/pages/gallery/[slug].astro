@@ -478,7 +478,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   let currentIndex = 0;
   let zoomLevel = 1;
-  
+
   // Touch/swipe variables
   let touchStartX = 0;
   let touchStartY = 0;
@@ -636,121 +636,145 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
   // Touch/Swipe Navigation for Mobile
   const imageContainer = document.getElementById('image-container');
   const lightboxImage = document.getElementById('lightbox-image');
-  
-  imageContainer.addEventListener('touchstart', (e) => {
-    if (zoomLevel > 1) return; // Don't swipe when zoomed in
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    isSwiping = false;
-  }, { passive: true });
 
-  imageContainer.addEventListener('touchmove', (e) => {
-    if (zoomLevel > 1) return; // Allow scrolling when zoomed in
-    
-    touchEndX = e.touches[0].clientX;
-    touchEndY = e.touches[0].clientY;
-    
-    const deltaX = Math.abs(touchEndX - touchStartX);
-    const deltaY = Math.abs(touchEndY - touchStartY);
-    
-    // Determine if this is a horizontal swipe (more horizontal than vertical)
-    if (deltaX > deltaY && deltaX > 20) {
-      isSwiping = true;
-      e.preventDefault(); // Prevent scrolling when swiping horizontally
-    }
-  }, { passive: false });
+  imageContainer.addEventListener(
+    'touchstart',
+    (e) => {
+      if (zoomLevel > 1) return; // Don't swipe when zoomed in
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = false;
+    },
+    { passive: true }
+  );
 
-  imageContainer.addEventListener('touchend', (e) => {
-    if (zoomLevel > 1) {
-      // Reset when zoomed in
+  imageContainer.addEventListener(
+    'touchmove',
+    (e) => {
+      if (zoomLevel > 1) return; // Allow scrolling when zoomed in
+
+      touchEndX = e.touches[0].clientX;
+      touchEndY = e.touches[0].clientY;
+
+      const deltaX = Math.abs(touchEndX - touchStartX);
+      const deltaY = Math.abs(touchEndY - touchStartY);
+
+      // Determine if this is a horizontal swipe (more horizontal than vertical)
+      if (deltaX > deltaY && deltaX > 20) {
+        isSwiping = true;
+        e.preventDefault(); // Prevent scrolling when swiping horizontally
+      }
+    },
+    { passive: false }
+  );
+
+  imageContainer.addEventListener(
+    'touchend',
+    () => {
+      if (zoomLevel > 1) {
+        // Reset when zoomed in
+        isSwiping = false;
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+        return;
+      }
+
+      if (!isSwiping) {
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+        return;
+      }
+
+      const deltaX = touchEndX - touchStartX;
+      const minSwipeDistance = 50; // Minimum distance for a swipe
+
+      // Check if it's a horizontal swipe
+      if (Math.abs(deltaX) > minSwipeDistance) {
+        if (deltaX > 0) {
+          // Swipe right - go to previous image
+          prevImage();
+        } else {
+          // Swipe left - go to next image
+          nextImage();
+        }
+      }
+
+      // Reset
       isSwiping = false;
       touchStartX = 0;
       touchStartY = 0;
       touchEndX = 0;
       touchEndY = 0;
-      return;
-    }
-    
-    if (!isSwiping) {
-      touchStartX = 0;
-      touchStartY = 0;
-      touchEndX = 0;
-      touchEndY = 0;
-      return;
-    }
-    
-    const deltaX = touchEndX - touchStartX;
-    const minSwipeDistance = 50; // Minimum distance for a swipe
-    
-    // Check if it's a horizontal swipe
-    if (Math.abs(deltaX) > minSwipeDistance) {
-      if (deltaX > 0) {
-        // Swipe right - go to previous image
-        prevImage();
-      } else {
-        // Swipe left - go to next image
-        nextImage();
-      }
-    }
-    
-    // Reset
-    isSwiping = false;
-    touchStartX = 0;
-    touchStartY = 0;
-    touchEndX = 0;
-    touchEndY = 0;
-  }, { passive: true });
-  
+    },
+    { passive: true }
+  );
+
   // Also handle swipe on the image itself
-  lightboxImage.addEventListener('touchstart', (e) => {
-    if (zoomLevel > 1) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    isSwiping = false;
-  }, { passive: true });
+  lightboxImage.addEventListener(
+    'touchstart',
+    (e) => {
+      if (zoomLevel > 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = false;
+    },
+    { passive: true }
+  );
 
-  lightboxImage.addEventListener('touchmove', (e) => {
-    if (zoomLevel > 1) return;
-    
-    touchEndX = e.touches[0].clientX;
-    touchEndY = e.touches[0].clientY;
-    
-    const deltaX = Math.abs(touchEndX - touchStartX);
-    const deltaY = Math.abs(touchEndY - touchStartY);
-    
-    if (deltaX > deltaY && deltaX > 20) {
-      isSwiping = true;
-      e.preventDefault();
-    }
-  }, { passive: false });
+  lightboxImage.addEventListener(
+    'touchmove',
+    (e) => {
+      if (zoomLevel > 1) return;
 
-  lightboxImage.addEventListener('touchend', (e) => {
-    if (zoomLevel > 1 || !isSwiping) {
+      touchEndX = e.touches[0].clientX;
+      touchEndY = e.touches[0].clientY;
+
+      const deltaX = Math.abs(touchEndX - touchStartX);
+      const deltaY = Math.abs(touchEndY - touchStartY);
+
+      if (deltaX > deltaY && deltaX > 20) {
+        isSwiping = true;
+        e.preventDefault();
+      }
+    },
+    { passive: false }
+  );
+
+  lightboxImage.addEventListener(
+    'touchend',
+    () => {
+      if (zoomLevel > 1 || !isSwiping) {
+        isSwiping = false;
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+        return;
+      }
+
+      const deltaX = touchEndX - touchStartX;
+      const minSwipeDistance = 50;
+
+      if (Math.abs(deltaX) > minSwipeDistance) {
+        if (deltaX > 0) {
+          prevImage();
+        } else {
+          nextImage();
+        }
+      }
+
       isSwiping = false;
       touchStartX = 0;
       touchStartY = 0;
       touchEndX = 0;
       touchEndY = 0;
-      return;
-    }
-    
-    const deltaX = touchEndX - touchStartX;
-    const minSwipeDistance = 50;
-    
-    if (Math.abs(deltaX) > minSwipeDistance) {
-      if (deltaX > 0) {
-        prevImage();
-      } else {
-        nextImage();
-      }
-    }
-    
-    isSwiping = false;
-    touchStartX = 0;
-    touchStartY = 0;
-    touchEndX = 0;
-    touchEndY = 0;
-  }, { passive: true });
+    },
+    { passive: true }
+  );
 
   // Share functionality
   document.getElementById('lightbox-share').addEventListener('click', async () => {
