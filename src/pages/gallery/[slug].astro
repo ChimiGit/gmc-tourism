@@ -147,7 +147,7 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
       <!-- Navigation Button - Previous -->
       <button
         id="prev-btn"
-        class="lightbox-nav-btn fixed left-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
+        class="lightbox-nav-btn fixed left-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden md:flex"
       >
         <i class="fa-solid fa-chevron-left text-lg"></i>
       </button>
@@ -155,14 +155,14 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
       <!-- Navigation Button - Next -->
       <button
         id="next-btn"
-        class="lightbox-nav-btn fixed right-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300"
+        class="lightbox-nav-btn fixed right-6 top-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 hidden md:flex"
       >
         <i class="fa-solid fa-chevron-right text-lg"></i>
       </button>
 
       <!-- Image Container -->
       <div
-        class="w-full h-full flex items-center justify-center pt-16 pb-24 px-16 md:pt-20 md:pb-28 md:px-20"
+        class="w-full h-full flex items-center justify-center pt-16 pb-24 px-4 md:px-16 md:pt-20 md:pb-28 md:px-20 touch-none"
         id="image-container"
       >
         <img
@@ -388,6 +388,13 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
     background: rgba(0, 0, 0, 0.1);
   }
 
+  /* Hide navigation buttons on mobile */
+  @media (max-width: 768px) {
+    .lightbox-nav-btn {
+      display: none !important;
+    }
+  }
+
   /* Image */
   .lightbox-image {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -471,6 +478,13 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
 
   let currentIndex = 0;
   let zoomLevel = 1;
+  
+  // Touch/swipe variables
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+  let isSwiping = false;
 
   // Open Lightbox
   items.forEach((item) => {
@@ -618,6 +632,125 @@ const images = rawImages.map((image: { src: string; alt?: string; title?: string
     if (e.key === 'ArrowRight') nextImage();
     if (e.key === 'ArrowLeft') prevImage();
   });
+
+  // Touch/Swipe Navigation for Mobile
+  const imageContainer = document.getElementById('image-container');
+  const lightboxImage = document.getElementById('lightbox-image');
+  
+  imageContainer.addEventListener('touchstart', (e) => {
+    if (zoomLevel > 1) return; // Don't swipe when zoomed in
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  imageContainer.addEventListener('touchmove', (e) => {
+    if (zoomLevel > 1) return; // Allow scrolling when zoomed in
+    
+    touchEndX = e.touches[0].clientX;
+    touchEndY = e.touches[0].clientY;
+    
+    const deltaX = Math.abs(touchEndX - touchStartX);
+    const deltaY = Math.abs(touchEndY - touchStartY);
+    
+    // Determine if this is a horizontal swipe (more horizontal than vertical)
+    if (deltaX > deltaY && deltaX > 20) {
+      isSwiping = true;
+      e.preventDefault(); // Prevent scrolling when swiping horizontally
+    }
+  }, { passive: false });
+
+  imageContainer.addEventListener('touchend', (e) => {
+    if (zoomLevel > 1) {
+      // Reset when zoomed in
+      isSwiping = false;
+      touchStartX = 0;
+      touchStartY = 0;
+      touchEndX = 0;
+      touchEndY = 0;
+      return;
+    }
+    
+    if (!isSwiping) {
+      touchStartX = 0;
+      touchStartY = 0;
+      touchEndX = 0;
+      touchEndY = 0;
+      return;
+    }
+    
+    const deltaX = touchEndX - touchStartX;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+    
+    // Check if it's a horizontal swipe
+    if (Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        // Swipe right - go to previous image
+        prevImage();
+      } else {
+        // Swipe left - go to next image
+        nextImage();
+      }
+    }
+    
+    // Reset
+    isSwiping = false;
+    touchStartX = 0;
+    touchStartY = 0;
+    touchEndX = 0;
+    touchEndY = 0;
+  }, { passive: true });
+  
+  // Also handle swipe on the image itself
+  lightboxImage.addEventListener('touchstart', (e) => {
+    if (zoomLevel > 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isSwiping = false;
+  }, { passive: true });
+
+  lightboxImage.addEventListener('touchmove', (e) => {
+    if (zoomLevel > 1) return;
+    
+    touchEndX = e.touches[0].clientX;
+    touchEndY = e.touches[0].clientY;
+    
+    const deltaX = Math.abs(touchEndX - touchStartX);
+    const deltaY = Math.abs(touchEndY - touchStartY);
+    
+    if (deltaX > deltaY && deltaX > 20) {
+      isSwiping = true;
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  lightboxImage.addEventListener('touchend', (e) => {
+    if (zoomLevel > 1 || !isSwiping) {
+      isSwiping = false;
+      touchStartX = 0;
+      touchStartY = 0;
+      touchEndX = 0;
+      touchEndY = 0;
+      return;
+    }
+    
+    const deltaX = touchEndX - touchStartX;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        prevImage();
+      } else {
+        nextImage();
+      }
+    }
+    
+    isSwiping = false;
+    touchStartX = 0;
+    touchStartY = 0;
+    touchEndX = 0;
+    touchEndY = 0;
+  }, { passive: true });
 
   // Share functionality
   document.getElementById('lightbox-share').addEventListener('click', async () => {

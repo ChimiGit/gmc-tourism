@@ -170,6 +170,16 @@ const socialLinks = defineCollection({
   }),
 });
 
+const pillars = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    image: z.string(),
+    description: z.string().optional(),
+    order: z.number().default(0), // For ordering pillars
+  }),
+});
+
 export const collections = {
   'event-category': eventCategory,
   events,
@@ -182,4 +192,5 @@ export const collections = {
   murals,
   faqs,
   'social-links': socialLinks,
+  pillars,
 };

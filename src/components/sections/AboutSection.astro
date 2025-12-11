@@ -1,9 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
 import { getImageBaseUrl } from '../../utils/images';
-
-const aboutContent = await getCollection('about');
-const about = aboutContent[0]; // Get the first (and likely only) about entry
 ---
 
 <section
@@ -34,29 +30,58 @@ const about = aboutContent[0]; // Get the first (and likely only) about entry
 
   <!-- Content Container -->
   <div
-    class="relative z-20 flex min-h-screen w-full flex-col items-center justify-center px-6 sm:px-8 lg:px-12 py-16 pt-24 md:pt-32"
+    class="relative z-20 flex w-full flex-col items-center px-6 sm:px-8 lg:px-12 py-16 pt-24 md:pt-32"
   >
     <div class="container mx-auto max-w-6xl px-4 w-full">
       <!-- Cards Container -->
       <div class="about-cards relative mx-auto max-w-5xl w-full">
         <!-- Title -->
-        <h2 class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center relative z-30">
+        <h2
+          class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center relative z-30"
+        >
           About GMC Tourism
         </h2>
 
         <!-- All Cards Displayed -->
-        <div class="flex flex-col gap-6">
-          {
-            about?.data.cards.map((card) => (
-              <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
-                <div class="carousel-content flex items-center justify-center">
-                  <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
-                    {card.content}
-                  </p>
-                </div>
-              </div>
-            ))
-          }
+        <div class="flex flex-col gap-6 mb-12">
+          <!-- Card 1: Premier Destination -->
+          <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
+            <div class="carousel-content flex items-center justify-center">
+              <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
+                Gelephu Mindfulness City is emerging as a premier destination for mindful,
+                sustainable, and transformative travel. Designed as a place where spirituality,
+                wellness, and eco-conscious living come together, GMC offers unique opportunities
+                for retreats, eco-tourism, and cultural exchange.
+
+                <br />
+                <br />
+                GMC’s tourism identity is built on five pillars: nature, adventure, spiritual, wellness,
+                and culture, giving visitors a chance to immerse themselves in meaningful and authentic
+                journeys. With a new international airport under development and improved road and rail
+                connections, GMC is set to welcome travellers from around the world to discover a destination
+                where mindfulness, culture, and community shape every experience.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2: Five Pillars -->
+          <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
+            <div class="carousel-content flex items-center justify-center">
+              <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
+                Our mission is to shape Gelephu Mindfulness City into a transformative tourism
+                destination that nurtures mind, body, and spirit. Through our tourism pillars, we
+                create authentic, regenerative, and immersive experiences that celebrate Bhutanese
+                culture, protect the environment, and connect travellers meaningfully with community
+                and self.
+                <br />
+                <br />
+                We aspire to establish Gelephu Mindfulness City as the world’s foremost hub for mindful,
+                sustainable, and purposeful travel—where people from all walks of life come together
+                to explore, heal, and grow, inspired by Bhutan’s values of harmony, resilience, and holistic
+                wellbeing.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

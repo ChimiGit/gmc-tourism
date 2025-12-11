@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import { getImageBaseUrl } from '../../utils/images';
+
+// Get pillars from content collection
+const allPillars = await getCollection('pillars');
+const sortedPillars = allPillars.sort((a, b) => a.data.order - b.data.order);
+---
+
+<section
+  class="pillars-section relative w-full overflow-hidden py-16 px-4 sm:px-6 lg:px-8"
+  style="background-color: #000000;"
+>
+  <div class="container mx-auto max-w-7xl">
+    <h2
+      class="pillars-title text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-8 md:mb-12"
+    >
+      Tourism Pillars
+    </h2>
+
+    <div class="pillars-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 md:gap-8 w-full">
+      {
+        sortedPillars.map((pillar) => (
+          <div class="pillar-item flex flex-col items-center text-center w-full">
+            <div class="pillar-image-wrapper mb-4 flex items-center justify-center min-h-[96px] md:min-h-[120px] w-full">
+              <img
+                src={`${getImageBaseUrl()}${pillar.data.image}`}
+                alt={pillar.data.name}
+                class="pillar-image w-20 h-20 md:w-24 md:h-24 object-contain"
+                loading="lazy"
+              />
+            </div>
+            <h4 class="pillar-name text-lg md:text-xl font-semibold text-white mb-2">
+              {pillar.data.name}
+            </h4>
+            {pillar.data.description && (
+              <p class="pillar-description text-sm md:text-base text-white/80">
+                {pillar.data.description}
+              </p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .pillars-section {
+    position: relative;
+    z-index: 30;
+  }
+
+  .pillars-title {
+    color: #ffffff !important;
+  }
+
+  .pillar-item {
+    transition: transform 0.3s ease;
+  }
+
+  .pillar-item:hover {
+    transform: translateY(-8px);
+  }
+
+  .pillar-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .pillar-image {
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+  }
+
+  .pillar-item:hover .pillar-image {
+    transform: scale(1.1);
+  }
+
+  .pillar-name {
+    color: #ffffff !important;
+  }
+
+  .pillar-description {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  :global([data-theme='light']) .pillars-title,
+  :global([data-theme='light']) .pillar-name {
+    color: #ffffff !important;
+  }
+
+  :global([data-theme='light']) .pillar-description {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+</style>
