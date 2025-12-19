@@ -1,0 +1,82 @@
+---
+import FooterBackground from './FooterBackground';
+import SocialLinks from './SocialLinks';
+import { ArrowUp } from 'lucide-react';
+import Divider from './Divider';
+---
+
+<footer class="relative overflow-hidden px-4 pt-16 pb-8 md:px-8 lg:px-16">
+  <!-- Background text (client island) -->
+  <FooterBackground client:visible />
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+
+    <!-- Sitemap -->
+    <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+      <div class="mb-16">
+        <div class="mb-6 text-lg">/ SITEMAP</div>
+
+        <div class="grid grid-cols-3 gap-28 md:grid-cols-4">
+          <div>
+            <a href="/" class="footer-link block py-1 text-lg hover:text-slate-600">Home</a>
+            <a href="/about" class="footer-link block py-1 text-lg hover:text-slate-600">About</a>
+            <a href="/news" class="footer-link block py-1 text-lg hover:text-slate-600">News</a>
+          </div>
+
+          <div>
+            <a href="/gallery" class="footer-link block py-1 text-lg hover:text-slate-600">Gallery</a>
+            <a href="/faq" class="footer-link block py-1 text-lg hover:text-slate-600">FAQ</a>
+            <a href="/careers" class="footer-link block py-1 text-lg hover:text-slate-600">Careers</a>
+          </div>
+
+          <div>
+            <a href="/contact" class="footer-link block py-1 text-lg hover:text-slate-600">Contact</a>
+            <a href="/people" class="footer-link block py-1 text-lg hover:text-slate-600">People</a>
+            <a href="/privacy-policy" class="footer-link block py-2 text-lg hover:text-slate-600">
+              Privacy Policy
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <h3 class="mb-4 text-lg font-medium">Follow us</h3>
+        <SocialLinks
+          client:visible
+          links={[
+            { platform: 'facebook', url: 'https://www.facebook.com/people/Gelephu-Mindfulness-City/61565212923092' },
+            { platform: 'instagram', url: 'https://www.instagram.com/gmcbhutan/#' },
+            { platform: 'twitter', url: 'https://x.com/gmcbhutan' },
+            { platform: 'tiktok', url: 'https://www.tiktok.com/@gmc_bhutan' },
+            { platform: 'youtube', url: 'https://www.youtube.com/@gelephumindfulnesscity' }
+          ]}
+        />
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="flex w-full flex-col">
+      <Divider class="relative left-1/2 w-screen -translate-x-1/2" client:visible />
+
+      <div class="flex items-center justify-center gap-4
+                  max-sm:mt-4 max-sm:flex-col max-sm:items-start
+                  md:flex-row md:items-center md:gap-8">
+
+        <button
+          class="flex items-center font-medium hover:text-slate-600"
+          aria-label="Back to top"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        >
+          <ArrowUp class="mr-2 h-4 w-4" />
+          BACK TO TOP
+        </button>
+
+        <div class="text-slate-500 max-sm:text-center">
+          COPYRIGHT 2025 GMC. ALL RIGHTS RESERVED
+        </div>
+      </div>
+    </div>
+
+  </div>
+</footer>
