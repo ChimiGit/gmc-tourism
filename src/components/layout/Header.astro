@@ -184,8 +184,47 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
           </div>
 
           <div class="menu-item overflow-hidden">
+            <div class="relative">
+              <button
+                class="submenu-toggle group relative flex w-full items-center justify-between rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
+                data-submenu="invest"
+                aria-expanded="false"
+                aria-label="Toggle Invest submenu"
+              >
+                <span>Focus</span>
+              </button>
+              <div data-submenu-content="invest" class="submenu-content hidden mt-0">
+                <a
+                  href={getLinkUrl('https://gmc.bt/international-affairs')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  International Affairs
+                </a>
+                <a
+                  href={getLinkUrl('https://gmc.bt/spiritual')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  Spiritual Foundations
+                </a>
+                <a
+                  href={getLinkUrl('https://gmc.bt/city-development')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  City Development
+                </a>
+                <a
+                  href={getLinkUrl('https://gmc.bt/tourism/')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  Tourism
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item overflow-hidden">
             <a
-              href={getLinkUrl('/pledge')}
+              href={getLinkUrl('https://gmc.bt/pledge')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Bitcoin Pledge
