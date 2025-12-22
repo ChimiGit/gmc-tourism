@@ -35,31 +35,22 @@ import { getImageBaseUrl } from '../../utils/images';
     <div class="container mx-auto max-w-6xl px-4 w-full">
       <!-- Cards Container -->
       <div class="about-cards relative mx-auto max-w-5xl w-full">
-        <!-- Title -->
-        <h2
-          class="about-title mb-8 text-4xl md:text-5xl font-bold text-white text-center relative z-30"
-        >
-          About GMC Tourism
-        </h2>
-
-        <!-- All Cards Displayed -->
         <div class="flex flex-col gap-6">
-          <!-- Card 1: Premier Destination -->
+          <!-- Card 2: Five Pillars -->
           <div class="carousel-card liquid-glass p-8 md:p-12 rounded-2xl text-center">
             <div class="carousel-content flex items-center justify-center">
               <p class="text-lg md:text-xl leading-relaxed font-regular max-w-4xl">
-                Gelephu Mindfulness City is emerging as a premier destination for mindful,
-                sustainable, and transformative travel. Designed as a place where spirituality,
-                wellness, and eco-conscious living come together, GMC offers unique opportunities
-                for retreats, eco-tourism, and cultural exchange.
-
+                Our mission is to shape Gelephu Mindfulness City into a transformative tourism
+                destination that nurtures mind, body, and spirit. Through our tourism pillars, we
+                create authentic, regenerative, and immersive experiences that celebrate Bhutanese
+                culture, protect the environment, and connect travellers meaningfully with community
+                and self.
                 <br />
                 <br />
-                GMC's tourism identity is built on five pillars: nature, adventure, spiritual, wellness,
-                and culture, giving visitors a chance to immerse themselves in meaningful and authentic
-                journeys. With a new international airport under development and improved road and rail
-                connections, GMC is set to welcome travellers from around the world to discover a destination
-                where mindfulness, culture, and community shape every experience.
+                We aspire to establish Gelephu Mindfulness City as the world's foremost hub for mindful,
+                sustainable, and purposeful travel—where people from all walks of life come together
+                to explore, heal, and grow, inspired by Bhutan's values of harmony, resilience, and holistic
+                wellbeing.
               </p>
             </div>
           </div>
@@ -69,11 +60,11 @@ import { getImageBaseUrl } from '../../utils/images';
   </div>
 
   <!-- Top gradient to hide line from hero section -->
-  <div
+  <!-- <div
     class="absolute top-0 left-0 right-0 z-15 h-24 md:h-32"
     style="background: linear-gradient(to bottom, #000000 0%, #000000 40%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);"
   >
-  </div>
+  </div> -->
 
   <!-- Bottom gradient -->
   <div
@@ -94,10 +85,25 @@ import { getImageBaseUrl } from '../../utils/images';
   }
 
   .about-cards {
-    opacity: 0;
-    transform: translateY(100px);
+    opacity: 1;
+    transform: translateY(0);
     position: relative;
     z-index: 30;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  /* Hide initially if JS will animate */
+  .about-cards.will-animate {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  /* Fallback: show cards if JS fails or GSAP doesn't load */
+  .about-cards.no-animation {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .about-title {
@@ -266,48 +272,79 @@ import { getImageBaseUrl } from '../../utils/images';
   // Scroll-triggered animation for About section with bouncy slide-up effect
   function initAboutSectionAnimation() {
     const aboutSection = document.querySelector('.about-section');
-    const aboutCards = document.querySelector('.about-cards');
+    const aboutCards = document.querySelector('.about-cards') as HTMLElement | null;
 
-    if (!aboutSection || !aboutCards) return;
+    if (!aboutSection || !aboutCards) {
+      // Fallback: show cards if elements not found
+      const fallbackCards = document.querySelector('.about-cards');
+      if (fallbackCards) {
+        fallbackCards.classList.remove('will-animate');
+        fallbackCards.classList.add('no-animation');
+      }
+      return;
+    }
 
-    // Import GSAP and ScrollTrigger for animation
-    import('gsap').then(({ gsap }) => {
-      import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-        gsap.registerPlugin(ScrollTrigger);
+    // Try to load GSAP - if it loads, we'll hide and animate the cards
+    // If it doesn't load, cards stay visible (which is the default)
+    const gsapTimeout = setTimeout(() => {
+      // If GSAP doesn't load within 1 second, ensure cards are visible
+      const cards = document.querySelector('.about-cards') as HTMLElement | null;
+      if (cards && cards.classList.contains('will-animate')) {
+        console.warn('GSAP loading timeout - showing cards without animation');
+        cards.classList.remove('will-animate');
+      }
+    }, 1000);
 
-        // Bouncy slide-up animation with "thak thak" effect
-        // Triggers after scrolling 20px from the top of the page
-        gsap.fromTo(
-          aboutCards,
-          {
-            opacity: 0,
-            y: 150,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.4,
-            ease: 'elastic.out(1, 0.6)',
-            scrollTrigger: {
-              trigger: 'body',
-              start: '20px top', // Triggers after scrolling 20px
-              toggleActions: 'play none none none',
-              once: true, // Only play once
-            },
-            onComplete: () => {
-              // Add a subtle bounce effect for "thak thak"
-              gsap.to(aboutCards, {
-                y: -10,
-                duration: 0.15,
-                ease: 'power2.out',
-                yoyo: true,
-                repeat: 1,
-              });
-            },
-          }
-        );
+    // Use dynamic imports for GSAP
+    import('gsap')
+      .then(({ gsap }) => {
+        return import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          clearTimeout(gsapTimeout);
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Hide cards initially to animate them in
+          aboutCards.classList.add('will-animate');
+
+          // Small delay to ensure class is applied
+          requestAnimationFrame(() => {
+            // Set initial state with GSAP
+            gsap.set(aboutCards, {
+              opacity: 0,
+              y: 150,
+            });
+
+            // Bouncy slide-up animation with "thak thak" effect
+            // Trigger when section comes into view
+            gsap.to(aboutCards, {
+              opacity: 1,
+              y: 0,
+              duration: 1.4,
+              ease: 'elastic.out(1, 0.6)',
+              scrollTrigger: {
+                trigger: aboutSection,
+                start: 'top 80%', // Triggers when section top is 80% down viewport
+                toggleActions: 'play none none none',
+                once: true, // Only play once
+              },
+              onComplete: () => {
+                // Add a subtle bounce effect for "thak thak"
+                gsap.to(aboutCards, {
+                  y: -10,
+                  duration: 0.15,
+                  ease: 'power2.out',
+                  yoyo: true,
+                  repeat: 1,
+                });
+              },
+            });
+          });
+        });
+      })
+      .catch((error) => {
+        clearTimeout(gsapTimeout);
+        console.warn('GSAP failed to load, cards will remain visible:', error);
+        // Cards are already visible by default, no action needed
       });
-    });
 
     // Video parallax effect similar to Hero section
     const aboutVideo = document.getElementById('about-video') as HTMLVideoElement | null;
@@ -336,4 +373,18 @@ import { getImageBaseUrl } from '../../utils/images';
   } else {
     initAboutSectionAnimation();
   }
+
+  // Final safety fallback: ensure cards are visible after 3 seconds
+  setTimeout(() => {
+    const aboutCards = document.querySelector('.about-cards') as HTMLElement | null;
+    if (aboutCards) {
+      const computedStyle = window.getComputedStyle(aboutCards);
+      if (computedStyle.opacity === '0' || parseFloat(computedStyle.opacity) < 0.1) {
+        console.warn('About cards still hidden after 3s - forcing visibility');
+        aboutCards.classList.remove('will-animate');
+        aboutCards.style.opacity = '1';
+        aboutCards.style.transform = 'translateY(0)';
+      }
+    }
+  }, 3000);
 </script>

@@ -19,7 +19,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
       data-logo-dark={logoImage}
       data-logo-light={logoLightImage}
     >
-      <a href={getLinkUrl('/')} class="relative block h-10 w-10 md:h-12 md:w-12">
+      <a href={getLinkUrl('https://gmc.bt')} class="relative block h-10 w-10 md:h-12 md:w-12">
         <img
           id="site-logo"
           src={logoLightImage}
@@ -31,13 +31,13 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
     <div class="relative z-60 flex items-center gap-4">
       <ThemeManager />
-      <!-- <button
+      <button
         id="menu-toggle"
         class="relative z-60 cursor-pointer px-4 font-medium uppercase tracking-wider text-white transition-opacity hover:opacity-70"
         aria-label="Toggle menu"
       >
         Menu
-      </button> -->
+      </button>
     </div>
   </div>
 
@@ -73,15 +73,16 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
       <!-- Close button -->
       <div
-        class="flex justify-end px-6 py-6 md:px-12 relative"
-        style="z-index: 999; pointer-events: auto; position: relative;"
+        id="menu-close-container"
+        class="flex justify-end px-6 py-6 md:px-12 relative cursor-pointer"
+        style="z-index: 999; pointer-events: auto; position: relative; min-height: 80px;"
       >
         <button
           id="menu-close"
           class="text-white transition-opacity hover:opacity-70 cursor-pointer relative"
           aria-label="Close menu"
           type="button"
-          style="z-index: 1000; cursor: pointer; pointer-events: auto; position: relative; background: transparent; border: none; padding: 8px; min-width: 48px; min-height: 48px;"
+          style="z-index: 1000; cursor: pointer; pointer-events: auto; position: relative; background: transparent; border: none; padding: 20px; min-width: 80px; min-height: 80px; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px;"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +94,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            style="pointer-events: none; display: block;"
+            style="pointer-events: none; display: block; flex-shrink: 0;"
           >
             <path d="M18 6 6 18"></path>
             <path d="m6 6 12 12"></path>
@@ -106,7 +107,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
         <nav id="menu-items" class="space-y-4 md:space-y-6">
           <div class="menu-item overflow-hidden">
             <a
-              href={getLinkUrl('/')}
+              href={getLinkUrl('https://gmc.bt')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Home
@@ -115,7 +116,7 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
-              href={getLinkUrl('/about')}
+              href={getLinkUrl('https://gmc.bt/about')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               About
@@ -124,66 +125,117 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
           <div class="menu-item overflow-hidden">
             <a
+              href={getLinkUrl('https://gmc.bt/news')}
+              class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
+            >
+              News
+            </a>
+          </div>
+
+          <!-- <div class="menu-item overflow-hidden">
+            <a
               href={getLinkUrl('/experiences')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Experiences
             </a>
-          </div>
+          </div> -->
 
-          <div class="menu-item overflow-hidden">
+          <!-- <div class="menu-item overflow-hidden">
             <a
               href={getLinkUrl('/events')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Events Calendar
             </a>
+          </div> -->
+
+          <div class="menu-item overflow-hidden">
+            <div class="relative">
+              <button
+                class="submenu-toggle group relative flex w-full items-center justify-between rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
+                data-submenu="invest"
+                aria-expanded="false"
+                aria-label="Toggle Invest submenu"
+              >
+                <span>Invest</span>
+              </button>
+              <div data-submenu-content="invest" class="submenu-content hidden mt-0">
+                <a
+                  href={getLinkUrl('https://gmc.bt/invest-in-gmc')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  Invest in GMC
+                </a>
+                <a
+                  href={getLinkUrl('https://gmc.bt/GFSO')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  Gelephu Financial Services Office
+                </a>
+                <a
+                  href={getLinkUrl('https://corp.registry.gmc.bt/')}
+                  class="submenu-link block px-3 py-2 pl-12 text-2xl font-normal text-gray-500 transition-all duration-200 hover:text-white"
+                >
+                  Gelephu Corporate Registration Office
+                </a>
+              </div>
+            </div>
           </div>
 
           <div class="menu-item overflow-hidden">
             <a
-              href={getLinkUrl('/projects')}
+              href={getLinkUrl('/pledge')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
-              Projects
+              Bitcoin Pledge
             </a>
           </div>
 
           <div class="menu-item overflow-hidden">
+            <a
+              href={getLinkUrl('https://gmc.bt/careers')}
+              class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
+            >
+              Careers
+            </a>
+          </div>
+
+          <!-- <div class="menu-item overflow-hidden">
             <a
               href={getLinkUrl('/gallery')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Gallery
             </a>
-          </div>
+          </div> -->
 
-          <div class="menu-item overflow-hidden">
+          <!-- <div class="menu-item overflow-hidden">
             <a
               href={getLinkUrl('/resources')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Resources
             </a>
-          </div>
+          </div> -->
 
-          <div class="menu-item overflow-hidden">
+          <!-- <div class="menu-item overflow-hidden">
             <a
               href={getLinkUrl('/faq')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               FAQ
             </a>
-          </div>
+          </div> -->
 
-          <div class="menu-item overflow-hidden">
+          <!-- <div class="menu-item overflow-hidden">
             <a
               href={getLinkUrl('/contact')}
               class="relative block rounded-lg px-3 py-2 text-4xl font-bold text-gray-400 transition-all duration-200 hover:text-white"
             >
               Contact
             </a>
-          </div>
+          </div> -->
         </nav>
       </div>
     </div>
@@ -197,6 +249,47 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
   >
   </div>
 </header>
+
+<style>
+  .submenu-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .submenu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .submenu-toggle svg {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .submenu-content {
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      max-height 0.3s ease,
+      opacity 0.2s ease;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  .submenu-content:not(.hidden) {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .submenu-link {
+    display: block;
+    position: relative;
+    padding-left: 3rem;
+  }
+</style>
 
 <script>
   (function () {
@@ -292,6 +385,22 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
           (item as HTMLElement).style.opacity = '0';
           (item as HTMLElement).style.transform = 'translateX(50px)';
         });
+
+        // Close all submenus
+        const submenus = document.querySelectorAll('.submenu-content');
+        submenus.forEach((submenu) => {
+          submenu.classList.add('hidden');
+        });
+
+        // Reset submenu icons
+        const submenuToggles = document.querySelectorAll('.submenu-toggle');
+        submenuToggles.forEach((toggle) => {
+          toggle.setAttribute('aria-expanded', 'false');
+          const icon = toggle.querySelector('svg') as HTMLElement | null;
+          if (icon) {
+            icon.style.transform = 'rotate(0deg)';
+          }
+        });
       }
     }
 
@@ -347,13 +456,18 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
 
             // Check for close button - handle it first (check multiple ways to be sure)
             const menuClose = document.getElementById('menu-close');
+            const menuCloseContainer = document.getElementById('menu-close-container');
             const isCloseButton =
               target.id === 'menu-close' ||
+              target.id === 'menu-close-container' ||
               target.closest('#menu-close') ||
+              target.closest('#menu-close-container') ||
               (menuClose &&
                 (target === menuClose ||
                   menuClose.contains(target) ||
-                  target.parentElement === menuClose));
+                  target.parentElement === menuClose)) ||
+              (menuCloseContainer &&
+                (target === menuCloseContainer || menuCloseContainer.contains(target)));
 
             if (isCloseButton) {
               e.preventDefault();
@@ -375,13 +489,38 @@ const logoLightImage = `${getImageBaseUrl()}/logo-light.svg`;
             const submenuToggle = target.closest('.submenu-toggle');
             if (submenuToggle) {
               e.preventDefault();
+              e.stopPropagation();
               const submenuId = submenuToggle.getAttribute('data-submenu');
               const submenuContent = document.querySelector(
                 `[data-submenu-content="${submenuId}"]`
-              );
+              ) as HTMLElement | null;
+              const icon = submenuToggle.querySelector('svg') as HTMLElement | null;
+
               if (submenuContent) {
-                submenuContent.classList.toggle('hidden');
+                const isHidden = submenuContent.classList.contains('hidden');
+
+                if (isHidden) {
+                  // Opening submenu
+                  submenuContent.classList.remove('hidden');
+                  submenuToggle.setAttribute('aria-expanded', 'true');
+                  if (icon) {
+                    icon.style.transform = 'rotate(180deg)';
+                  }
+                } else {
+                  // Closing submenu
+                  submenuContent.classList.add('hidden');
+                  submenuToggle.setAttribute('aria-expanded', 'false');
+                  if (icon) {
+                    icon.style.transform = 'rotate(0deg)';
+                  }
+                }
               }
+              return;
+            }
+
+            // Check for submenu links - close menu when clicked
+            if (target.closest('.submenu-content a')) {
+              closeMenu();
               return;
             }
 

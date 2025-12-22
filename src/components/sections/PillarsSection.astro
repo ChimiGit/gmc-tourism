@@ -9,11 +9,10 @@ const sortedPillars = allPillars.sort((a, b) => a.data.order - b.data.order);
 
 <section
   class="pillars-section relative w-full overflow-hidden py-16 px-4 sm:px-6 lg:px-8"
-  style="background-color: #000000;"
 >
   <div class="container mx-auto max-w-7xl">
     <h2
-      class="pillars-title text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center mb-8 md:mb-12"
+      class="pillars-title text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 md:mb-12"
     >
       Tourism Pillars
     </h2>
@@ -30,11 +29,11 @@ const sortedPillars = allPillars.sort((a, b) => a.data.order - b.data.order);
                 loading="lazy"
               />
             </div>
-            <h4 class="pillar-name text-lg md:text-xl font-semibold text-white mb-2">
+            <h4 class="pillar-name text-lg md:text-xl font-semibold mb-2">
               {pillar.data.name}
             </h4>
             {/* {pillar.data.description && (
-              <p class="pillar-description text-sm md:text-base text-white/80">
+              <p class="pillar-description text-sm md:text-base">
                 {pillar.data.description}
               </p>
             )} */}
@@ -49,12 +48,49 @@ const sortedPillars = allPillars.sort((a, b) => a.data.order - b.data.order);
   .pillars-section {
     position: relative;
     z-index: 30;
+    background-color: #000000;
   }
 
+  /* Dark theme styles */
   .pillars-title {
     color: #ffffff !important;
   }
 
+  .pillar-name {
+    color: #ffffff !important;
+  }
+
+  .pillar-description {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .pillar-image {
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+  }
+
+  /* Light theme styles */
+  :global([data-theme='light']) .pillars-section {
+    background-color: #f5f5f5 !important;
+  }
+
+  :global([data-theme='light']) .pillars-title {
+    color: #0f172a !important; /* slate-900 */
+  }
+
+  :global([data-theme='light']) .pillar-name {
+    color: #0f172a !important; /* slate-900 */
+  }
+
+  :global([data-theme='light']) .pillar-description {
+    color: #334155 !important; /* slate-700 */
+  }
+
+  :global([data-theme='light']) .pillar-image {
+    filter: brightness(0) invert(0); /* Dark images in light mode */
+  }
+
+  /* Common styles */
   .pillar-item {
     transition: transform 0.3s ease;
   }
@@ -70,29 +106,7 @@ const sortedPillars = allPillars.sort((a, b) => a.data.order - b.data.order);
     width: 100%;
   }
 
-  .pillar-image {
-    filter: brightness(0) invert(1);
-    transition: transform 0.3s ease;
-  }
-
   .pillar-item:hover .pillar-image {
     transform: scale(1.1);
-  }
-
-  .pillar-name {
-    color: #ffffff !important;
-  }
-
-  .pillar-description {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-
-  :global([data-theme='light']) .pillars-title,
-  :global([data-theme='light']) .pillar-name {
-    color: #ffffff !important;
-  }
-
-  :global([data-theme='light']) .pillar-description {
-    color: rgba(255, 255, 255, 0.8) !important;
   }
 </style>
